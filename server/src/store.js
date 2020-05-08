@@ -62,11 +62,11 @@ const createStore = () => {
   });
 
   user.hasOne(notebook);
-  notebook.belongsTo(user, { foreignKey: 'userId' });
+  notebook.belongsTo(user, { foreignKey: 'userId', onDelete: 'CASCADE' });
   notebook.hasMany(sheet);
-  sheet.belongsTo(notebook, { foreignKey: 'notebookId' });
+  sheet.belongsTo(notebook, { foreignKey: 'notebookId', onDelete: 'CASCADE' });
   sheet.hasMany(todo);
-  todo.belongsTo(sheet, { foreignKey: 'sheetId' });
+  todo.belongsTo(sheet, { foreignKey: 'sheetId', onDelete: 'CASCADE' });
 
   return { user, notebook, sheet, todo, db };
 };

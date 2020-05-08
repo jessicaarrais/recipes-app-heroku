@@ -25,8 +25,7 @@ class User extends DataSource {
     if (!isEmail.validate(email)) return null;
 
     await this.store.db.sync();
-
-    const emailExists = this.store.user.findOne({ where: { email } });
+    const emailExists = await this.store.user.findOne({ where: { email } });
     if (emailExists) throw new Error('Email already exists.');
 
     const newUser = await this.store.user.create({ email });
@@ -36,7 +35,16 @@ class User extends DataSource {
         notebookId: newNotebook.notebookId,
       });
     }
+
     return newUser;
+  }
+
+  async deleteUser() {
+    const user = await this.store.user.findOne({
+      where: { userId: this.context.user.userId },
+    });
+
+    return await user.destroy();
   }
 }
 

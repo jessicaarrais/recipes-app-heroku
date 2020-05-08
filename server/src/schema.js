@@ -33,6 +33,8 @@ const typeDefs = gql`
     signin(email: String): UserResponse
 
     login(email: String): UserResponse
+
+    deleteUser: UserResponse
   }
 
   type UserResponse {
