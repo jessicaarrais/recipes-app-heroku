@@ -1,10 +1,19 @@
+import { Context } from '.';
+import { UserModel } from './store';
+import {
+  TodoUpdateResponseGQL,
+  SheetUpdateResponseGQL,
+  UserResponseGQL,
+  NotebookGQL,
+} from './schema';
+
 const resolvers = {
   Query: {
-    user: async (_, __, context) => await context.user,
+    user: (_, __, context: Context): UserModel => context.user,
   },
 
   Mutation: {
-    createTodo: async (_, args, context) => {
+    createTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
       const sheet = await context.dataSources.todoAPI.getTodos(args.sheetId);
       const response = await context.dataSources.todoAPI.createTodo({
         text: args.text,
@@ -15,6 +24,7 @@ const resolvers = {
         return {
           success: false,
           message: 'Failed creating todo',
+          sheet: null,
         };
       }
       sheet.push(response);
@@ -22,7 +32,7 @@ const resolvers = {
       return { success: true, message: 'Todo created', sheet };
     },
 
-    updateTodo: async (_, args, context) => {
+    updateTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
       const todo = await context.dataSources.todoAPI.updateTodo(
         { text: args.text, isChecked: args.isChecked },
         args.todoId
@@ -31,6 +41,7 @@ const resolvers = {
         return {
           success: false,
           message: 'Failed updating todo',
+          sheet: null,
         };
       }
       const sheet = await context.dataSources.todoAPI.getTodos(args.sheetId);
@@ -38,12 +49,13 @@ const resolvers = {
       return { success: true, message: 'Todo updated', sheet };
     },
 
-    deleteTodo: async (_, args, context) => {
+    deleteTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
       const todo = await context.dataSources.todoAPI.deleteTodo(args.todoId);
       if (!todo) {
         return {
           success: false,
           message: 'Failed deleting todo',
+          sheet: null,
         };
       }
       const sheet = await context.dataSources.todoAPI.getTodos(args.sheetId);
@@ -51,27 +63,24 @@ const resolvers = {
       return { success: true, message: 'Todo deleted', sheet };
     },
 
-    createSheet: async (_, args, context) => {
-      const notebook = await context.dataSources.sheetAPI.getSheets(
-        args.notebookId
-      );
-
-      const sheet = await context.dataSources.sheetAPI.createSheet({
+    createSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
+      const sheetModel = await context.dataSources.sheetAPI.createSheet({
         title: args.title,
         notebookId: args.notebookId,
       });
-      if (!sheet) {
+      if (!sheetModel) {
         return {
           success: false,
           message: 'Failed creating sheet',
+          notebook: null,
         };
       }
-      notebook.push(sheet);
+      const notebook = await context.dataSources.sheetAPI.getSheets(args.notebookId);
 
       return { success: true, message: 'Sheet created', notebook };
     },
 
-    updateSheet: async (_, args, context) => {
+    updateSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
       const sheet = await context.dataSources.sheetAPI.updateSheet(
         { title: args.title },
         args.sheetId
@@ -80,84 +89,82 @@ const resolvers = {
         return {
           success: false,
           message: 'Failed to update sheet',
+          notebook: null,
         };
       }
-      const notebook = await context.dataSources.sheetAPI.getSheets(
-        args.notebookId
-      );
+      const notebook = await context.dataSources.sheetAPI.getSheets(args.notebookId);
 
       return { success: true, message: 'Sheet updated', notebook };
     },
 
-    deleteSheet: async (_, args, context) => {
-      const sheet = await context.dataSources.sheetAPI.deleteSheet(
-        args.sheetId
-      );
+    deleteSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
+      const sheet = await context.dataSources.sheetAPI.deleteSheet(args.sheetId);
       if (!sheet) {
         return {
           success: false,
           message: 'Failed to delete sheet',
+          notebook: null,
         };
       }
-      const notebook = await context.dataSources.sheetAPI.getSheets(
-        args.notebookId
-      );
+      const notebook = await context.dataSources.sheetAPI.getSheets(args.notebookId);
 
       return { success: true, message: 'Sheet deleted', notebook };
     },
 
-    signin: async (_, args, context) => {
+    signin: async (_, args, context: Context): Promise<UserResponseGQL> => {
       try {
-        const newUser = await context.dataSources.userAPI.createUser(
-          args.email
-        );
+        const newUser = await context.dataSources.userAPI.createUser(args.email);
         return {
           success: true,
           message: 'Created',
-          user: {
-            userId: newUser.userId,
-            notebookId: newUser.notebookId,
-            email: newUser.email,
-            auth: Buffer.from(args.email).toString('base64'),
-          },
+          user: newUser,
         };
       } catch (error) {
         return {
           success: false,
           message: error.message,
+          user: null,
         };
       }
     },
 
-    login: async (_, args, context) => {
-      const user = await context.dataSources.userAPI.findUserByEmail(
-        args.email
-      );
+    login: async (_, args, context: Context): Promise<UserResponseGQL> => {
+      const user = await context.dataSources.userAPI.findUserByEmail(args.email);
       if (!user) {
         return {
           success: false,
           message: 'Failed logging in',
+          user: null,
         };
       }
       return {
         success: true,
         message: 'Logged',
-        user: {
-          userId: user.userId,
-          notebookId: user.notebookId,
-          email: user.email,
-          auth: Buffer.from(args.email).toString('base64'),
-        },
+        user,
       };
     },
 
-    deleteUser: async (_, __, context) => {
-      const user = Object.assign({}, context.user);
+    deleteUser: async (_, __, context: Context): Promise<UserResponseGQL> => {
+      const user = Object.assign(
+        {},
+        {
+          id: context.user.id,
+          email: context.user.email,
+          token: context.user.token,
+          notebook: {
+            id: context.user.notebookId,
+            notebook: await this.context.dataSources.sheetAPI.getSheets(
+              context.user.notebookId
+            ),
+          },
+        }
+      );
       const deletedUser = await context.dataSources.userAPI.deleteUser();
       if (!deletedUser) {
         return {
           success: false,
           message: 'User not deleted',
+          user: null,
         };
       }
 
@@ -166,13 +173,13 @@ const resolvers = {
   },
 
   User: {
-    notebook: async (user, __, context) => {
+    notebook: async (user, __, context: Context): Promise<NotebookGQL> => {
       return {
-        notebookId: user.notebookId,
-        notebook: context.dataSources.sheetAPI.getSheets(user.notebookId),
+        id: user.notebookId,
+        notebook: await context.dataSources.sheetAPI.getSheets(user.notebookId),
       };
     },
   },
 };
 
-module.exports = resolvers;
+export default resolvers;

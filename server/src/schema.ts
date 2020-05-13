@@ -1,4 +1,48 @@
-const { gql } = require('apollo-server');
+import { gql } from 'apollo-server';
+
+export interface UserGQL {
+  id: number;
+  email: string;
+  token: string;
+  notebook: NotebookGQL;
+}
+
+export interface NotebookGQL {
+  id: number;
+  notebook: Array<SheetGQL>;
+}
+
+export interface SheetGQL {
+  id: number;
+  notebookId: number;
+  title: string;
+  sheet: Array<TodoGQL>;
+}
+
+export interface TodoGQL {
+  id: number;
+  sheetId: number;
+  text: string;
+  isChecked: boolean;
+}
+
+export interface UserResponseGQL {
+  success: boolean;
+  message: string;
+  user: UserGQL;
+}
+
+export interface TodoUpdateResponseGQL {
+  success: Boolean;
+  message: string;
+  sheet: Array<TodoGQL>;
+}
+
+export interface SheetUpdateResponseGQL {
+  success: Boolean;
+  message: string;
+  notebook: Array<SheetGQL>;
+}
 
 const typeDefs = gql`
   type Query {
@@ -6,11 +50,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createTodo(
-      text: String
-      isChecked: Boolean
-      sheetId: ID!
-    ): TodoUpdateResponse
+    createTodo(text: String, isChecked: Boolean, sheetId: ID!): TodoUpdateResponse
 
     updateTodo(
       todoId: ID!
@@ -22,11 +62,8 @@ const typeDefs = gql`
     deleteTodo(todoId: ID!, sheetId: ID!): TodoUpdateResponse
 
     createSheet(title: String, notebookId: ID!): SheetUpdateResponse
-    updateSheet(
-      sheetId: ID!
-      title: String
-      notebookId: ID!
-    ): SheetUpdateResponse
+
+    updateSheet(sheetId: ID!, title: String, notebookId: ID!): SheetUpdateResponse
 
     deleteSheet(sheetId: ID!, notebookId: ID!): SheetUpdateResponse
 
@@ -56,30 +93,30 @@ const typeDefs = gql`
   }
 
   type Todo {
-    todoId: ID!
+    id: ID!
     sheetId: ID!
     text: String
     isChecked: Boolean
   }
 
   type Sheet {
-    sheetId: ID!
+    id: ID!
     notebookId: ID!
     title: String
     sheet: [Todo]
   }
 
   type Notebook {
-    notebookId: ID!
+    id: ID!
     notebook: [Sheet]
   }
 
   type User {
-    userId: ID!
+    id: ID!
     email: String
-    auth: String
+    token: String
     notebook: Notebook
   }
 `;
 
-module.exports = typeDefs;
+export default typeDefs;
