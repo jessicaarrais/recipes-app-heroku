@@ -17,6 +17,7 @@ class User extends DataSource {
 
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
+    if (!user) throw new Error('User does not exist.');
 
     return {
       id: user.id,

@@ -1,15 +1,23 @@
 import { Context } from '.';
-import { UserModel } from './store';
 import {
   TodoUpdateResponseGQL,
   SheetUpdateResponseGQL,
   UserResponseGQL,
-  NotebookGQL,
+  UserGQL,
 } from './schema';
 
 const resolvers = {
   Query: {
-    user: (_, __, context: Context): UserModel => context.user,
+    user: async (_, __, context: Context): Promise<UserGQL> =>
+      await {
+        id: context.user.id,
+        email: context.user.email,
+        token: context.user.token,
+        notebook: {
+          id: context.user.notebookId,
+          notebook: await context.dataSources.sheetAPI.getSheets(context.user.notebookId),
+        },
+      },
   },
 
   Mutation: {
@@ -129,36 +137,33 @@ const resolvers = {
     },
 
     login: async (_, args, context: Context): Promise<UserResponseGQL> => {
-      const user = await context.dataSources.userAPI.findUserByEmail(args.email);
-      if (!user) {
+      try {
+        const user = await context.dataSources.userAPI.findUserByEmail(args.email);
+        return {
+          success: true,
+          message: 'Logged',
+          user,
+        };
+      } catch (error) {
         return {
           success: false,
-          message: 'Failed logging in',
+          message: error.message,
           user: null,
         };
       }
-      return {
-        success: true,
-        message: 'Logged',
-        user,
-      };
     },
 
     deleteUser: async (_, __, context: Context): Promise<UserResponseGQL> => {
-      const user = Object.assign(
-        {},
-        {
-          id: context.user.id,
-          email: context.user.email,
-          token: context.user.token,
-          notebook: {
-            id: context.user.notebookId,
-            notebook: await this.context.dataSources.sheetAPI.getSheets(
-              context.user.notebookId
-            ),
-          },
-        }
-      );
+      const user = {
+        id: context.user.id,
+        email: context.user.email,
+        token: context.user.token,
+        notebook: {
+          id: context.user.notebookId,
+          notebook: await context.dataSources.sheetAPI.getSheets(context.user.notebookId),
+        },
+      };
+
       const deletedUser = await context.dataSources.userAPI.deleteUser();
       if (!deletedUser) {
         return {
@@ -169,15 +174,6 @@ const resolvers = {
       }
 
       return { success: true, message: 'User deleted', user };
-    },
-  },
-
-  User: {
-    notebook: async (user, __, context: Context): Promise<NotebookGQL> => {
-      return {
-        id: user.notebookId,
-        notebook: await context.dataSources.sheetAPI.getSheets(user.notebookId),
-      };
     },
   },
 };
