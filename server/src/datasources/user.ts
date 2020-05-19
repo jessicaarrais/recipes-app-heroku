@@ -13,7 +13,7 @@ class User extends DataSource {
   }
 
   async findUserByEmail(email: string): Promise<UserGQL> {
-    if (!email || !isEmail.validate(email)) return null;
+    if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
 
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
@@ -31,7 +31,7 @@ class User extends DataSource {
   }
 
   async createUser(email: string): Promise<UserGQL> {
-    if (!isEmail.validate(email)) return null;
+    if (!isEmail.validate(email)) throw new Error('Invalid email.');
 
     await db.sync();
     const emailExists = await dbUser.findOne({ where: { email } });
