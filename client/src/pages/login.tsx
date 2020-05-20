@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import Button from '../components/button';
 
 const LOGIN = gql`
   mutation login($email: String!) {
@@ -28,8 +29,8 @@ const LOGIN = gql`
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [inputLogin, setInputLogin] = useState('');
   const client = useApolloClient();
-  let inputLogin: HTMLInputElement;
 
   const [login, { loading, error }] = useMutation(LOGIN, {
     onCompleted(data) {
@@ -52,19 +53,20 @@ function Login() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          login({ variables: { email: inputLogin.value } });
-          inputLogin.value = '';
+          login({ variables: { email: inputLogin } });
         }}
       >
         <input
-          ref={(node) => {
-            inputLogin = node as HTMLInputElement;
+          value={inputLogin}
+          onChange={(e) => {
+            setInputLogin(e.target.value);
           }}
         />
-        <button type="submit">Login</button>
+        <Button type="submit">Login</Button>
       </form>
       {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 }
+
 export default Login;

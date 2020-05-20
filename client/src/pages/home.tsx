@@ -1,5 +1,4 @@
 import React from 'react';
-import { useApolloClient } from '@apollo/react-hooks';
 
 function Home() {
   return (

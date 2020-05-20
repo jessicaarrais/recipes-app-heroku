@@ -14,7 +14,9 @@ function NavigationBar() {
 
   return (
     <nav>
-      <Button handleOnClick={handleOnClick}>Logout</Button>
+      <Button type="button" handleOnClick={handleOnClick}>
+        Logout
+      </Button>
     </nav>
   );
 }

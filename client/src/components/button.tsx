@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
-interface ButtonType {
-  children?: string;
-  handleOnClick: (param?: any) => void;
+interface PropsType {
+  type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  children?: ButtonHTMLAttributes<HTMLButtonElement>['children'];
+  handleOnClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
-function Button(props: ButtonType) {
-  return <button onClick={props.handleOnClick}>{props.children}</button>;
+function Button(props: PropsType) {
+  return (
+    <button type={props.type} onClick={props.handleOnClick}>
+      {props.children}
+    </button>
+  );
 }
 
 export default Button;

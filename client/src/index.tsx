@@ -14,6 +14,7 @@ import { typeDefs } from './resolvers';
 import Login from './pages/login';
 import Home from './pages/home';
 import NavigationBar from './components/navigationbar';
+import Signin from './pages/signin';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -27,6 +28,7 @@ const client = new ApolloClient({
   }),
   cache,
   typeDefs,
+  resolvers: {},
 });
 
 cache.writeData({ data: { isLoggedIn: !!localStorage.getItem('token'), notebook: [] } });
@@ -48,6 +50,7 @@ function LandingPage() {
   ) : (
     <div>
       <Login />
+      <Signin />
     </div>
   );
 }
