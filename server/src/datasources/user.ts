@@ -25,7 +25,7 @@ class User extends DataSource {
       token: user.token,
       notebook: {
         id: user.notebookId,
-        notebook: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
+        sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
       },
     };
   }
@@ -52,7 +52,7 @@ class User extends DataSource {
       id: newUser.id,
       email: newUser.email,
       token: newUser.token,
-      notebook: { id: newNotebook.id, notebook: [] },
+      notebook: { id: newNotebook.id, sheets: [] },
     };
   }
 

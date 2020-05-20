@@ -29,7 +29,7 @@ class Sheet extends DataSource {
           id: sheet.id,
           notebookId: sheet.notebookId,
           title: sheet.title,
-          sheet: await this.context.dataSources.todoAPI.getTodos(sheet.id),
+          todos: await this.context.dataSources.todoAPI.getTodos(sheet.id),
         };
       });
   }

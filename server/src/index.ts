@@ -9,7 +9,7 @@ import Sheet from './datasources/sheet';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
 
 interface MyContext {
-  user: UserModel;
+  user: UserModel | null;
 }
 interface MyDataSources {
   dataSources: {
