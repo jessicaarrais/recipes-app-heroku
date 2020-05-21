@@ -4,24 +4,12 @@ import gql from 'graphql-tag';
 import Button from '../components/button';
 
 const LOGIN = gql`
-  mutation login($email: String!) {
+  mutation Login($email: String!) {
     login(email: $email) {
       success
       message
       user {
         token
-        notebook {
-          notebook {
-            notebookId
-            title
-            sheet {
-              id
-              sheetId
-              text
-              isChecked
-            }
-          }
-        }
       }
     }
   }
@@ -40,7 +28,7 @@ function Login() {
       }
       localStorage.setItem('token', data.login.user.token);
       client.writeData({
-        data: { isLoggedIn: true, notebook: data.login.user.notebook.notebook },
+        data: { isLoggedIn: true },
       });
     },
   });
@@ -51,8 +39,7 @@ function Login() {
   return (
     <div>
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={() => {
           login({ variables: { email: inputLogin } });
         }}
       >
