@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import Todo from './todo';
+import Todo, { TODO_FRAGMENT } from './todo';
 import Button from './button';
 import { useMutation } from '@apollo/react-hooks';
+
+export const SHEET_FRAGMENT = gql`
+  fragment SheetFragment on Sheet {
+    __typename
+    id
+    notebookId
+    title
+    todos {
+      ...TodoFragment
+    }
+  }
+  ${TODO_FRAGMENT}
+`;
 
 const DELETE_SHEET = gql`
   mutation DeleteSheet($sheetId: ID!, $notebookId: ID!) {
@@ -17,6 +30,19 @@ const DELETE_SHEET = gql`
   }
 `;
 
+const CREATE_TODO = gql`
+  mutation CreateTodo($text: String, $isChecked: Boolean, $sheetId: ID!) {
+    createTodo(text: $text, isChecked: $isChecked, sheetId: $sheetId) {
+      success
+      message
+      sheet {
+        ...SheetFragment
+      }
+    }
+  }
+  ${SHEET_FRAGMENT}
+`;
+
 interface SheetPropsType {
   id: number;
   notebookId: number;
@@ -25,14 +51,37 @@ interface SheetPropsType {
 }
 
 function Sheet(props: SheetPropsType) {
-  const [deleteSheet, { loading, error }] = useMutation(DELETE_SHEET);
+  const [deleteSheet, { error }] = useMutation(DELETE_SHEET);
+  const [createTodo] = useMutation(CREATE_TODO);
+  const [title, setTitle] = useState(props.title);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>An error has ocurred</h1>;
 
   return (
     <li>
-      <h3>{props.title}</h3>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setIsEditingTitle(false);
+        }}
+      >
+        {isEditingTitle ? (
+          <input
+            ref={(ref) => {
+              ref && ref.focus();
+            }}
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={() => setIsEditingTitle(false)}
+          />
+        ) : (
+          <h2 onClick={() => setIsEditingTitle(true)}>
+            {title === '' ? 'Title' : title}
+          </h2>
+        )}
+      </form>
       <ul>
         {props.todos.map((todo: any) => (
           <Todo
@@ -46,6 +95,14 @@ function Sheet(props: SheetPropsType) {
       </ul>
       <Button
         type="button"
+        handleOnClick={() =>
+          createTodo({ variables: { text: 'todo', isChecked: false, sheetId: props.id } })
+        }
+      >
+        New Todo
+      </Button>
+      <Button
+        type="button"
         handleOnClick={() => {
           deleteSheet({
             variables: { sheetId: props.id, notebookId: props.notebookId },
@@ -57,4 +114,5 @@ function Sheet(props: SheetPropsType) {
     </li>
   );
 }
+
 export default Sheet;
