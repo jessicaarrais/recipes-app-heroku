@@ -19,6 +19,10 @@ class Sheet extends DataSource {
     this.context = config.context;
   }
 
+  async getSheet(sheetId: number): Promise<SheetModel> {
+    return await dbSheet.findOne({ where: { id: sheetId } });
+  }
+
   async getSheets(notebookId: number): Promise<Array<SheetGQL>> {
     return await dbSheet
       .findAll({

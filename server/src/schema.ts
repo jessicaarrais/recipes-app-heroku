@@ -14,8 +14,8 @@ export interface NotebookGQL {
 
 export interface SheetGQL {
   id: number;
-  notebookId?: number;
-  title?: string;
+  notebookId: number;
+  title: string;
   todos: Array<TodoGQL>;
 }
 

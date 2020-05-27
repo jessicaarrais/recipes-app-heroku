@@ -38,11 +38,14 @@ const resolvers = {
           sheet: null,
         };
       }
+      const { id, title, notebookId } = await context.dataSources.sheetAPI.getSheet(
+        args.sheetId
+      );
       const todos = await context.dataSources.todoAPI.getTodos(args.sheetId);
       return {
         success: true,
         message: 'Todo created',
-        sheet: { id: args.sheetId, todos: todos },
+        sheet: { id, notebookId, title, todos },
       };
     },
 
@@ -58,11 +61,14 @@ const resolvers = {
           sheet: null,
         };
       }
+      const { id, title, notebookId } = await context.dataSources.sheetAPI.getSheet(
+        args.sheetId
+      );
       const todos = await context.dataSources.todoAPI.getTodos(args.sheetId);
       return {
         success: true,
         message: 'Todo updated',
-        sheet: { id: args.sheetid, todos },
+        sheet: { id, notebookId, title, todos },
       };
     },
 
@@ -75,11 +81,14 @@ const resolvers = {
           sheet: null,
         };
       }
+      const { id, title, notebookId } = await context.dataSources.sheetAPI.getSheet(
+        args.sheetId
+      );
       const todos = await context.dataSources.todoAPI.getTodos(args.sheetId);
       return {
         success: true,
         message: 'Todo deleted',
-        sheet: { id: args.sheetId, todos },
+        sheet: { id, notebookId, title, todos },
       };
     },
 
