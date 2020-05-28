@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from './button';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import Button from './button';
 
 export const TODO_FRAGMENT = gql`
   fragment TodoFragment on Todo {
@@ -11,6 +11,17 @@ export const TODO_FRAGMENT = gql`
     text
     isChecked
   }
+`;
+
+const UPDATE_TODO = gql`
+  mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
+    updateTodo(todoId: $todoId, text: $text, isChecked: $isChecked, sheetId: $sheetId) {
+      todo {
+        ...TodoFragment
+      }
+    }
+  }
+  ${TODO_FRAGMENT}
 `;
 
 const DELETE_TODO = gql`
@@ -34,38 +45,68 @@ interface TodoPropsType {
 }
 
 function Todo(props: TodoPropsType) {
+  const [updateTodo] = useMutation(UPDATE_TODO);
   const [deleteTodo, { error }] = useMutation(DELETE_TODO);
-  const [isChecked, setIsChecked] = useState(props.isChecked);
-  const [text, setText] = useState(props.text);
+  const [newText, setNewText] = useState('');
   const [isEditingText, setIsEditingText] = useState(false);
 
-  if (error) return <h1>An error has occurred</h1>;
+  const handleUpdateTodoCheckbox = (isChecked: boolean): void => {
+    if (isChecked !== props.isChecked) {
+      updateTodo({
+        variables: {
+          todoId: props.id,
+          isChecked,
+          sheetId: props.sheetId,
+        },
+      });
+    }
+  };
+
+  const handleUpdateTodoText = (text: string): void => {
+    setIsEditingText(false);
+    if (text !== props.text) {
+      updateTodo({
+        variables: {
+          todoId: props.id,
+          text,
+          sheetId: props.sheetId,
+        },
+      });
+    }
+  };
+
+  if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
     <li>
       <input
         type="checkbox"
-        checked={isChecked}
-        onChange={(e) => setIsChecked(e.target.checked)}
-      />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsEditingText(false);
+        checked={props.isChecked}
+        onChange={(e) => {
+          handleUpdateTodoCheckbox(e.target.checked);
         }}
-      >
-        {isEditingText ? (
-          <input
-            ref={(ref) => ref && ref.focus()}
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onBlur={() => setIsEditingText(false)}
-          />
-        ) : (
-          <p onClick={() => setIsEditingText(true)}>{text === '' ? 'todo' : text}</p>
-        )}
-      </form>
+      />
+      {isEditingText ? (
+        <input
+          ref={(ref) => ref && ref.focus()}
+          type="text"
+          value={newText}
+          onChange={(e) => setNewText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleUpdateTodoText(newText);
+          }}
+          onBlur={() => handleUpdateTodoText(newText)}
+        />
+      ) : (
+        <p
+          onClick={() => {
+            setIsEditingText(true);
+            setNewText(props.text);
+          }}
+        >
+          {props.text}
+        </p>
+      )}
       <Button
         type="button"
         handleOnClick={() => {

@@ -4,6 +4,8 @@ import {
   SheetUpdateResponseGQL,
   UserResponseGQL,
   UserGQL,
+  TodoCreateResponseGQL,
+  TodoDeleteResponseGQL,
 } from './schema';
 
 const resolvers = {
@@ -25,7 +27,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
+    createTodo: async (_, args, context: Context): Promise<TodoCreateResponseGQL> => {
       const response = await context.dataSources.todoAPI.createTodo({
         text: args.text,
         isChecked: args.isChecked,
@@ -58,21 +60,22 @@ const resolvers = {
         return {
           success: false,
           message: 'Failed updating todo',
-          sheet: null,
+          todo: null,
         };
       }
-      const { id, title, notebookId } = await context.dataSources.sheetAPI.getSheet(
-        args.sheetId
-      );
-      const todos = await context.dataSources.todoAPI.getTodos(args.sheetId);
       return {
         success: true,
         message: 'Todo updated',
-        sheet: { id, notebookId, title, todos },
+        todo: {
+          id: todo.id,
+          sheetId: todo.sheetId,
+          text: todo.text,
+          isChecked: todo.isChecked,
+        },
       };
     },
 
-    deleteTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
+    deleteTodo: async (_, args, context: Context): Promise<TodoDeleteResponseGQL> => {
       const todo = await context.dataSources.todoAPI.deleteTodo(args.todoId);
       if (!todo) {
         return {

@@ -32,7 +32,19 @@ export interface UserResponseGQL {
   user: UserGQL;
 }
 
+export interface TodoCreateResponseGQL {
+  success: Boolean;
+  message: string;
+  sheet: SheetGQL;
+}
+
 export interface TodoUpdateResponseGQL {
+  success: Boolean;
+  message: string;
+  todo: TodoGQL;
+}
+
+export interface TodoDeleteResponseGQL {
   success: Boolean;
   message: string;
   sheet: SheetGQL;
@@ -50,7 +62,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createTodo(text: String, isChecked: Boolean, sheetId: ID!): TodoUpdateResponse
+    createTodo(text: String, isChecked: Boolean, sheetId: ID!): TodoCreateResponse
 
     updateTodo(
       todoId: ID!
@@ -59,7 +71,7 @@ const typeDefs = gql`
       sheetId: ID!
     ): TodoUpdateResponse
 
-    deleteTodo(todoId: ID!, sheetId: ID!): TodoUpdateResponse
+    deleteTodo(todoId: ID!, sheetId: ID!): TodoDeleteResponse
 
     createSheet(title: String, notebookId: ID!): SheetUpdateResponse
 
@@ -80,7 +92,19 @@ const typeDefs = gql`
     user: User
   }
 
+  type TodoCreateResponse {
+    success: Boolean
+    message: String
+    sheet: Sheet
+  }
+
   type TodoUpdateResponse {
+    success: Boolean
+    message: String
+    todo: Todo
+  }
+
+  type TodoDeleteResponse {
     success: Boolean
     message: String
     sheet: Sheet

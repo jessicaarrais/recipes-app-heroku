@@ -42,7 +42,7 @@ function Notebook() {
   const [createSheet] = useMutation(CREATE_SHEET);
 
   if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>An error has ocurred</h1>;
+  if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
     <div>

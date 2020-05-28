@@ -1,5 +1,5 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { dbTodo, TodoModel } from '../store';
+import { dbTodo, TodoModel, db } from '../store';
 import { Context } from '..';
 import { TodoGQL } from '../schema';
 
@@ -40,13 +40,12 @@ class Todo extends DataSource {
     return await dbTodo.create({ text, isChecked, sheetId });
   }
 
-  async updateTodo(
-    updatedTodo: UpdatedTodo,
-    todoId: number
-  ): Promise<[number, TodoModel[]]> {
-    return await dbTodo.update(updatedTodo, {
-      where: { id: todoId },
-    });
+  async updateTodo(updatedTodo: UpdatedTodo, todoId: number): Promise<TodoModel> {
+    const todo = await dbTodo.findOne({ where: { id: todoId } });
+    if (!todo) {
+      return null;
+    }
+    return await todo.update(updatedTodo);
   }
 
   async deleteTodo(todoId: number): Promise<boolean> {

@@ -56,8 +56,7 @@ function Sheet(props: SheetPropsType) {
   const [title, setTitle] = useState(props.title);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  if (error) return <h1>An error has ocurred</h1>;
-
+  if (error) return <h1>An error has occurred. ${error.message}</h1>;
   return (
     <li>
       <form
