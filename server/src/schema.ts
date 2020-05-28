@@ -50,7 +50,19 @@ export interface TodoDeleteResponseGQL {
   sheet: SheetGQL;
 }
 
+export interface SheetCreateResponseGQL {
+  success: Boolean;
+  message: string;
+  notebook: NotebookGQL;
+}
+
 export interface SheetUpdateResponseGQL {
+  success: Boolean;
+  message: string;
+  sheet: SheetGQL;
+}
+
+export interface SheetDeleteResponseGQL {
   success: Boolean;
   message: string;
   notebook: NotebookGQL;
@@ -73,11 +85,11 @@ const typeDefs = gql`
 
     deleteTodo(todoId: ID!, sheetId: ID!): TodoDeleteResponse
 
-    createSheet(title: String, notebookId: ID!): SheetUpdateResponse
+    createSheet(title: String, notebookId: ID!): SheetCreateResponse
 
     updateSheet(sheetId: ID!, title: String, notebookId: ID!): SheetUpdateResponse
 
-    deleteSheet(sheetId: ID!, notebookId: ID!): SheetUpdateResponse
+    deleteSheet(sheetId: ID!, notebookId: ID!): SheetDeleteResponse
 
     signin(email: String): UserResponse
 
@@ -110,7 +122,19 @@ const typeDefs = gql`
     sheet: Sheet
   }
 
+  type SheetCreateResponse {
+    success: Boolean
+    message: String
+    notebook: Notebook
+  }
+
   type SheetUpdateResponse {
+    success: Boolean
+    message: String
+    sheet: Sheet
+  }
+
+  type SheetDeleteResponse {
     success: Boolean
     message: String
     notebook: Notebook

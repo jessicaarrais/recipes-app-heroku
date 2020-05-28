@@ -45,8 +45,12 @@ class Sheet extends DataSource {
     });
   }
 
-  async updateSheet(updatedSheet: UpdatedSheet, sheetId: number): Promise<Array<any>> {
-    return dbSheet.update(updatedSheet, { where: { id: sheetId } });
+  async updateSheet(updatedSheet: UpdatedSheet, sheetId: number): Promise<SheetModel> {
+    const sheet = await dbSheet.findOne({ where: { id: sheetId } });
+    if (!sheet) {
+      return null;
+    }
+    return await sheet.update(updatedSheet);
   }
 
   async deleteSheet(sheetId: number): Promise<boolean> {

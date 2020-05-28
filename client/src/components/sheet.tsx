@@ -17,6 +17,17 @@ export const SHEET_FRAGMENT = gql`
   ${TODO_FRAGMENT}
 `;
 
+const UPDATE_SHEET = gql`
+  mutation UpdateSheet($sheetId: ID!, $title: String, $notebookId: ID!) {
+    updateSheet(sheetId: $sheetId, title: $title, notebookId: $notebookId) {
+      sheet {
+        id
+        title
+      }
+    }
+  }
+`;
+
 const DELETE_SHEET = gql`
   mutation DeleteSheet($sheetId: ID!, $notebookId: ID!) {
     deleteSheet(sheetId: $sheetId, notebookId: $notebookId) {
@@ -51,36 +62,47 @@ interface SheetPropsType {
 }
 
 function Sheet(props: SheetPropsType) {
+  const [updateSheet] = useMutation(UPDATE_SHEET);
   const [deleteSheet, { error }] = useMutation(DELETE_SHEET);
   const [createTodo] = useMutation(CREATE_TODO);
-  const [title, setTitle] = useState(props.title);
+  const [newTitle, setNewTitle] = useState(props.title);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+
+  const handleUpdateSheetTitle = (title: string): void => {
+    setIsEditingTitle(false);
+    if (title !== props.title) {
+      updateSheet({
+        variables: { sheetId: props.id, title, notebookId: props.notebookId },
+      });
+    }
+  };
 
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
   return (
     <li>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsEditingTitle(false);
-        }}
-      >
-        {isEditingTitle ? (
-          <input
-            ref={(ref) => {
-              ref && ref.focus();
-            }}
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onBlur={() => setIsEditingTitle(false)}
-          />
-        ) : (
-          <h2 onClick={() => setIsEditingTitle(true)}>
-            {title === '' ? 'Title' : title}
-          </h2>
-        )}
-      </form>
+      {isEditingTitle ? (
+        <input
+          ref={(ref) => {
+            ref && ref.focus();
+          }}
+          type="text"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleUpdateSheetTitle(newTitle);
+          }}
+          onBlur={() => handleUpdateSheetTitle(newTitle)}
+        />
+      ) : (
+        <h2
+          onClick={() => {
+            setIsEditingTitle(true);
+            setNewTitle(props.title);
+          }}
+        >
+          {props.title}
+        </h2>
+      )}
       <ul>
         {props.todos.map((todo: any) => (
           <Todo

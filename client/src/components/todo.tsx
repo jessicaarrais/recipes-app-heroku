@@ -47,7 +47,7 @@ interface TodoPropsType {
 function Todo(props: TodoPropsType) {
   const [updateTodo] = useMutation(UPDATE_TODO);
   const [deleteTodo, { error }] = useMutation(DELETE_TODO);
-  const [newText, setNewText] = useState('');
+  const [newText, setNewText] = useState(props.text);
   const [isEditingText, setIsEditingText] = useState(false);
 
   const handleUpdateTodoCheckbox = (isChecked: boolean): void => {

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks';
 import Sheet, { SHEET_FRAGMENT } from './sheet';
 import Button from './button';
 
-const NOTEBOOK_FRAGMENT = gql`
+export const NOTEBOOK_FRAGMENT = gql`
   fragment NotebookFragment on Notebook {
     __typename
     id

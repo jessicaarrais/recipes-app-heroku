@@ -6,6 +6,8 @@ import {
   UserGQL,
   TodoCreateResponseGQL,
   TodoDeleteResponseGQL,
+  SheetDeleteResponseGQL,
+  SheetCreateResponseGQL,
 } from './schema';
 
 const resolvers = {
@@ -95,7 +97,7 @@ const resolvers = {
       };
     },
 
-    createSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
+    createSheet: async (_, args, context: Context): Promise<SheetCreateResponseGQL> => {
       const sheetModel = await context.dataSources.sheetAPI.createSheet({
         title: args.title,
         notebookId: args.notebookId,
@@ -124,18 +126,22 @@ const resolvers = {
         return {
           success: false,
           message: 'Failed to update sheet',
-          notebook: null,
+          sheet: null,
         };
       }
-      const sheets = await context.dataSources.sheetAPI.getSheets(args.notebookId);
       return {
         success: true,
         message: 'Sheet updated',
-        notebook: { id: args.notebookId, sheets },
+        sheet: {
+          id: sheet.id,
+          notebookId: sheet.notebookId,
+          title: sheet.title,
+          todos: await context.dataSources.todoAPI.getTodos(sheet.id),
+        },
       };
     },
 
-    deleteSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
+    deleteSheet: async (_, args, context: Context): Promise<SheetDeleteResponseGQL> => {
       const sheet = await context.dataSources.sheetAPI.deleteSheet(args.sheetId);
       if (!sheet) {
         return {
