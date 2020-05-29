@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
-import Button from './button';
+import Button from './Button';
 
 function NavigationBar() {
   const client = useApolloClient();

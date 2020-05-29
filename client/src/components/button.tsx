@@ -1,12 +1,12 @@
 import React, { ButtonHTMLAttributes } from 'react';
 
-interface PropsType {
+interface Props {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   children?: ButtonHTMLAttributes<HTMLButtonElement>['children'];
   handleOnClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
-function Button(props: PropsType) {
+function Button(props: Props) {
   return (
     <button type={props.type} onClick={props.handleOnClick}>
       {props.children}

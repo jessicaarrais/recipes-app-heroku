@@ -1,5 +1,5 @@
 import React from 'react';
-import Notebook from '../components/notebook';
+import Notebook from '../components/Notebook';
 
 function Home() {
   return (

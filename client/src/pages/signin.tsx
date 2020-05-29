@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import Button from '../components/button';
+import Button from '../components/Button';
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String) {

@@ -11,10 +11,10 @@ import { HttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
 
 import { typeDefs } from './resolvers';
-import Login from './pages/login';
-import Home from './pages/home';
-import NavigationBar from './components/navigationbar';
-import Signin from './pages/signin';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import NavigationBar from './components/NavigationBar';
+import Signin from './pages/Signin';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({

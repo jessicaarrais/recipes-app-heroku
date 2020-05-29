@@ -1,8 +1,8 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import Sheet, { SHEET_FRAGMENT } from './sheet';
-import Button from './button';
+import { useQuery } from '@apollo/react-hooks';
+import Sheet, { SHEET_FRAGMENT } from './Sheet';
+import CreateSheetButton from './CreateSheetButton';
 
 export const NOTEBOOK_FRAGMENT = gql`
   fragment NotebookFragment on Notebook {
@@ -26,37 +26,15 @@ const GET_NOTEBOOK = gql`
   ${NOTEBOOK_FRAGMENT}
 `;
 
-const CREATE_SHEET = gql`
-  mutation CreateSheet($title: String, $notebookId: ID!) {
-    createSheet(title: $title, notebookId: $notebookId) {
-      notebook {
-        ...NotebookFragment
-      }
-    }
-  }
-  ${NOTEBOOK_FRAGMENT}
-`;
-
 function Notebook() {
   const { data, loading, error } = useQuery(GET_NOTEBOOK);
-  const [createSheet] = useMutation(CREATE_SHEET);
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
     <div>
-      <Button
-        type="button"
-        handleOnClick={() =>
-          createSheet({
-            variables: { title: 'Title', notebookId: data.user.notebook.id },
-          })
-        }
-      >
-        New Sheet
-      </Button>
-
+      <CreateSheetButton title={'Title'} notebookId={data.user.notebook.id} />
       <ul>
         {data?.user.notebook.sheets.map((sheet: any) => (
           <Sheet
