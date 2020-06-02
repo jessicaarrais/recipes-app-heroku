@@ -34,7 +34,7 @@ function Notebook() {
 
   return (
     <div>
-      <CreateSheetButton title={'Title'} notebookId={data.user.notebook.id} />
+      <CreateSheetButton title="Title" notebookId={data.user.notebook.id} />
       <ul>
         {data?.user.notebook.sheets.map((sheet: any) => (
           <Sheet

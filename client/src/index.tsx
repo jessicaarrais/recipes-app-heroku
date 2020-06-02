@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { setContext } from 'apollo-link-context';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import { createHttpLink } from 'apollo-link-http';
 
 import gql from 'graphql-tag';
 
@@ -16,16 +17,21 @@ import Home from './pages/Home';
 import NavigationBar from './components/NavigationBar';
 import Signin from './pages/Signin';
 
-const cache = new InMemoryCache();
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'http://localhost:4000/graphql',
+const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
+const authLink = setContext((_, { headers }) => {
+  return {
     headers: {
+      ...headers,
       authorization: localStorage.getItem('token'),
       'client-name': 'todo-app',
       'client-version': '1.0.0',
     },
-  }),
+  };
+});
+
+const cache = new InMemoryCache();
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache,
   typeDefs,
   resolvers: {},
