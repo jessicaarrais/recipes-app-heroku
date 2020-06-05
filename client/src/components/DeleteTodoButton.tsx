@@ -27,7 +27,15 @@ function DeleteTodoButton(props: Props) {
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
-    <Button type="button" handleOnClick={() => deleteTodo({ variables: props })}>
+    <Button
+      type="button"
+      styleType="danger"
+      icon="clear"
+      handleOnClick={() => deleteTodo({ variables: props })}
+      handleOnKeyDown={(e) => {
+        if (e.key === 'Enter') deleteTodo({ variables: props });
+      }}
+    >
       delete todo
     </Button>
   );

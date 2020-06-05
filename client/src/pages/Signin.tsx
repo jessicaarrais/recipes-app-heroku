@@ -1,7 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import gql from 'graphql-tag';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import Button from '../components/Button';
+
+export const card: CSSProperties = {
+  width: '400px',
+  height: '320px',
+  margin: '32px',
+  border: 'solid 1px gray',
+  borderRadius: '16px',
+};
+export const input: CSSProperties = {
+  display: 'block',
+  width: '240px',
+  height: '28px',
+  margin: '10% auto',
+  border: 'solid 1px gray',
+  borderRadius: '2px',
+};
+export const btn: CSSProperties = {
+  display: 'block',
+};
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String) {
@@ -37,18 +56,25 @@ function Signin() {
   return (
     <div>
       <form
+        style={card}
         onSubmit={(e) => {
           e.preventDefault();
           signin({ variables: { email: inputSignin } });
         }}
       >
         <input
+          placeholder="E-mail"
           value={inputSignin}
+          style={input}
           onChange={(e) => {
             setInputSignin(e.target.value);
           }}
         />
-        <Button type="submit">Signin</Button>
+        <div style={btn}>
+          <Button type="submit" styleType="default">
+            Signin
+          </Button>
+        </div>
       </form>
       {errorMessage && <p>{errorMessage}</p>}
     </div>

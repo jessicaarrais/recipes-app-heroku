@@ -31,7 +31,15 @@ function CreateTodoButton(props: Props) {
   const [createTodo] = useMutation(CREATE_TODO);
 
   return (
-    <Button type="button" handleOnClick={() => createTodo({ variables: props })}>
+    <Button
+      type="button"
+      styleType="primary"
+      icon="add"
+      handleOnClick={() => createTodo({ variables: props })}
+      handleOnKeyDown={(e) => {
+        if (e.key === 'Enter') createTodo({ variables: props });
+      }}
+    >
       new todo
     </Button>
   );

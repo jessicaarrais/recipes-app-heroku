@@ -52,9 +52,16 @@ function SheetTitle(props: Props) {
         />
       ) : (
         <h2
+          tabIndex={0}
           onClick={() => {
             setIsEditingTitle(true);
             setNewTitle(props.title);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setIsEditingTitle(true);
+              setNewTitle(props.title);
+            }
           }}
         >
           {props.title}

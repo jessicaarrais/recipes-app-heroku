@@ -29,7 +29,12 @@ function DeleteUserButton() {
 
   return (
     <div>
-      <Button type="button" handleOnClick={() => deleteUser()}>
+      <Button
+        type="button"
+        styleType="danger"
+        icon="delete_forever"
+        handleOnClick={() => deleteUser()}
+      >
         delete account
       </Button>
     </div>

@@ -25,7 +25,15 @@ function DeleteSheetButton(props: Props) {
   const [deleteSheet] = useMutation(DELETE_SHEET);
 
   return (
-    <Button type="button" handleOnClick={() => deleteSheet({ variables: props })}>
+    <Button
+      type="button"
+      styleType="danger"
+      icon="delete"
+      handleOnClick={() => deleteSheet({ variables: props })}
+      handleOnKeyDown={(e) => {
+        if (e.key === 'Enter') deleteSheet({ variables: props });
+      }}
+    >
       delete sheet
     </Button>
   );

@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import DeleteTodoButton from './DeleteTodoButton';
+
+const p: CSSProperties = {
+  display: 'inline-block',
+};
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
@@ -38,20 +43,31 @@ function TodoText(props: Props) {
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
-    <div>
+    <>
       {isEditingText ? (
-        <input
-          ref={(ref) => ref && ref.focus()}
-          type="text"
-          value={newText}
-          onChange={(e) => setNewText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleUpdateTodoText(newText);
-          }}
-          onBlur={() => handleUpdateTodoText(newText)}
-        />
+        <>
+          <input
+            ref={(ref) => ref && ref.focus()}
+            type="text"
+            value={newText}
+            onChange={(e) => setNewText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleUpdateTodoText(newText);
+            }}
+            onBlur={() => handleUpdateTodoText(newText)}
+          />
+          <DeleteTodoButton todoId={props.todoId} sheetId={props.sheetId} />
+        </>
       ) : (
         <p
+          style={p}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setIsEditingText(true);
+              setNewText(props.text);
+            }
+          }}
           onClick={() => {
             setIsEditingText(true);
             setNewText(props.text);
@@ -60,7 +76,7 @@ function TodoText(props: Props) {
           {props.text}
         </p>
       )}
-    </div>
+    </>
   );
 }
 

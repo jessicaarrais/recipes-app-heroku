@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
 import { setContext } from 'apollo-link-context';
 import './index.css';
@@ -16,6 +16,12 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import NavigationBar from './components/NavigationBar';
 import Signin from './pages/Signin';
+
+const page: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-around',
+};
 
 const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
 const authLink = setContext((_, { headers }) => {
@@ -54,7 +60,7 @@ function LandingPage() {
       <Home />
     </div>
   ) : (
-    <div>
+    <div style={page}>
       <Login />
       <Signin />
     </div>
