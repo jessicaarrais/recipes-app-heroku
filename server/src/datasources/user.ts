@@ -5,6 +5,11 @@ import { db, dbUser } from '../store';
 import { Context } from '..';
 import { UserGQL } from '../schema';
 
+interface NewUser {
+  email: string;
+  username: string;
+}
+
 class User extends DataSource {
   context: Context;
 
@@ -21,6 +26,7 @@ class User extends DataSource {
 
     return {
       id: user.id,
+      username: user.username,
       email: user.email,
       token: user.token,
       notebook: {
@@ -30,15 +36,18 @@ class User extends DataSource {
     };
   }
 
-  async createUser(email: string): Promise<UserGQL> {
+  async createUser({ email, username }: NewUser): Promise<UserGQL> {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
 
     await db.sync();
     const emailExists = await dbUser.findOne({ where: { email } });
+    const usernameExists = await dbUser.findOne({ where: { username } });
     if (emailExists) throw new Error('Email already exists.');
+    if (usernameExists) throw new Error('Username already exists.');
 
     const newUser = await dbUser.create({
       email,
+      username,
       token: Buffer.from(email).toString('base64'),
     });
     const newNotebook = await Notebook.create(newUser.id);
@@ -50,6 +59,7 @@ class User extends DataSource {
 
     return {
       id: newUser.id,
+      username: newUser.username,
       email: newUser.email,
       token: newUser.token,
       notebook: { id: newNotebook.id, sheets: [] },

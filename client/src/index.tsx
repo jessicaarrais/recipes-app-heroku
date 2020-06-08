@@ -1,27 +1,16 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { setContext } from 'apollo-link-context';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createHttpLink } from 'apollo-link-http';
-
+import { setContext } from 'apollo-link-context';
 import gql from 'graphql-tag';
-
 import { typeDefs } from './resolvers';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import NavigationBar from './components/NavigationBar';
-import Signin from './pages/Signin';
-
-const page: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-};
+import LoggedIn from './pages/LoggedIn';
+import LoggedOut from './pages/LoggedOut';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
 const authLink = setContext((_, { headers }) => {
@@ -43,7 +32,11 @@ const client = new ApolloClient({
   resolvers: {},
 });
 
-cache.writeData({ data: { isLoggedIn: !!localStorage.getItem('token'), notebook: [] } });
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('token'),
+  },
+});
 
 const IS_LOGGED_IN = gql`
   query IsLoggedIn {
@@ -54,17 +47,7 @@ const IS_LOGGED_IN = gql`
 function LandingPage() {
   const { data } = useQuery(IS_LOGGED_IN);
 
-  return data.isLoggedIn ? (
-    <div>
-      <NavigationBar />
-      <Home />
-    </div>
-  ) : (
-    <div style={page}>
-      <Login />
-      <Signin />
-    </div>
-  );
+  return data.isLoggedIn ? <LoggedIn /> : <LoggedOut />;
 }
 
 ReactDOM.render(

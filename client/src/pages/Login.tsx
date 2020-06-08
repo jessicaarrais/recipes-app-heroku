@@ -10,6 +10,7 @@ const LOGIN = gql`
       success
       message
       user {
+        username
         token
       }
     }
@@ -28,9 +29,8 @@ function Login() {
         return;
       }
       localStorage.setItem('token', data.login.user.token);
-      client.writeData({
-        data: { isLoggedIn: true },
-      });
+      localStorage.setItem('username', data.login.user.username);
+      client.writeData({ data: { isLoggedIn: true } });
     },
   });
 

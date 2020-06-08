@@ -2,6 +2,7 @@ import { gql } from 'apollo-server';
 
 export interface UserGQL {
   id: number;
+  username: string;
   email: string;
   token: string;
   notebook: NotebookGQL;
@@ -91,7 +92,7 @@ const typeDefs = gql`
 
     deleteSheet(sheetId: ID!, notebookId: ID!): SheetDeleteResponse
 
-    signin(email: String): UserResponse
+    signin(email: String!, username: String!): UserResponse
 
     login(email: String): UserResponse
 
@@ -161,6 +162,7 @@ const typeDefs = gql`
 
   type User {
     id: ID!
+    username: String
     email: String
     token: String
     notebook: Notebook

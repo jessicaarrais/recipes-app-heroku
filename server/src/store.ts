@@ -10,6 +10,7 @@ export const db = new Sequelize('database', 'username', 'password', {
 /* User Model */
 export interface UserModel extends Model {
   id: number;
+  username: string;
   email: string;
   notebookId: number;
   token: string;
@@ -26,7 +27,22 @@ export const dbUser = <UserStatic>db.define('user', {
     primaryKey: true,
     autoIncrement: true,
   },
-  email: DataType.STRING,
+  username: {
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  email: {
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      notEmpty: true,
+    },
+  },
   notebookId: DataType.INTEGER,
   token: DataType.STRING,
   createdAt: DataType.DATE,

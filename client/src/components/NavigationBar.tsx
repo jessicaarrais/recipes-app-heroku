@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
-import Button from './Button';
 import Settings from '../pages/Settings';
+import Button from './Button';
 
 const nav: CSSProperties = {
   display: 'flex',
@@ -10,19 +10,22 @@ const nav: CSSProperties = {
   boxShadow: '0 0 3px 0 gray',
 };
 
-function NavigationBar() {
+interface Props {
+  username: string;
+}
+
+function NavigationBar(props: Props) {
   const client = useApolloClient();
 
   const handleLogout = () => {
     localStorage.clear();
     client.cache.reset();
-    client.writeData({
-      data: { isLoggedIn: false, notebook: [] },
-    });
+    client.writeData({ data: { isLoggedIn: false } });
   };
 
   return (
     <nav style={nav}>
+      <h3>{props.username}</h3>
       <Button styleType="default" icon="menu" />
       <Button
         type="button"

@@ -1,10 +1,15 @@
 import React from 'react';
 import Notebook from '../components/Notebook';
 
-function Home() {
+interface Props {
+  notebookId: number;
+  sheets: [];
+}
+
+function Home(props: Props) {
   return (
     <div>
-      <Notebook />
+      <Notebook id={props.notebookId} sheets={props.sheets} />
     </div>
   );
 }

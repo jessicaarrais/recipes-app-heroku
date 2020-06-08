@@ -16,6 +16,7 @@ const resolvers = {
       context.user
         ? {
             id: context.user.id,
+            username: context.user.username,
             email: context.user.email,
             token: context.user.token,
             notebook: {
@@ -160,7 +161,10 @@ const resolvers = {
 
     signin: async (_, args, context: Context): Promise<UserResponseGQL> => {
       try {
-        const newUser = await context.dataSources.userAPI.createUser(args.email);
+        const newUser = await context.dataSources.userAPI.createUser({
+          email: args.email,
+          username: args.username,
+        });
         return {
           success: true,
           message: 'Created',
@@ -195,6 +199,7 @@ const resolvers = {
     deleteUser: async (_, __, context: Context): Promise<UserResponseGQL> => {
       const user = {
         id: context.user.id,
+        username: context.user.username,
         email: context.user.email,
         token: context.user.token,
         notebook: {

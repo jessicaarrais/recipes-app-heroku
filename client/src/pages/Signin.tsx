@@ -23,11 +23,13 @@ export const btn: CSSProperties = {
 };
 
 const CREATE_USER = gql`
-  mutation CreateUser($email: String) {
-    signin(email: $email) {
+  mutation CreateUser($email: String!, $username: String!) {
+    signin(email: $email, username: $username) {
+      __typename
       success
       message
       user {
+        username
         token
       }
     }
@@ -36,7 +38,8 @@ const CREATE_USER = gql`
 
 function Signin() {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [inputSignin, setInputSignin] = useState('');
+  const [emailInputSignin, setEmailInputSignin] = useState('');
+  const [usernameInputSignin, setUsernameInputSignin] = useState('');
   const client = useApolloClient();
 
   const [signin, { error, loading }] = useMutation(CREATE_USER, {
@@ -46,6 +49,7 @@ function Signin() {
         return;
       }
       localStorage.setItem('token', data.signin.user.token);
+      localStorage.setItem('username', data.signin.user.username);
       client.writeData({ data: { isLoggedIn: true } });
     },
   });
@@ -54,20 +58,29 @@ function Signin() {
   if (error) return <h1>An error has ocurred</h1>;
 
   return (
-    <div>
+    <div style={card}>
       <form
-        style={card}
         onSubmit={(e) => {
           e.preventDefault();
-          signin({ variables: { email: inputSignin } });
+          signin({
+            variables: { email: emailInputSignin, username: usernameInputSignin },
+          });
         }}
       >
         <input
           placeholder="E-mail"
-          value={inputSignin}
+          value={emailInputSignin}
           style={input}
           onChange={(e) => {
-            setInputSignin(e.target.value);
+            setEmailInputSignin(e.target.value);
+          }}
+        />
+        <input
+          placeholder="Username"
+          value={usernameInputSignin}
+          style={input}
+          onChange={(e) => {
+            setUsernameInputSignin(e.target.value);
           }}
         />
         <div style={btn}>
