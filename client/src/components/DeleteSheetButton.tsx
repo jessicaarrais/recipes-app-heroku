@@ -30,9 +30,6 @@ function DeleteSheetButton(props: Props) {
       styleType="danger"
       icon="delete"
       handleOnClick={() => deleteSheet({ variables: props })}
-      handleOnKeyDown={(e) => {
-        if (e.key === 'Enter') deleteSheet({ variables: props });
-      }}
     >
       delete sheet
     </Button>
