@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useHistory } from 'react-router';
 import gql from 'graphql-tag';
 import Button from './Button';
 
@@ -16,11 +17,13 @@ const DELETE_USER = gql`
 
 function DeleteUserButton() {
   const client = useApolloClient();
+  const history = useHistory();
   const [deleteUser, { loading, error }] = useMutation(DELETE_USER, {
     onCompleted() {
       localStorage.clear();
       client.cache.reset();
       client.writeData({ data: { isLoggedIn: false, notebook: [] } });
+      history.push('/');
     },
   });
 
