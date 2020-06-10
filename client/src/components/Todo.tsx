@@ -1,7 +1,8 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import gql from 'graphql-tag';
 import TodoCheckbox from './TodoCheckbox';
 import TodoText from './TodoText';
+import DeleteTodoButton from './DeleteTodoButton';
 
 const li: CSSProperties = {
   display: 'flex',
@@ -28,14 +29,22 @@ interface Props {
 }
 
 function Todo(props: Props) {
+  const [isShowingDeleteTodoButton, setIsShowingDeleteTodoButton] = useState(false);
   return (
-    <li style={li}>
+    <li
+      style={li}
+      onFocus={() => setIsShowingDeleteTodoButton(true)}
+      onBlur={() => setIsShowingDeleteTodoButton(false)}
+    >
       <TodoCheckbox
         todoId={props.id}
         isChecked={props.isChecked}
         sheetId={props.sheetId}
       />
       <TodoText todoId={props.id} text={props.text} sheetId={props.sheetId} />
+      {isShowingDeleteTodoButton && (
+        <DeleteTodoButton todoId={props.id} sheetId={props.sheetId} />
+      )}
     </li>
   );
 }

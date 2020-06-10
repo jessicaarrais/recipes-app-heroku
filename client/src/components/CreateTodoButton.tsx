@@ -36,9 +36,6 @@ function CreateTodoButton(props: Props) {
       styleType="primary"
       icon="add"
       handleOnClick={() => createTodo({ variables: props })}
-      handleOnKeyDown={(e) => {
-        if (e.key === 'Enter') createTodo({ variables: props });
-      }}
     >
       new todo
     </Button>

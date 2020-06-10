@@ -1,7 +1,6 @@
 import React, { useState, CSSProperties } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import DeleteTodoButton from './DeleteTodoButton';
 
 const p: CSSProperties = {
   display: 'inline-block',
@@ -56,7 +55,6 @@ function TodoText(props: Props) {
             }}
             onBlur={() => handleUpdateTodoText(newText)}
           />
-          <DeleteTodoButton todoId={props.todoId} sheetId={props.sheetId} />
         </>
       ) : (
         <p
