@@ -1,19 +1,43 @@
-import React, { CSSProperties } from 'react';
-import Login from './Login';
-import Signin from './Signin';
+import React, { CSSProperties, useState } from 'react';
+import Login from '../components/Login';
+import Signin from '../components/Signin';
+import Button from '../components/Button';
 
-const page: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-around',
+const section: CSSProperties = {
+  width: '100%',
+  maxWidth: '968px',
+  margin: '0 auto',
 };
 
 function LoggedOut() {
+  const [login, setLogin] = useState(false);
+  const [signin, setSignin] = useState(false);
   return (
-    <div style={page}>
-      <Login />
-      <Signin />
-    </div>
+    <section style={section}>
+      <h1>Recipes</h1>
+      <Button
+        type="button"
+        styleType="default"
+        handleOnClick={() => {
+          setLogin(true);
+          setSignin(false);
+        }}
+      >
+        Login
+      </Button>
+      <Button
+        type="button"
+        styleType="default"
+        handleOnClick={() => {
+          setSignin(true);
+          setLogin(false);
+        }}
+      >
+        Signin
+      </Button>
+      {login && <Login />}
+      {signin && <Signin />}
+    </section>
   );
 }
 

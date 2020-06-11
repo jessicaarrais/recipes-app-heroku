@@ -3,6 +3,7 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { useHistory } from 'react-router';
 import Button from '../components/Button';
 import DeleteUserButton from '../components/DeleteUserButton';
+import { Link } from 'react-router-dom';
 
 function Settings() {
   const client = useApolloClient();
@@ -15,13 +16,9 @@ function Settings() {
     history.push('/');
   };
 
-  const navigateToHome = () => history.push('/home');
-
   return (
     <>
-      <Button type="button" styleType="default" handleOnClick={navigateToHome}>
-        Back to Home
-      </Button>
+      <Link to="/home">Back to Home</Link>
       <DeleteUserButton />
       <Button type="button" styleType="default" handleOnClick={handleLogout}>
         Logout

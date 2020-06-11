@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { SHEET_FRAGMENT } from '../components/Sheet';
 import NavigationBar from '../components/NavigationBar';
 import Home from './Home';
+import { Route, Switch, Redirect } from 'react-router';
+import Settings from './Settings';
+
+const section: CSSProperties = {
+  width: '100%',
+  maxWidth: '968px',
+  margin: '0 auto',
+};
 
 export const NOTEBOOK_FRAGMENT = gql`
   fragment NotebookFragment on Notebook {
@@ -37,7 +45,21 @@ function LoggedIn() {
   return (
     <div>
       <NavigationBar username={data.user.username} />
-      <Home notebookId={data.user.notebook.id} sheets={data.user.notebook.sheets} />
+      <section style={section}>
+        <Switch>
+          <Redirect exact from="/" to="/home" />
+          <Route
+            path="/home"
+            render={() => (
+              <Home
+                notebookId={data.user.notebook.id}
+                sheets={data.user.notebook.sheets}
+              />
+            )}
+          />
+          <Route path="/account-settings" component={Settings} />
+        </Switch>
+      </section>
     </div>
   );
 }

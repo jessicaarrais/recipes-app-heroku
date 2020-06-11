@@ -29,7 +29,6 @@ function Login() {
         return;
       }
       localStorage.setItem('token', data.login.user.token);
-      localStorage.setItem('username', data.login.user.username);
       client.writeData({ data: { isLoggedIn: true } });
     },
   });

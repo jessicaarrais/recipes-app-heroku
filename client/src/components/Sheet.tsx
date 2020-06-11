@@ -6,10 +6,8 @@ import DeleteSheetButton from './DeleteSheetButton';
 import SheetTitle from './SheetTitle';
 
 const li: CSSProperties = {
-  width: '90%',
-  maxWidth: '1000px',
   padding: '24px',
-  margin: '16px',
+  marginBottom: '16px',
   boxShadow: '1px 1px 3px 1px lightgray',
   borderRadius: '8px',
   listStyle: 'none',

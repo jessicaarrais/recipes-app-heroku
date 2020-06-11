@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, Redirect, Switch } from 'react-router';
+import { Router, Route, Redirect } from 'react-router';
 import { createBrowserHistory } from 'history';
-import './index.css';
-import * as serviceWorker from './serviceWorker';
+import gql from 'graphql-tag';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
-import gql from 'graphql-tag';
 import { typeDefs } from './resolvers';
 import LoggedIn from './pages/LoggedIn';
 import LoggedOut from './pages/LoggedOut';
-import Settings from './pages/Settings';
+import * as serviceWorker from './serviceWorker';
+import './index.css';
 
 const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
 const authLink = setContext((_, { headers }) => {
@@ -49,18 +48,15 @@ const IS_LOGGED_IN = gql`
 
 function LandingPage() {
   const { data } = useQuery(IS_LOGGED_IN);
-  return data.isLoggedIn ? <Redirect to="/home" /> : <LoggedOut />;
+  return data.isLoggedIn ? <LoggedIn /> : <Redirect to="/" />;
 }
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Router history={history}>
-        <Switch>
-          <Route exact path="/" render={() => <LandingPage />} />
-          <Route path="/home" component={LoggedIn} />
-          <Route path="/account-settings" component={Settings} />
-        </Switch>
+        <LandingPage />
+        <Route exact path="/" component={LoggedOut} />
       </Router>
     </ApolloProvider>
   </React.StrictMode>,
