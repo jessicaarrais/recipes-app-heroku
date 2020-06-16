@@ -27,6 +27,7 @@ export const NOTEBOOK_FRAGMENT = gql`
 export const GET_NOTEBOOK = gql`
   query User {
     user {
+      id
       username
       notebook {
         ...NotebookFragment
@@ -57,7 +58,10 @@ function LoggedIn() {
               />
             )}
           />
-          <Route path="/account-settings" component={Settings} />
+          <Route
+            path="/account-settings"
+            render={() => <Settings username={data.user.username} />}
+          />
         </Switch>
       </section>
     </div>

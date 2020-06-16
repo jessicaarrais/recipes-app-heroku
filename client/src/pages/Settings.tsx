@@ -1,11 +1,15 @@
 import React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { useHistory } from 'react-router';
-import Button from '../components/Button';
-import DeleteUserButton from '../components/DeleteUserButton';
 import { Link } from 'react-router-dom';
+import Button from '../components/Button';
+import User from '../components/User';
 
-function Settings() {
+interface Props {
+  username: string;
+}
+
+function Settings(props: Props) {
   const client = useApolloClient();
   const history = useHistory();
 
@@ -19,10 +23,10 @@ function Settings() {
   return (
     <>
       <Link to="/home">Back to Home</Link>
-      <DeleteUserButton />
       <Button type="button" styleType="default" handleOnClick={handleLogout}>
         Logout
       </Button>
+      <User username={props.username} />
     </>
   );
 }

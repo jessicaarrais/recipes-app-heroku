@@ -9,6 +9,7 @@ import {
   SheetDeleteResponseGQL,
   SheetCreateResponseGQL,
 } from './schema';
+import { attachConnectorsToContext } from 'apollo-server';
 
 const resolvers = {
   Query: {
@@ -185,6 +186,25 @@ const resolvers = {
         return {
           success: true,
           message: 'Logged',
+          user,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: error.message,
+          user: null,
+        };
+      }
+    },
+
+    updateUser: async (_, args, context: Context): Promise<UserResponseGQL> => {
+      try {
+        const user = await context.dataSources.userAPI.updateUser({
+          username: args.username,
+        });
+        return {
+          success: true,
+          message: 'Updated',
           user,
         };
       } catch (error) {

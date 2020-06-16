@@ -10,6 +10,10 @@ interface NewUser {
   username: string;
 }
 
+interface UpdatedUser {
+  username: string;
+}
+
 class User extends DataSource {
   context: Context;
 
@@ -40,30 +44,51 @@ class User extends DataSource {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
 
     await db.sync();
-    const emailExists = await dbUser.findOne({ where: { email } });
-    const usernameExists = await dbUser.findOne({ where: { username } });
-    if (emailExists) throw new Error('Email already exists.');
-    if (usernameExists) throw new Error('Username already exists.');
-
-    const newUser = await dbUser.create({
-      email,
-      username,
-      token: Buffer.from(email).toString('base64'),
-    });
-    const newNotebook = await Notebook.create(newUser.id);
-    if (newNotebook) {
-      await newUser.update({
-        notebookId: newNotebook.id,
+    try {
+      const newUser = await dbUser.create({
+        email,
+        username,
+        token: Buffer.from(email).toString('base64'),
       });
+      const newNotebook = await Notebook.create(newUser.id);
+      if (newNotebook) {
+        await newUser.update({
+          notebookId: newNotebook.id,
+        });
+      }
+      return {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        token: newUser.token,
+        notebook: { id: newNotebook.id, sheets: [] },
+      };
+    } catch (error) {
+      throw new Error(error.errors[0].message);
     }
+  }
 
-    return {
-      id: newUser.id,
-      username: newUser.username,
-      email: newUser.email,
-      token: newUser.token,
-      notebook: { id: newNotebook.id, sheets: [] },
-    };
+  async updateUser(updatedUser: UpdatedUser): Promise<UserGQL> {
+    await db.sync();
+    const foundUser = await dbUser.findOne({ where: { id: this.context.user.id } });
+    if (!foundUser) {
+      return null;
+    }
+    try {
+      const user = await foundUser.update(updatedUser);
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        token: user.token,
+        notebook: {
+          id: user.notebookId,
+          sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
+        },
+      };
+    } catch (error) {
+      throw new Error(error.errors[0].message);
+    }
   }
 
   async deleteUser(): Promise<boolean> {

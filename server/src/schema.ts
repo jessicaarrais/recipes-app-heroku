@@ -96,13 +96,9 @@ const typeDefs = gql`
 
     login(email: String): UserResponse
 
-    deleteUser: UserResponse
-  }
+    updateUser(username: String): UserResponse
 
-  type UserResponse {
-    success: Boolean
-    message: String
-    user: User
+    deleteUser: UserResponse
   }
 
   type TodoCreateResponse {
@@ -139,6 +135,12 @@ const typeDefs = gql`
     success: Boolean
     message: String
     notebook: Notebook
+  }
+
+  type UserResponse {
+    success: Boolean
+    message: String
+    user: User
   }
 
   type Todo {
