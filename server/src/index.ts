@@ -1,12 +1,15 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-express';
+import express from 'express';
+import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
 import isEmail from 'isemail';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import { dbUser, UserModel } from './store';
 import User from './datasources/user';
+import Avatar from './datasources/avatar';
 import Todo from './datasources/todo';
 import Sheet from './datasources/sheet';
-import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
+import path from 'path';
 
 interface MyContext {
   user: UserModel | null;
@@ -14,6 +17,7 @@ interface MyContext {
 interface MyDataSources {
   dataSources: {
     userAPI: User;
+    avatarAPI: Avatar;
     sheetAPI: Sheet;
     todoAPI: Todo;
   };
@@ -22,6 +26,7 @@ export type Context = MyContext & MyDataSources;
 
 const dataSources = (): DataSources<Context> => ({
   userAPI: new User(),
+  avatarAPI: new Avatar(),
   sheetAPI: new Sheet(),
   todoAPI: new Todo(),
 });
@@ -42,6 +47,10 @@ const server = new ApolloServer({
   resolvers,
 });
 
-server.listen().then(({ url }) => {
-  console.log(`server running on port ${url}`);
+const app = express();
+app.use('/images', express.static(path.join(__dirname, '../images')));
+server.applyMiddleware({ app });
+
+app.listen(4000, () => {
+  console.log(`server running on port http://localhost:4000`);
 });

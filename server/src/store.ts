@@ -50,6 +50,35 @@ export const dbUser = <UserStatic>db.define('user', {
   deletedAt: DataType.DATE,
 });
 
+/* Avatar Model */
+export interface AvatarModel extends Model {
+  id: number;
+  userId: number;
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+}
+export type AvatarStatic = typeof Model & {
+  new (values?: object, option?: BuildOptions): AvatarModel;
+};
+export const dbAvatar = <AvatarStatic>db.define('avatar', {
+  id: {
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  userId: DataType.INTEGER,
+  filename: DataType.STRING,
+  mimetype: DataType.STRING,
+  encoding: DataType.STRING,
+  createdAt: DataType.DATE,
+  updatedAt: DataType.DATE,
+  deletedAt: DataType.DATE,
+});
+
 /* Notebook Model */
 export interface NotebookModel extends Model {
   id: number;
@@ -126,6 +155,8 @@ export const dbTodo = <TodoStatic>db.define('todo', {
 });
 
 /* Assossiations */
+dbUser.hasOne(dbAvatar);
+dbAvatar.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
 dbUser.hasOne(dbNotebook);
 dbNotebook.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
 dbNotebook.hasMany(dbSheet);

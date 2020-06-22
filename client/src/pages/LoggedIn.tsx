@@ -29,6 +29,10 @@ export const GET_NOTEBOOK = gql`
     user {
       id
       username
+      avatar {
+        id
+        uri
+      }
       notebook {
         ...NotebookFragment
       }
@@ -45,7 +49,7 @@ function LoggedIn() {
 
   return (
     <div>
-      <NavigationBar username={data.user.username} />
+      <NavigationBar username={data.user.username} uri={data.user.avatar?.uri} />
       <section style={section}>
         <Switch>
           <Redirect exact from="/" to="/home" />
@@ -60,7 +64,9 @@ function LoggedIn() {
           />
           <Route
             path="/account-settings"
-            render={() => <Settings username={data.user.username} />}
+            render={() => (
+              <Settings username={data.user.username} uri={data.user.avatar?.uri} />
+            )}
           />
         </Switch>
       </section>

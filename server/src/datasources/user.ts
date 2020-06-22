@@ -27,12 +27,12 @@ class User extends DataSource {
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
     if (!user) throw new Error('User does not exist.');
-
     return {
       id: user.id,
       username: user.username,
       email: user.email,
       token: user.token,
+      avatar: await this.context.dataSources.avatarAPI.getAvatar(user.id),
       notebook: {
         id: user.notebookId,
         sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
@@ -70,17 +70,18 @@ class User extends DataSource {
 
   async updateUser(updatedUser: UpdatedUser): Promise<UserGQL> {
     await db.sync();
-    const foundUser = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!foundUser) {
+    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
+    if (!user) {
       return null;
     }
     try {
-      const user = await foundUser.update(updatedUser);
+      await user.update(updatedUser);
       return {
         id: user.id,
         username: user.username,
         email: user.email,
         token: user.token,
+        avatar: await this.context.dataSources.avatarAPI.getAvatar(user.id),
         notebook: {
           id: user.notebookId,
           sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),

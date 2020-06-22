@@ -1,15 +1,15 @@
 import { Context } from '.';
 import {
-  TodoUpdateResponseGQL,
-  SheetUpdateResponseGQL,
-  UserResponseGQL,
   UserGQL,
+  UserResponseGQL,
+  AvatarResponseGQL,
   TodoCreateResponseGQL,
+  TodoUpdateResponseGQL,
   TodoDeleteResponseGQL,
-  SheetDeleteResponseGQL,
   SheetCreateResponseGQL,
+  SheetUpdateResponseGQL,
+  SheetDeleteResponseGQL,
 } from './schema';
-import { attachConnectorsToContext } from 'apollo-server';
 
 const resolvers = {
   Query: {
@@ -20,6 +20,7 @@ const resolvers = {
             username: context.user.username,
             email: context.user.email,
             token: context.user.token,
+            avatar: await context.dataSources.avatarAPI.getAvatar(context.user.id),
             notebook: {
               id: context.user.notebookId,
               sheets: await context.dataSources.sheetAPI.getSheets(
@@ -237,6 +238,23 @@ const resolvers = {
         };
       }
       return { success: true, message: 'User deleted', user };
+    },
+
+    uploadAvatar: async (_, args, context: Context): Promise<AvatarResponseGQL> => {
+      try {
+        const avatar = await context.dataSources.avatarAPI.uploadAvatar(args);
+        return {
+          success: true,
+          message: 'Avatar updated',
+          avatar,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: error.message,
+          avatar: null,
+        };
+      }
     },
   },
 };

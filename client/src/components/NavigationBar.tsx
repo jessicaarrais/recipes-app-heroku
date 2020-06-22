@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
+import standartAvatar from './../assets/img/chinchilla.jpg';
 
 const nav: CSSProperties = {
   display: 'flex',
@@ -23,13 +24,14 @@ const avatar: CSSProperties = {
   marginLeft: '16px',
   width: '32px',
   height: '32px',
+  objectFit: 'cover',
   fontSize: '12px',
   boxShadow: '0 0 0 2px hotpink',
 };
 
 interface Props {
   username: string;
-  avatar?: string;
+  uri?: string;
 }
 
 function NavigationBar(props: Props) {
@@ -37,7 +39,11 @@ function NavigationBar(props: Props) {
     <nav style={nav}>
       <Link to="/account-settings" style={link}>
         <span style={username}>{props.username}</span>
-        <img alt="user's avatar" src={props.avatar} style={avatar} />
+        <img
+          alt="user's avatar"
+          src={props.uri ? props.uri : standartAvatar}
+          style={avatar}
+        />
       </Link>
     </nav>
   );

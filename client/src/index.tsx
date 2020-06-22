@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
 import { typeDefs } from './resolvers';
 import LoggedIn from './pages/LoggedIn';
@@ -14,7 +14,7 @@ import LoggedOut from './pages/LoggedOut';
 import * as serviceWorker from './serviceWorker';
 import './index.css';
 
-const httpLink = createHttpLink({ uri: 'http://localhost:4000/graphql' });
+const httpLink = createUploadLink({ uri: 'http://localhost:4000/graphql' });
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
