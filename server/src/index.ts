@@ -10,6 +10,7 @@ import Avatar from './datasources/avatar';
 import Todo from './datasources/todo';
 import Sheet from './datasources/sheet';
 import path from 'path';
+import Notebook from './datasources/notebook';
 
 interface MyContext {
   user: UserModel | null;
@@ -18,6 +19,7 @@ interface MyDataSources {
   dataSources: {
     userAPI: User;
     avatarAPI: Avatar;
+    notebookAPI: Notebook;
     sheetAPI: Sheet;
     todoAPI: Todo;
   };
@@ -27,6 +29,7 @@ export type Context = MyContext & MyDataSources;
 const dataSources = (): DataSources<Context> => ({
   userAPI: new User(),
   avatarAPI: new Avatar(),
+  notebookAPI: new Notebook(),
   sheetAPI: new Sheet(),
   todoAPI: new Todo(),
 });

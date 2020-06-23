@@ -1,39 +1,9 @@
 import { gql } from 'apollo-server';
-
-export interface UserGQL {
-  id: number;
-  username: string;
-  email: string;
-  token: string;
-  avatar?: AvatarGQL;
-  notebook: NotebookGQL;
-}
-
-export interface AvatarGQL {
-  id: number;
-  userId: number;
-  uri: string;
-  filename: string;
-}
-
-export interface NotebookGQL {
-  id: number;
-  sheets: Array<SheetGQL>;
-}
-
-export interface SheetGQL {
-  id: number;
-  notebookId: number;
-  title: string;
-  todos: Array<TodoGQL>;
-}
-
-export interface TodoGQL {
-  id: number;
-  sheetId: number;
-  text: string;
-  isChecked: boolean;
-}
+import UserGQL from './graphql_models/userGQL';
+import AvatarGQL from './graphql_models/AvatarGQL';
+import NotebookGQL from './graphql_models/notebookGQL';
+import SheetGQL from './graphql_models/sheetGQL';
+import TodoGQL from './graphql_models/todoGQL';
 
 export interface UserResponseGQL {
   success: boolean;
@@ -80,7 +50,7 @@ export interface SheetDeleteResponseGQL {
 export interface AvatarResponseGQL {
   success: boolean;
   message: string;
-  avatar: AvatarGQL;
+  user: UserGQL;
 }
 
 const typeDefs = gql`
@@ -156,7 +126,7 @@ const typeDefs = gql`
   type AvatarResponseGQL {
     success: Boolean
     message: String
-    avatar: Avatar
+    user: User
   }
 
   type UserResponse {
@@ -185,10 +155,7 @@ const typeDefs = gql`
   }
 
   type Avatar {
-    id: ID!
-    userId: ID!
     uri: String
-    filename: String
   }
 
   type User {

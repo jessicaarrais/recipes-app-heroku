@@ -30,7 +30,6 @@ export const GET_NOTEBOOK = gql`
       id
       username
       avatar {
-        id
         uri
       }
       notebook {
@@ -45,7 +44,7 @@ function LoggedIn() {
   const { data, loading, error } = useQuery(GET_NOTEBOOK);
 
   if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>An error has occurred. ${error.message}</h1>;
+  // if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
     <div>

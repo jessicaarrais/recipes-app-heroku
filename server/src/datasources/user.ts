@@ -1,9 +1,13 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import isEmail from 'isemail';
 import Notebook from './notebook';
-import { db, dbUser } from '../store';
+import { db, dbUser, UserModel } from '../store';
 import { Context } from '..';
-import { UserGQL } from '../schema';
+import UserGQL from '../graphql_models/userGQL';
+
+interface CurrentUser {
+  id?: number;
+}
 
 interface NewUser {
   email: string;
@@ -21,28 +25,23 @@ class User extends DataSource {
     this.context = config.context;
   }
 
-  async findUserByEmail(email: string): Promise<UserGQL> {
-    if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
+  async getUser({ id }: CurrentUser = {}): Promise<UserModel> {
+    await db.sync();
+    const user = id ? await dbUser.findOne({ where: { id } }) : this.context.user;
+    if (!user) return null;
+    return user;
+  }
 
+  async findUserByEmail(email: string): Promise<UserModel> {
+    if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
     if (!user) throw new Error('User does not exist.');
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      token: user.token,
-      avatar: await this.context.dataSources.avatarAPI.getAvatar(user.id),
-      notebook: {
-        id: user.notebookId,
-        sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
-      },
-    };
+    return user;
   }
 
-  async createUser({ email, username }: NewUser): Promise<UserGQL> {
+  async createUser({ email, username }: NewUser): Promise<UserModel> {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
-
     await db.sync();
     try {
       const newUser = await dbUser.create({
@@ -56,37 +55,20 @@ class User extends DataSource {
           notebookId: newNotebook.id,
         });
       }
-      return {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        token: newUser.token,
-        notebook: { id: newNotebook.id, sheets: [] },
-      };
+      return newUser;
     } catch (error) {
       throw new Error(error.errors[0].message);
     }
   }
 
-  async updateUser(updatedUser: UpdatedUser): Promise<UserGQL> {
+  async updateUser(updatedUser: UpdatedUser): Promise<UserModel> {
     await db.sync();
     const user = await dbUser.findOne({ where: { id: this.context.user.id } });
     if (!user) {
       return null;
     }
     try {
-      await user.update(updatedUser);
-      return {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        token: user.token,
-        avatar: await this.context.dataSources.avatarAPI.getAvatar(user.id),
-        notebook: {
-          id: user.notebookId,
-          sheets: await this.context.dataSources.sheetAPI.getSheets(user.notebookId),
-        },
-      };
+      return await user.update(updatedUser);
     } catch (error) {
       throw new Error(error.errors[0].message);
     }

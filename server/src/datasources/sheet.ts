@@ -1,7 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbSheet, SheetModel } from '../store';
 import { Context } from '..';
-import { SheetGQL } from '../schema';
 
 interface NewSheet {
   title: string;
@@ -23,19 +22,10 @@ class Sheet extends DataSource {
     return await dbSheet.findOne({ where: { id: sheetId } });
   }
 
-  async getSheets(notebookId: number): Promise<Array<SheetGQL>> {
-    return await dbSheet
-      .findAll({
-        where: { notebookId },
-      })
-      .map(async (sheet) => {
-        return {
-          id: sheet.id,
-          notebookId: sheet.notebookId,
-          title: sheet.title,
-          todos: await this.context.dataSources.todoAPI.getTodos(sheet.id),
-        };
-      });
+  async getSheets(notebookId: number): Promise<Array<SheetModel>> {
+    return await dbSheet.findAll({
+      where: { notebookId },
+    });
   }
 
   async createSheet({ title, notebookId }: NewSheet): Promise<SheetModel> {

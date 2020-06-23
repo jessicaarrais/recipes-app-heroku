@@ -1,7 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbTodo, TodoModel, db } from '../store';
 import { Context } from '..';
-import { TodoGQL } from '../schema';
 
 interface NewTodo {
   text: string;
@@ -21,19 +20,10 @@ class Todo extends DataSource {
     this.context = config.context;
   }
 
-  async getTodos(sheetId: number): Promise<Array<TodoGQL>> {
-    return await dbTodo
-      .findAll({
-        where: { sheetId },
-      })
-      .map((todo) => {
-        return {
-          id: todo.id,
-          sheetId: todo.sheetId,
-          text: todo.text,
-          isChecked: todo.isChecked,
-        };
-      });
+  async getTodos(sheetId: number): Promise<Array<TodoModel>> {
+    return await dbTodo.findAll({
+      where: { sheetId },
+    });
   }
 
   async createTodo({ text, isChecked, sheetId }: NewTodo): Promise<TodoModel> {

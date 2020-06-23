@@ -3,8 +3,7 @@ import { createWriteStream, unlink, existsSync, mkdirSync } from 'fs';
 import sharp from 'sharp';
 import path from 'path';
 import { Context } from '..';
-import { dbAvatar, db } from '../store';
-import { AvatarGQL } from '../schema';
+import { dbAvatar, db, AvatarModel } from '../store';
 
 class Avatar extends DataSource {
   context: Context;
@@ -13,7 +12,7 @@ class Avatar extends DataSource {
     this.context = config.context;
   }
 
-  async uploadAvatar({ file }): Promise<AvatarGQL> {
+  async uploadAvatar({ file }): Promise<AvatarModel> {
     await db.sync();
     try {
       const { filename, mimetype, encoding, createReadStream } = await file;
@@ -50,18 +49,14 @@ class Avatar extends DataSource {
         stream.pipe(transform).pipe(writeStream);
       });
 
-      return {
-        id: newAvatar.id,
-        userId: newAvatar.userId,
-        filename: newAvatar.filename,
-        uri: `http://localhost:4000/images/${filename}`,
-      };
+      return newAvatar;
     } catch (error) {
       throw new Error(error.errors[0].message);
     }
   }
 
-  async getAvatar(userId): Promise<AvatarGQL> {
+  async getAvatar(userId: number): Promise<AvatarModel> {
+    await db.sync();
     return await dbAvatar.findOne({ where: { userId } });
   }
 }
