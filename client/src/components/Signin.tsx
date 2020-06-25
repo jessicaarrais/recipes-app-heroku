@@ -1,26 +1,8 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import Button from '../components/Button';
-
-export const card: CSSProperties = {
-  width: '400px',
-  height: '320px',
-  margin: '32px',
-  border: 'solid 1px gray',
-  borderRadius: '16px',
-};
-export const input: CSSProperties = {
-  display: 'block',
-  width: '240px',
-  height: '28px',
-  margin: '10% auto',
-  border: 'solid 1px gray',
-  borderRadius: '2px',
-};
-export const btn: CSSProperties = {
-  display: 'block',
-};
+import '../assets/css/login-signup.css';
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $username: String!) {
@@ -57,7 +39,7 @@ function Signin() {
   if (error) return <h1>An error has ocurred</h1>;
 
   return (
-    <div style={card}>
+    <div className="login-signup-card">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -67,22 +49,22 @@ function Signin() {
         }}
       >
         <input
+          className="login-signup-input"
           placeholder="E-mail"
           value={emailInputSignin}
-          style={input}
           onChange={(e) => {
             setEmailInputSignin(e.target.value);
           }}
         />
         <input
+          className="login-signup-input"
           placeholder="Username"
           value={usernameInputSignin}
-          style={input}
           onChange={(e) => {
             setUsernameInputSignin(e.target.value);
           }}
         />
-        <div style={btn}>
+        <div className="login-signup-btn">
           <Button type="submit" styleType="default">
             Signin
           </Button>

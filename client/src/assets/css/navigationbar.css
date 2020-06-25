@@ -1,0 +1,44 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  position: fixed;
+  top: 0px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 0 3px 0 gray;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background-color: antiquewhite;
+}
+
+.nav-link:active {
+  background-color: thistle;
+  transform: scale(0.95);
+}
+
+.nav-span-username {
+  margin: 0;
+  font-weight: bold;
+}
+
+.nav-avatar {
+  margin-left: 16px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  font-size: 12px;
+  box-shadow: 0 0 0 2px hotpink;
+}

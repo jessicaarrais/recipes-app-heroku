@@ -1,10 +1,8 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import Sheet from './Sheet';
 import CreateSheetButton from './CreateSheetButton';
-
-const ul: CSSProperties = {
-  padding: '0',
-};
+import Button from './Button';
+import '../assets/css/notebook.css';
 
 interface Props {
   id: number;
@@ -14,8 +12,14 @@ interface Props {
 function Notebook(props: Props) {
   return (
     <div>
-      <CreateSheetButton title="Title" notebookId={props.id} />
-      <ul style={ul}>
+      <div className="notebook-header">
+        <CreateSheetButton title="Title" notebookId={props.id} />
+        <div className="notebook-listorganizers-container">
+          <Button type="button" styleType="icon" icon="filter_list" />
+          <Button type="button" styleType="icon" icon="sort" />
+        </div>
+      </div>
+      <ul className="notebook-ul">
         {props.sheets.map((sheet: any) => (
           <Sheet
             key={sheet.id}

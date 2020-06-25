@@ -1,0 +1,10 @@
+.notebook-header,
+.notebook-listorganizers-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notebook-ul {
+  padding: 0;
+}

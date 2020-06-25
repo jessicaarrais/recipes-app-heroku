@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import Button from '../components/Button';
-import { card, input, btn } from './Signin';
+import '../assets/css/login-signup.css';
 
 const LOGIN = gql`
   mutation Login($email: String!) {
@@ -37,22 +37,21 @@ function Login() {
   if (error) return <h1>An error has ocurred</h1>;
 
   return (
-    <div>
+    <div className="login-signup-card">
       <form
-        style={card}
         onSubmit={() => {
           login({ variables: { email: inputLogin } });
         }}
       >
         <input
+          className="login-signup-input"
           placeholder="E-mail"
           value={inputLogin}
-          style={input}
           onChange={(e) => {
             setInputLogin(e.target.value);
           }}
         />
-        <div style={btn}>
+        <div className="login-signup-btn">
           <Button type="submit" styleType="default">
             Login
           </Button>

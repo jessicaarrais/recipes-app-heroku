@@ -1,0 +1,20 @@
+.login-signup-card {
+  width: 400px;
+  height: 320px;
+  margin: 32px;
+  border: solid 1px gray;
+  border-radius: 16px;
+}
+
+.login-signup-input {
+  display: block;
+  width: 240px;
+  height: 28px;
+  margin: 10% auto;
+  border: solid 1px gray;
+  border-radius: 2px;
+}
+
+.login-signup-btn {
+  display: block;
+}

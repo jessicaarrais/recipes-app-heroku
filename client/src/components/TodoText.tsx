@@ -1,10 +1,7 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-
-const p: CSSProperties = {
-  display: 'inline-block',
-};
+import '../assets/css/todo.css';
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
@@ -46,6 +43,7 @@ function TodoText(props: Props) {
       {isEditingText ? (
         <>
           <input
+            className="todo-text-input"
             ref={(ref) => ref && ref.focus()}
             type="text"
             value={newText}
@@ -58,7 +56,7 @@ function TodoText(props: Props) {
         </>
       ) : (
         <p
-          style={p}
+          className="todo-text"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

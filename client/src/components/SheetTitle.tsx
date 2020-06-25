@@ -1,10 +1,7 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-
-const title: CSSProperties = {
-  fontSize: '24px',
-};
+import '../assets/css/sheet.css';
 
 const UPDATE_SHEET = gql`
   mutation UpdateSheet($sheetId: ID!, $title: String, $notebookId: ID!) {
@@ -40,9 +37,10 @@ function SheetTitle(props: Props) {
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
-    <div>
+    <div className="sheet-title-container">
       {isEditingTitle ? (
         <input
+          className="sheet-title-input"
           ref={(ref) => {
             ref && ref.focus();
           }}
@@ -56,7 +54,7 @@ function SheetTitle(props: Props) {
         />
       ) : (
         <span
-          style={title}
+          className="sheet-title"
           tabIndex={0}
           onClick={() => {
             setIsEditingTitle(true);

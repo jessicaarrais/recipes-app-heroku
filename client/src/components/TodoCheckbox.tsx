@@ -1,10 +1,7 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-
-const checkbox: CSSProperties = {
-  boxShadow: '0 0 0 2px hotpink',
-};
+import '../assets/css/todo.css';
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
@@ -40,9 +37,9 @@ function TodoCheckbox(props: Props) {
 
   return (
     <input
+      className="todo-checkbox"
       type="checkbox"
       checked={props.isChecked}
-      style={checkbox}
       onChange={(e) => {
         handleUpdateTodoCheckbox(e.target.checked);
       }}

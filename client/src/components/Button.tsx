@@ -1,41 +1,21 @@
-import React, { ButtonHTMLAttributes, CSSProperties } from 'react';
-
-const base: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '160px',
-  height: '32px',
-  margin: '16px',
-  textTransform: 'uppercase',
-  fontWeight: 'bold',
-  borderRadius: '2px',
-  background: 'none',
-  cursor: 'pointer',
-};
-const styles = {
-  default: {
-    ...base,
-    color: 'gray',
-    border: 'solid 1px gray',
-  },
-  primary: {
-    ...base,
-    color: 'blue',
-    border: 'solid 1px blue',
-  },
-  danger: {
-    ...base,
-    color: 'red',
-    border: 'solid 1px red',
-  },
-};
+import React, { ButtonHTMLAttributes } from 'react';
+import '../assets/css/button.css';
 
 interface Props {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   children?: ButtonHTMLAttributes<HTMLButtonElement>['children'];
-  styleType: 'primary' | 'danger' | 'default';
-  icon?: 'menu' | 'create' | 'add' | 'delete' | 'clear' | 'delete_forever';
+  styleType: 'primary' | 'danger' | 'default' | 'icon-disguised' | 'icon';
+  icon?:
+    | 'menu'
+    | 'create'
+    | 'add'
+    | 'delete'
+    | 'clear'
+    | 'delete_forever'
+    | 'filter_list'
+    | 'sort'
+    | 'favorite_border'
+    | 'keyboard_arrow_up';
   handleOnClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
@@ -44,7 +24,7 @@ function Button(props: Props) {
     <>
       <button
         type={props.type}
-        style={styles[props.styleType]}
+        className={`base ${props.styleType}`}
         onClick={props.handleOnClick}
       >
         <span className="material-icons">{props.icon}</span>

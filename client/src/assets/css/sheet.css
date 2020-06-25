@@ -1,0 +1,39 @@
+.sheet-li {
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 1px 1px 3px 1px lightgray;
+  border-radius: 8px;
+  list-style: none;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sheet-title-container {
+  min-width: 25%;
+}
+
+.sheet-title,
+.sheet-title-input {
+  display: inline-block;
+  width: 100%;
+  min-height: 20px;
+  font-size: 20px;
+}
+
+.sheet-title-input {
+  border: none;
+  outline: antiquewhite;
+}
+
+.sheet-title:hover {
+  background-color: antiquewhite;
+}
+
+.sheet-title:active {
+  background-color: thistle;
+}

@@ -1,0 +1,52 @@
+.base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 32px;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 2px;
+  background: none;
+  cursor: pointer;
+}
+
+.base:hover {
+  background-color: antiquewhite;
+}
+
+.base:active {
+  background-color: thistle;
+  transform: scale(0.95);
+}
+
+.default {
+  color: gray;
+  border: solid 1px gray;
+}
+
+.primary {
+  color: blue;
+  border: solid 1px blue;
+}
+
+.danger {
+  color: red;
+  border: solid 1px red;
+}
+
+.icon-disguised,
+.icon {
+  width: 32px;
+  border: none;
+}
+
+.icon {
+  box-shadow: 1px 1px 1.5px 1.5px gainsboro;
+}
+
+.icon-disguised:hover,
+.icon:hover {
+  box-shadow: 1px 1px 1.5px 1.5px gainsboro;
+  background-color: white;
+}

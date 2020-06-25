@@ -1,15 +1,9 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import TodoCheckbox from './TodoCheckbox';
 import TodoText from './TodoText';
 import DeleteTodoButton from './DeleteTodoButton';
-
-const li: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  width: '560px',
-  height: '64px',
-};
+import '../assets/css/todo.css';
 
 export const TODO_FRAGMENT = gql`
   fragment TodoFragment on Todo {
@@ -32,7 +26,7 @@ function Todo(props: Props) {
   const [isShowingDeleteTodoButton, setIsShowingDeleteTodoButton] = useState(false);
   return (
     <li
-      style={li}
+      className="todo-li"
       onFocus={() => setIsShowingDeleteTodoButton(true)}
       onBlur={() => setIsShowingDeleteTodoButton(false)}
     >
