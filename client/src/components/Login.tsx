@@ -52,7 +52,7 @@ function Login() {
           }}
         />
         <div className="login-signup-btn">
-          <Button type="submit" styleType="default">
+          <Button type="submit" actionType="default">
             Login
           </Button>
         </div>

@@ -27,8 +27,8 @@ function Todo(props: Props) {
   return (
     <li
       className="todo-li"
-      onFocus={() => setIsShowingDeleteTodoButton(true)}
-      onBlur={() => setIsShowingDeleteTodoButton(false)}
+      onMouseOver={() => setIsShowingDeleteTodoButton(true)}
+      onMouseLeave={() => setIsShowingDeleteTodoButton(false)}
     >
       <TodoCheckbox
         todoId={props.id}

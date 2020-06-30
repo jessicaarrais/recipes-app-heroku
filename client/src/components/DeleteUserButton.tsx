@@ -3,6 +3,7 @@ import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import { useHistory } from 'react-router';
 import gql from 'graphql-tag';
 import Button from './Button';
+import Icon from './Icon';
 
 const DELETE_USER = gql`
   mutation DeleteUser {
@@ -32,12 +33,8 @@ function DeleteUserButton() {
 
   return (
     <div>
-      <Button
-        type="button"
-        styleType="danger"
-        icon="delete_forever"
-        handleOnClick={() => deleteUser()}
-      >
+      <Button type="button" actionType="danger" handleOnClick={() => deleteUser()}>
+        <Icon icon="delete_forever" />
         delete account
       </Button>
     </div>

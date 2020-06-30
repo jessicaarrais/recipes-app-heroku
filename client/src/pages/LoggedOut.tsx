@@ -12,7 +12,7 @@ function LoggedOut() {
       <h1>Recipes</h1>
       <Button
         type="button"
-        styleType="default"
+        actionType="default"
         handleOnClick={() => {
           setLogin(true);
           setSignin(false);
@@ -22,7 +22,7 @@ function LoggedOut() {
       </Button>
       <Button
         type="button"
-        styleType="default"
+        actionType="default"
         handleOnClick={() => {
           setSignin(true);
           setLogin(false);

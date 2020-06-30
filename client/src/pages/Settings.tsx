@@ -24,7 +24,7 @@ function Settings(props: Props) {
   return (
     <>
       <Link to="/home">Back to Home</Link>
-      <Button type="button" styleType="default" handleOnClick={handleLogout}>
+      <Button type="button" actionType="default" handleOnClick={handleLogout}>
         Logout
       </Button>
       <User username={props.username} uri={props.uri} />

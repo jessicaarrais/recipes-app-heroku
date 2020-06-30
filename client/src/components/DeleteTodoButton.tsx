@@ -2,6 +2,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
+import Icon from './Icon';
 
 const DELETE_TODO = gql`
   mutation DeleteTodo($todoId: ID!, $sheetId: ID!) {
@@ -29,11 +30,10 @@ function DeleteTodoButton(props: Props) {
   return (
     <Button
       type="button"
-      styleType="danger"
-      icon="clear"
+      actionType="danger"
       handleOnClick={() => deleteTodo({ variables: props })}
     >
-      delete todo
+      <Icon icon="clear" />
     </Button>
   );
 }

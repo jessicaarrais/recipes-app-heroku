@@ -4,18 +4,7 @@ import '../assets/css/button.css';
 interface Props {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   children?: ButtonHTMLAttributes<HTMLButtonElement>['children'];
-  styleType: 'primary' | 'danger' | 'default' | 'icon-disguised' | 'icon';
-  icon?:
-    | 'menu'
-    | 'create'
-    | 'add'
-    | 'delete'
-    | 'clear'
-    | 'delete_forever'
-    | 'filter_list'
-    | 'sort'
-    | 'favorite_border'
-    | 'keyboard_arrow_up';
+  actionType: 'default' | 'primary' | 'secondary' | 'danger';
   handleOnClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
@@ -24,10 +13,9 @@ function Button(props: Props) {
     <>
       <button
         type={props.type}
-        className={`base ${props.styleType}`}
+        className={`base ${props.actionType}`}
         onClick={props.handleOnClick}
       >
-        <span className="material-icons">{props.icon}</span>
         {props.children}
       </button>
     </>

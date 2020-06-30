@@ -65,7 +65,7 @@ function Signin() {
           }}
         />
         <div className="login-signup-btn">
-          <Button type="submit" styleType="default">
+          <Button type="submit" actionType="default">
             Signin
           </Button>
         </div>

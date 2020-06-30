@@ -2,6 +2,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
+import Icon from './Icon';
 
 const DELETE_SHEET = gql`
   mutation DeleteSheet($sheetId: ID!, $notebookId: ID!) {
@@ -27,10 +28,10 @@ function DeleteSheetButton(props: Props) {
   return (
     <Button
       type="button"
-      styleType="danger"
-      icon="delete"
+      actionType="danger"
       handleOnClick={() => deleteSheet({ variables: props })}
     >
+      <Icon icon="delete" />
       delete sheet
     </Button>
   );

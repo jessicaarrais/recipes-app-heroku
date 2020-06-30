@@ -6,6 +6,7 @@ import DeleteSheetButton from './DeleteSheetButton';
 import SheetTitle from './SheetTitle';
 import '../assets/css/sheet.css';
 import Button from './Button';
+import Icon from './Icon';
 
 export const SHEET_FRAGMENT = gql`
   fragment SheetFragment on Sheet {
@@ -33,7 +34,9 @@ function Sheet(props: Props) {
       <li className="sheet-li">
         <div className="sheet-header">
           <SheetTitle id={props.id} notebookId={props.notebookId} title={props.title} />
-          <Button type="button" styleType="icon-disguised" icon="favorite_border" />
+          <Button type="button" actionType="secondary">
+            <Icon icon="favorite_border" />
+          </Button>
         </div>
         <ul>
           {props.todos.map((todo: any) => (

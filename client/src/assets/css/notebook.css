@@ -5,6 +5,12 @@
   justify-content: space-between;
 }
 
+.notebook-listorganizers-container {
+  display: flex;
+  justify-content: space-between;
+  width: 72px;
+}
+
 .notebook-ul {
   padding: 0;
 }

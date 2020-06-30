@@ -8,6 +8,7 @@ import NavigationBar from '../components/NavigationBar';
 import Settings from './Settings';
 import '../assets/css/loggedin.css';
 import Button from '../components/Button';
+import Icon from '../components/Icon';
 
 export const NOTEBOOK_FRAGMENT = gql`
   fragment NotebookFragment on Notebook {
@@ -57,7 +58,9 @@ function LoggedIn() {
                   sheets={data.user.notebook.sheets}
                 />
                 <div className="back-to-top-icon">
-                  <Button type="button" icon="keyboard_arrow_up" styleType="icon" />
+                  <Button type="button" actionType="default">
+                    <Icon icon="keyboard_arrow_up" />
+                  </Button>
                 </div>
               </>
             )}

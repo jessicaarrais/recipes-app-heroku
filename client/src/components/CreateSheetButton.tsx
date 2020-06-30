@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
 import { SHEET_FRAGMENT } from './Sheet';
+import Icon from './Icon';
 
 const CREATE_SHEET = gql`
   mutation CreateSheet($title: String, $notebookId: ID!) {
@@ -31,14 +32,14 @@ function CreateSheetButton(props: Props) {
   return (
     <Button
       type="button"
-      styleType="primary"
-      icon="create"
+      actionType="primary"
       handleOnClick={() =>
         createSheet({
           variables: { title: props.title, notebookId: props.notebookId },
         })
       }
     >
+      <Icon icon="create" />
       New Sheet
     </Button>
   );
