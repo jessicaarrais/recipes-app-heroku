@@ -34,11 +34,7 @@ function TodoText(props: Props) {
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
-    <EditableTextArea
-      styleTypeInput="todo-text-input"
-      styleTypeSpan="todo-text"
-      onSubmit={onSubmit}
-    >
+    <EditableTextArea semanticalType="p" onSubmit={onSubmit}>
       {props.text}
     </EditableTextArea>
   );

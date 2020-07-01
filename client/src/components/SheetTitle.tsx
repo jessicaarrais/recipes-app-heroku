@@ -32,11 +32,7 @@ function SheetTitle(props: Props) {
 
   return (
     <div className="sheet-title-container">
-      <EditableTextArea
-        styleTypeInput="sheet-title-input"
-        styleTypeSpan="sheet-title"
-        onSubmit={onSubmit}
-      >
+      <EditableTextArea semanticalType="h2" onSubmit={onSubmit}>
         {props.title}
       </EditableTextArea>
     </div>

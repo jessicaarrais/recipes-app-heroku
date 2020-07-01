@@ -1,0 +1,35 @@
+.editable-input-h2,
+.editable-span-h2,
+.editable-input-p,
+.editable-span-p {
+  display: inline-block;
+  width: 100%;
+}
+.editable-input-h2,
+.editable-span-h2 {
+  min-height: 20px;
+  font-size: 20px;
+}
+
+.editable-input-p,
+.editable-span-p {
+  min-height: 14px;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+.editable-input-h2,
+.editable-input-p {
+  border: none;
+  outline: antiquewhite;
+}
+
+.editable-span-h2:hover,
+.editable-span-p:hover {
+  background-color: antiquewhite;
+}
+
+.editable-span-h2:active,
+.editable-span-p:active {
+  background-color: thistle;
+}

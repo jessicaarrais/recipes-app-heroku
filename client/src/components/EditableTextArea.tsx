@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import '../assets/css/sheet.css';
-import '../assets/css/todo.css';
+import '../assets/css/editable-text-area.css';
 
 interface Props {
-  styleTypeInput: 'sheet-title-input' | 'todo-text-input' | 'user-username-input';
-  styleTypeSpan: 'sheet-title' | 'todo-text' | 'user-username';
+  semanticalType: 'h2' | 'p';
   children: string;
   onSubmit(text: string): void;
 }
@@ -24,7 +22,7 @@ function EditableTextArea(props: Props) {
     <>
       {isEditing ? (
         <input
-          className={props.styleTypeInput}
+          className={`editable-input-${props.semanticalType}`}
           ref={(ref) => {
             ref && ref.focus();
           }}
@@ -38,7 +36,7 @@ function EditableTextArea(props: Props) {
         />
       ) : (
         <span
-          className={props.styleTypeSpan}
+          className={`editable-span-${props.semanticalType}`}
           tabIndex={0}
           onClick={() => {
             setIsEditing(true);

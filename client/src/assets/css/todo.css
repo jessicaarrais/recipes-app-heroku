@@ -9,25 +9,3 @@
 .todo-checkbox {
   box-shadow: 0 0 0 2px antiquewhite;
 }
-
-.todo-text,
-.todo-text-input {
-  display: 'inline-block';
-  width: 100%;
-  min-height: 14px;
-  margin-left: 8px;
-  font-size: 14px;
-}
-
-.todo-text-input {
-  border: none;
-  outline: antiquewhite;
-}
-
-.todo-text:hover {
-  background-color: antiquewhite;
-}
-
-.todo-text:active {
-  background-color: thistle;
-}

@@ -41,11 +41,7 @@ function User(props: Props) {
 
   return (
     <>
-      <EditableTextArea
-        styleTypeInput="user-username-input"
-        styleTypeSpan="user-username"
-        onSubmit={onSubmit}
-      >
+      <EditableTextArea semanticalType="p" onSubmit={onSubmit}>
         {props.username}
       </EditableTextArea>
       {errorMessage && <p>{errorMessage}</p>}
