@@ -10,7 +10,7 @@ import Avatar from './datasources/avatar';
 import Todo from './datasources/ingredient';
 import Sheet from './datasources/recipe';
 import path from 'path';
-import Notebook from './datasources/notebook';
+import Notebook from './datasources/cookbook';
 
 interface MyContext {
   user: UserModel | null;

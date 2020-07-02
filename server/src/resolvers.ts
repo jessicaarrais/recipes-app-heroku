@@ -13,7 +13,7 @@ import UserGQL from './graphql_models/userGQL';
 import AvatarGQL from './graphql_models/AvatarGQL';
 import SheetGQL from './graphql_models/recipeGQL';
 import TodoGQL from './graphql_models/ingredientGQL';
-import NotebookGQL from './graphql_models/notebookGQL';
+import NotebookGQL from './graphql_models/cookbookGQL';
 
 const resolvers = {
   Query: {
