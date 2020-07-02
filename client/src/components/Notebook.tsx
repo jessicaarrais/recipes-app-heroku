@@ -14,14 +14,20 @@ function Notebook(props: Props) {
   return (
     <div>
       <div className="notebook-header">
-        <CreateSheetButton title="Title" notebookId={props.id} />
-        <div className="notebook-listorganizers-container">
-          <Button type="button" actionType="default">
-            <Icon icon="filter_list" />
-          </Button>
-          <Button type="button" actionType="default">
-            <Icon icon="sort" />
-          </Button>
+        <div className="create-sheet-container">
+          <CreateSheetButton title="Title" notebookId={props.id} />
+        </div>
+        <div className="notebook-list-organizers-container">
+          <div className="filter-list-container">
+            <Button type="button" actionType="default">
+              <Icon icon="filter_list" />
+            </Button>
+          </div>
+          <div className="sort-list-container">
+            <Button type="button" actionType="default">
+              <Icon icon="sort" />
+            </Button>
+          </div>
         </div>
       </div>
       <ul className="notebook-ul">

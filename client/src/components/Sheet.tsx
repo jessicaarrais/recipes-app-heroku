@@ -30,29 +30,35 @@ interface Props {
 
 function Sheet(props: Props) {
   return (
-    <>
-      <li className="sheet-li">
-        <div className="sheet-header">
-          <SheetTitle id={props.id} notebookId={props.notebookId} title={props.title} />
+    <li className="sheet-li">
+      <div className="sheet-header">
+        <SheetTitle id={props.id} notebookId={props.notebookId} title={props.title} />
+        <div>
           <Button type="button" actionType="secondary">
             <Icon icon="favorite_border" />
           </Button>
         </div>
-        <ul>
-          {props.todos.map((todo: any) => (
-            <Todo
-              key={todo.id}
-              id={todo.id}
-              sheetId={todo.sheetId}
-              isChecked={todo.isChecked}
-              text={todo.text}
-            />
-          ))}
-        </ul>
-        <CreateTodoButton text="todo" isChecked={false} sheetId={props.id} />
-        <DeleteSheetButton sheetId={props.id} notebookId={props.notebookId} />
-      </li>
-    </>
+      </div>
+      <ul>
+        {props.todos.map((todo: any) => (
+          <Todo
+            key={todo.id}
+            id={todo.id}
+            sheetId={todo.sheetId}
+            isChecked={todo.isChecked}
+            text={todo.text}
+          />
+        ))}
+      </ul>
+      <div className="sheet-btns-container">
+        <div className="create-todo-container">
+          <CreateTodoButton text="todo" isChecked={false} sheetId={props.id} />
+        </div>
+        <div className="delete-sheet-container">
+          <DeleteSheetButton sheetId={props.id} notebookId={props.notebookId} />
+        </div>
+      </div>
+    </li>
   );
 }
 

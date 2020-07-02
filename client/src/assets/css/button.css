@@ -1,14 +1,16 @@
 .base {
-  color: gray;
+  color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
   height: 32px;
   padding: 4px;
   text-transform: uppercase;
   font-weight: bold;
   background: none;
   border-radius: 2px;
+  border-style: none;
   cursor: pointer;
 }
 
@@ -18,32 +20,18 @@
 
 .default {
   border: none;
-  box-shadow: 1px 1px 1.5px 1.5px gainsboro;
+  background-color: #b6c2b7;
 }
 
-.default:hover,
-.secondary:hover {
-  color: rgb(82, 82, 82);
-}
-
-.primary {
-  color: blue;
-  border: solid 1px blue;
+.primary,
+.danger {
+  background-color: #e8f5e9;
 }
 
 .primary:hover {
-  background-color: rgb(221, 236, 255);
-}
-
-.secondary {
-  border: none;
-}
-
-.danger {
-  color: red;
-  border: solid 1px red;
+  background-color: #b6c2b7;
 }
 
 .danger:hover {
-  background-color: rgb(250, 229, 229);
+  background-color: #cb9b8c;
 }

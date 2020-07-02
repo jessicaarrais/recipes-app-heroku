@@ -1,9 +1,11 @@
 .sheet-li {
   padding: 24px;
   margin-bottom: 16px;
-  box-shadow: 1px 1px 3px 1px lightgray;
   border-radius: 8px;
   list-style: none;
+  background-color: #ffffff;
+  border-left: solid 32px #cb9b8c;
+  box-shadow: 1px 1px 1px 1px #bdbdbd;
 }
 
 .sheet-header {
@@ -15,4 +17,16 @@
 
 .sheet-title-container {
   min-width: 85%;
+}
+
+.sheet-btns-container {
+  display: flex;
+  margin: 0 -4px;
+}
+
+.create-todo-container,
+.delete-sheet-container {
+  display: flex;
+  flex: 1;
+  margin: 0 4px;
 }

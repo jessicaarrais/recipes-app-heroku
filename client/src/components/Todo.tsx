@@ -37,7 +37,9 @@ function Todo(props: Props) {
       />
       <TodoText todoId={props.id} text={props.text} sheetId={props.sheetId} />
       {isShowingDeleteTodoButton && (
-        <DeleteTodoButton todoId={props.id} sheetId={props.sheetId} />
+        <div>
+          <DeleteTodoButton todoId={props.id} sheetId={props.sheetId} />
+        </div>
       )}
     </li>
   );

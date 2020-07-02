@@ -7,15 +7,17 @@
   left: 0;
   right: 0;
   z-index: 1;
-  padding: 16px;
-  background-color: white;
-  box-shadow: 0 0 3px 0 gray;
+  padding: 8px;
+  background-color: #ffccbc;
+  box-shadow: 0 0 4px 0 #bdbdbd;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding: 8px 16px;
+  border-radius: 50%;
   cursor: pointer;
   text-decoration: none;
 }
@@ -30,6 +32,7 @@
 }
 
 .nav-span-username {
+  color: #000000;
   margin: 0;
   font-weight: bold;
 }
@@ -40,5 +43,5 @@
   height: 32px;
   object-fit: cover;
   font-size: 12px;
-  box-shadow: 0 0 0 2px hotpink;
+  border-radius: 16px;
 }

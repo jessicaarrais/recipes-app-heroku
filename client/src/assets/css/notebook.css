@@ -5,12 +5,24 @@
   justify-content: space-between;
 }
 
-.notebook-listorganizers-container {
+.create-sheet-container {
   display: flex;
-  justify-content: space-between;
-  width: 72px;
+  flex: 1;
+  margin-right: 8px;
+}
+
+.notebook-list-organizers-container {
+  display: flex;
+  margin: 0 -4px;
+}
+
+.filter-list-container,
+.sort-list-container {
+  width: 32px;
+  margin: 0 4px;
 }
 
 .notebook-ul {
-  padding: 0;
+  margin: 0;
+  padding: 16px 0;
 }

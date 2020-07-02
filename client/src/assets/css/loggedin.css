@@ -1,7 +1,13 @@
+.body-loggedin {
+  min-height: 100vh;
+  background-color: #efefef;
+}
+
 .loggedin-section {
   width: 100%;
   max-width: 968px;
-  margin: 64px auto 0;
+  margin: 0 auto;
+  padding: 80px 0;
 }
 
 .back-to-top-icon {

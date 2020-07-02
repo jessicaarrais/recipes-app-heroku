@@ -44,7 +44,7 @@ function LoggedIn() {
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
   return (
-    <div>
+    <div className="body-loggedin">
       <NavigationBar username={data.user.username} uri={data.user.avatar?.uri} />
       <section className="loggedin-section">
         <Switch>

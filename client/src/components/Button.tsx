@@ -10,15 +10,13 @@ interface Props {
 
 function Button(props: Props) {
   return (
-    <>
-      <button
-        type={props.type}
-        className={`base ${props.actionType}`}
-        onClick={props.handleOnClick}
-      >
-        {props.children}
-      </button>
-    </>
+    <button
+      type={props.type}
+      className={`base ${props.actionType}`}
+      onClick={props.handleOnClick}
+    >
+      {props.children}
+    </button>
   );
 }
 
