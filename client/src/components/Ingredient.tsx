@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import TodoCheckbox from './TodoCheckbox';
-import TodoText from './TodoText';
-import DeleteTodoButton from './DeleteTodoButton';
-import '../assets/css/todo.css';
+import TodoCheckbox from './IngredientCheckbox';
+import TodoText from './IngredientText';
+import DeleteTodoButton from './DeleteIngredientButton';
+import '../assets/css/ingredient.css';
 
 export const TODO_FRAGMENT = gql`
   fragment TodoFragment on Todo {

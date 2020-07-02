@@ -7,8 +7,8 @@ import resolvers from './resolvers';
 import { dbUser, UserModel } from './store';
 import User from './datasources/user';
 import Avatar from './datasources/avatar';
-import Todo from './datasources/todo';
-import Sheet from './datasources/sheet';
+import Todo from './datasources/ingredient';
+import Sheet from './datasources/recipe';
 import path from 'path';
 import Notebook from './datasources/notebook';
 

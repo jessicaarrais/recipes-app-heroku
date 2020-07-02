@@ -1,6 +1,6 @@
 import React from 'react';
-import Sheet from './Sheet';
-import CreateSheetButton from './CreateSheetButton';
+import Sheet from './Recipe';
+import CreateSheetButton from './CreateRecipeButton';
 import Button from './Button';
 import '../assets/css/notebook.css';
 import Icon from './Icon';
