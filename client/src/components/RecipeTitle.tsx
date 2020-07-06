@@ -3,10 +3,10 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import EditableTextArea from './EditableTextArea';
 
-const UPDATE_SHEET = gql`
-  mutation UpdateSheet($sheetId: ID!, $title: String, $notebookId: ID!) {
-    updateSheet(sheetId: $sheetId, title: $title, notebookId: $notebookId) {
-      sheet {
+const UPDATE_RECIPE = gql`
+  mutation UpdateRecipe($recipeId: ID!, $title: String, $cookbookId: ID!) {
+    updateRecipe(recipeId: $recipeId, title: $title, cookbookId: $cookbookId) {
+      recipe {
         id
         title
       }
@@ -16,16 +16,16 @@ const UPDATE_SHEET = gql`
 
 interface Props {
   id: number;
-  notebookId: number;
+  cookbookId: number;
   title: string;
 }
 
-function SheetTitle(props: Props) {
-  const [updateSheet, { error }] = useMutation(UPDATE_SHEET);
+function RecipeTitle(props: Props) {
+  const [updateRecipe, { error }] = useMutation(UPDATE_RECIPE);
 
   const onSubmit = (title: string) =>
-    updateSheet({
-      variables: { sheetId: props.id, title, notebookId: props.notebookId },
+    updateRecipe({
+      variables: { recipeId: props.id, title, cookbookId: props.cookbookId },
     });
 
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
@@ -39,4 +39,4 @@ function SheetTitle(props: Props) {
   );
 }
 
-export default SheetTitle;
+export default RecipeTitle;
