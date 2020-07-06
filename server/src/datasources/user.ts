@@ -1,6 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import isEmail from 'isemail';
-import Notebook from './notebook';
+import Notebook from './cookbook';
 import { db, dbUser, UserModel } from '../store';
 import { Context } from '..';
 import UserGQL from '../graphql_models/userGQL';

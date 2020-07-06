@@ -1,5 +1,5 @@
 import { NotebookModel } from '../store';
-import SheetGQL from './sheetGQL';
+import SheetGQL from './recipeGQL';
 import { Context } from '..';
 
 class NotebookGQL {

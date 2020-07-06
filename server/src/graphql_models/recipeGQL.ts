@@ -1,6 +1,6 @@
 import { SheetModel } from '../store';
 import { Context } from '..';
-import TodoGQL from './todoGQL';
+import TodoGQL from './ingredientGQL';
 
 class SheetGQL {
   id: number;
