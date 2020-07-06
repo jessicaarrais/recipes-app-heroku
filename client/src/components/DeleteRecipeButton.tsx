@@ -32,7 +32,7 @@ function DeleteRecipeButton(props: Props) {
       handleOnClick={() => deleteRecipe({ variables: props })}
     >
       <Icon icon="delete" />
-      delete sheet
+      delete recipe
     </Button>
   );
 }

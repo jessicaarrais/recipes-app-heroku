@@ -20,7 +20,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: localStorage.getItem('token'),
-      'client-name': 'todo-app',
+      'client-name': 'recipes-app',
       'client-version': '1.0.0',
     },
   };

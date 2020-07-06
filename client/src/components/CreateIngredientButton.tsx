@@ -38,7 +38,7 @@ function CreateIngredientButton(props: Props) {
       handleOnClick={() => createIngredient({ variables: props })}
     >
       <Icon icon="add" />
-      new todo
+      add ingredient
     </Button>
   );
 }

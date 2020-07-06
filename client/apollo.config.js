@@ -1,7 +1,7 @@
 module.exports = {
   client: {
     service: {
-      name: 'todo-app',
+      name: 'recipes-app',
       url: 'http://localhost:4000/graphql',
       skipSSLValidation: true,
     },
