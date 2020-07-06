@@ -1,7 +1,7 @@
 import { Context } from '..';
 import { UserModel } from '../store';
 import AvatarGQL from './AvatarGQL';
-import NotebookGQL from './cookbookGQL';
+import NotebookGQL from './notebookGQL';
 
 class UserGQL {
   id: number;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Notebook from '../components/Cookbook';
+import Notebook from '../components/Notebook';
 
 interface Props {
   notebookId: number;

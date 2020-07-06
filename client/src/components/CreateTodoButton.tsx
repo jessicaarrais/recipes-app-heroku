@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { TODO_FRAGMENT } from './Ingredient';
+import { TODO_FRAGMENT } from './Todo';
 import Button from './Button';
 import Icon from './Icon';
 

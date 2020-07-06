@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import '../assets/css/ingredient.css';
+import '../assets/css/todo.css';
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {

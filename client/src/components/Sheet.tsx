@@ -1,10 +1,10 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import Todo, { TODO_FRAGMENT } from './Ingredient';
-import CreateTodoButton from './CreateIngredientButton';
-import DeleteSheetButton from './DeleteRecipeButton';
-import SheetTitle from './RecipeTitle';
-import '../assets/css/recipe.css';
+import Todo, { TODO_FRAGMENT } from './Todo';
+import CreateTodoButton from './CreateTodoButton';
+import DeleteSheetButton from './DeleteSheetButton';
+import SheetTitle from './SheetTitle';
+import '../assets/css/sheet.css';
 import Button from './Button';
 import Icon from './Icon';
 

@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import Home from './Home';
-import { SHEET_FRAGMENT } from '../components/Recipe';
+import { SHEET_FRAGMENT } from '../components/Sheet';
 import NavigationBar from '../components/NavigationBar';
 import Settings from './Settings';
 import '../assets/css/loggedin.css';

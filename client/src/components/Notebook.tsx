@@ -1,8 +1,8 @@
 import React from 'react';
-import Sheet from './Recipe';
-import CreateSheetButton from './CreateRecipeButton';
+import Sheet from './Sheet';
+import CreateSheetButton from './CreateSheetButton';
 import Button from './Button';
-import '../assets/css/cookbook.css';
+import '../assets/css/notebook.css';
 import Icon from './Icon';
 
 interface Props {

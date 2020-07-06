@@ -2,7 +2,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
-import { SHEET_FRAGMENT } from './Recipe';
+import { SHEET_FRAGMENT } from './Sheet';
 import Icon from './Icon';
 
 const CREATE_SHEET = gql`
