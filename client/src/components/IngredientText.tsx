@@ -3,12 +3,22 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import EditableTextArea from './EditableTextArea';
 
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
-    updateTodo(todoId: $todoId, text: $text, isChecked: $isChecked, sheetId: $sheetId) {
-      todo {
+const UPDATE_INGREDIENT = gql`
+  mutation UpdateIngredient(
+    $ingredientId: ID!
+    $text: String
+    $isChecked: Boolean
+    $recipeId: ID!
+  ) {
+    updateIngredient(
+      ingredientId: $ingredientId
+      text: $text
+      isChecked: $isChecked
+      recipeId: $recipeId
+    ) {
+      ingredient {
         id
-        sheetId
+        recipeId
         text
         isChecked
       }
@@ -17,17 +27,17 @@ const UPDATE_TODO = gql`
 `;
 
 interface Props {
-  todoId: number;
+  ingredientId: number;
   text: string;
-  sheetId: number;
+  recipeId: number;
 }
 
-function TodoText(props: Props) {
-  const [updateTodo, { error }] = useMutation(UPDATE_TODO);
+function IngredientText(props: Props) {
+  const [updateIngredient, { error }] = useMutation(UPDATE_INGREDIENT);
 
   const onSubmit = (text: string): void => {
-    updateTodo({
-      variables: { todoId: props.todoId, text, sheetId: props.sheetId },
+    updateIngredient({
+      variables: { ingredientId: props.ingredientId, text, recipeId: props.recipeId },
     });
   };
 
@@ -40,4 +50,4 @@ function TodoText(props: Props) {
   );
 }
 
-export default TodoText;
+export default IngredientText;

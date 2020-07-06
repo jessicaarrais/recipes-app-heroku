@@ -1,21 +1,21 @@
 import React from 'react';
-import Sheet from './Recipe';
-import CreateSheetButton from './CreateRecipeButton';
+import Recipe from './Recipe';
+import CreateRecipeButton from './CreateRecipeButton';
 import Button from './Button';
-import '../assets/css/cookbook.css';
 import Icon from './Icon';
+import '../assets/css/cookbook.css';
 
 interface Props {
   id: number;
-  sheets: [];
+  recipes: [];
 }
 
-function Notebook(props: Props) {
+function Cookbook(props: Props) {
   return (
     <div>
       <div className="notebook-header">
         <div className="create-sheet-container">
-          <CreateSheetButton title="Title" notebookId={props.id} />
+          <CreateRecipeButton title="Title" cookbookId={props.id} />
         </div>
         <div className="notebook-list-organizers-container">
           <div className="filter-list-container">
@@ -31,17 +31,17 @@ function Notebook(props: Props) {
         </div>
       </div>
       <ul className="notebook-ul">
-        {props.sheets.map((sheet: any) => (
-          <Sheet
-            key={sheet.id}
-            id={sheet.id}
-            notebookId={sheet.notebookId}
-            title={sheet.title}
-            todos={sheet.todos}
+        {props.recipes.map((recipe: any) => (
+          <Recipe
+            key={recipe.id}
+            id={recipe.id}
+            cookbookId={recipe.cookbookId}
+            title={recipe.title}
+            ingredients={recipe.ingredients}
           />
         ))}
       </ul>
     </div>
   );
 }
-export default Notebook;
+export default Cookbook;

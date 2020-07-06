@@ -1,27 +1,27 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
 import Home from './Home';
-import { SHEET_FRAGMENT } from '../components/Recipe';
-import NavigationBar from '../components/NavigationBar';
 import Settings from './Settings';
-import '../assets/css/loggedin.css';
+import { RECIPE_FRAGMENT } from '../components/Recipe';
+import NavigationBar from '../components/NavigationBar';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
+import '../assets/css/loggedin.css';
 
-export const NOTEBOOK_FRAGMENT = gql`
-  fragment NotebookFragment on Notebook {
+export const COOKBOOK_FRAGMENT = gql`
+  fragment CookbookFragment on Cookbook {
     __typename
     id
-    sheets {
-      ...SheetFragment
+    recipes {
+      ...RecipeFragment
     }
   }
-  ${SHEET_FRAGMENT}
+  ${RECIPE_FRAGMENT}
 `;
 
-export const GET_NOTEBOOK = gql`
+export const GET_COOKBOOK = gql`
   query User {
     user {
       id
@@ -29,16 +29,16 @@ export const GET_NOTEBOOK = gql`
       avatar {
         uri
       }
-      notebook {
-        ...NotebookFragment
+      cookbook {
+        ...CookbookFragment
       }
     }
   }
-  ${NOTEBOOK_FRAGMENT}
+  ${COOKBOOK_FRAGMENT}
 `;
 
 function LoggedIn() {
-  const { data, loading, error } = useQuery(GET_NOTEBOOK);
+  const { data, loading, error } = useQuery(GET_COOKBOOK);
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
@@ -54,8 +54,8 @@ function LoggedIn() {
             render={() => (
               <>
                 <Home
-                  notebookId={data.user.notebook.id}
-                  sheets={data.user.notebook.sheets}
+                  cookbookId={data.user.cookbook.id}
+                  recipes={data.user.cookbook.recipes}
                 />
                 <div className="back-to-top-icon">
                   <Button type="button" actionType="default">

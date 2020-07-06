@@ -1,16 +1,16 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
+import path from 'path';
 import isEmail from 'isemail';
+import { dbUser, UserModel } from './store';
 import typeDefs from './schema';
 import resolvers from './resolvers';
-import { dbUser, UserModel } from './store';
 import User from './datasources/user';
 import Avatar from './datasources/avatar';
-import Todo from './datasources/ingredient';
-import Sheet from './datasources/recipe';
-import path from 'path';
-import Notebook from './datasources/cookbook';
+import Ingredient from './datasources/ingredient';
+import Recipe from './datasources/recipe';
+import Cookbook from './datasources/cookbook';
 
 interface MyContext {
   user: UserModel | null;
@@ -19,9 +19,9 @@ interface MyDataSources {
   dataSources: {
     userAPI: User;
     avatarAPI: Avatar;
-    notebookAPI: Notebook;
-    sheetAPI: Sheet;
-    todoAPI: Todo;
+    cookbookAPI: Cookbook;
+    recipeAPI: Recipe;
+    ingredientAPI: Ingredient;
   };
 }
 export type Context = MyContext & MyDataSources;
@@ -29,9 +29,9 @@ export type Context = MyContext & MyDataSources;
 const dataSources = (): DataSources<Context> => ({
   userAPI: new User(),
   avatarAPI: new Avatar(),
-  notebookAPI: new Notebook(),
-  sheetAPI: new Sheet(),
-  todoAPI: new Todo(),
+  cookbookAPI: new Cookbook(),
+  recipeAPI: new Recipe(),
+  ingredientAPI: new Ingredient(),
 });
 
 const context = async ({ req }): Promise<MyContext> => {

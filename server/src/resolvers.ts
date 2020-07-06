@@ -2,18 +2,17 @@ import { Context } from '.';
 import {
   UserResponseGQL,
   AvatarResponseGQL,
-  TodoCreateResponseGQL,
-  TodoUpdateResponseGQL,
-  TodoDeleteResponseGQL,
-  SheetCreateResponseGQL,
-  SheetUpdateResponseGQL,
-  SheetDeleteResponseGQL,
+  IngredientCreateResponseGQL,
+  IngredientUpdateResponseGQL,
+  IngredientDeleteResponseGQL,
+  RecipeCreateResponseGQL,
+  RecipeUpdateResponseGQL,
+  RecipeDeleteResponseGQL,
 } from './schema';
 import UserGQL from './graphql_models/userGQL';
-import AvatarGQL from './graphql_models/AvatarGQL';
-import SheetGQL from './graphql_models/recipeGQL';
-import TodoGQL from './graphql_models/ingredientGQL';
-import NotebookGQL from './graphql_models/cookbookGQL';
+import RecipeGQL from './graphql_models/recipeGQL';
+import IngredientGQL from './graphql_models/ingredientGQL';
+import CookbookGQL from './graphql_models/cookbookGQL';
 
 const resolvers = {
   Query: {
@@ -25,120 +24,136 @@ const resolvers = {
   },
 
   Mutation: {
-    createTodo: async (_, args, context: Context): Promise<TodoCreateResponseGQL> => {
-      const newTodoModel = await context.dataSources.todoAPI.createTodo({
-        text: args.text,
-        isChecked: args.isChecked,
-        sheetId: args.sheetId,
-      });
-      if (!newTodoModel) {
+    createIngredient: async (
+      _,
+      args,
+      context: Context
+    ): Promise<IngredientCreateResponseGQL> => {
+      const newIngredientModel = await context.dataSources.ingredientAPI.createIngredient(
+        {
+          text: args.text,
+          isChecked: args.isChecked,
+          recipeId: args.recipeId,
+        }
+      );
+      if (!newIngredientModel) {
         return {
           success: false,
           message: 'Failed creating todo',
-          sheet: null,
+          recipe: null,
         };
       }
-      const sheetModel = await context.dataSources.sheetAPI.getSheet(args.sheetId);
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
         message: 'Todo created',
-        sheet: new SheetGQL(sheetModel),
+        recipe: new RecipeGQL(recipeModel),
       };
     },
 
-    updateTodo: async (_, args, context: Context): Promise<TodoUpdateResponseGQL> => {
-      const todoModel = await context.dataSources.todoAPI.updateTodo(
+    updateIngredient: async (
+      _,
+      args,
+      context: Context
+    ): Promise<IngredientUpdateResponseGQL> => {
+      const ingredientModel = await context.dataSources.ingredientAPI.updateIngredient(
         { text: args.text, isChecked: args.isChecked },
-        args.todoId
+        args.ingredientId
       );
-      if (!todoModel) {
+      if (!ingredientModel) {
         return {
           success: false,
           message: 'Failed updating todo',
-          todo: null,
+          ingredient: null,
         };
       }
       return {
         success: true,
         message: 'Todo updated',
-        todo: new TodoGQL(todoModel),
+        ingredient: new IngredientGQL(ingredientModel),
       };
     },
 
-    deleteTodo: async (_, args, context: Context): Promise<TodoDeleteResponseGQL> => {
-      const todoModel = await context.dataSources.todoAPI.deleteTodo(args.todoId);
-      if (!todoModel) {
+    deleteIngredient: async (
+      _,
+      args,
+      context: Context
+    ): Promise<IngredientDeleteResponseGQL> => {
+      const ingredientModel = await context.dataSources.ingredientAPI.deleteIngredient(
+        args.ingredientId
+      );
+      if (!ingredientModel) {
         return {
           success: false,
           message: 'Failed deleting todo',
-          sheet: null,
+          recipe: null,
         };
       }
-      const sheetModel = await context.dataSources.sheetAPI.getSheet(args.sheetId);
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
         message: 'Todo deleted',
-        sheet: new SheetGQL(sheetModel),
+        recipe: new RecipeGQL(recipeModel),
       };
     },
 
-    createSheet: async (_, args, context: Context): Promise<SheetCreateResponseGQL> => {
-      const sheetModel = await context.dataSources.sheetAPI.createSheet({
+    createRecipe: async (_, args, context: Context): Promise<RecipeCreateResponseGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.createRecipe({
         title: args.title,
-        notebookId: args.notebookId,
+        cookbookId: args.cookbookId,
       });
-      if (!sheetModel) {
+      if (!recipeModel) {
         return {
           success: false,
-          message: 'Failed creating sheet',
-          notebook: null,
+          message: 'Failed creating recipe',
+          cookbook: null,
         };
       }
-      const notebookModel = await context.dataSources.notebookAPI.getNotebook(
+      const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(
         context.user.id
       );
       return {
         success: true,
-        message: 'Sheet created',
-        notebook: new NotebookGQL(notebookModel),
+        message: 'Recipe created',
+        cookbook: new CookbookGQL(cookbookModel),
       };
     },
 
-    updateSheet: async (_, args, context: Context): Promise<SheetUpdateResponseGQL> => {
-      const sheetModel = await context.dataSources.sheetAPI.updateSheet(
+    updateRecipe: async (_, args, context: Context): Promise<RecipeUpdateResponseGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.updateRecipe(
         { title: args.title },
-        args.sheetId
+        args.recipeId
       );
-      if (!sheetModel) {
+      if (!recipeModel) {
         return {
           success: false,
-          message: 'Failed to update sheet',
-          sheet: null,
+          message: 'Failed to update recipe',
+          recipe: null,
         };
       }
       return {
         success: true,
-        message: 'Sheet updated',
-        sheet: new SheetGQL(sheetModel),
+        message: 'Recipe updated',
+        recipe: new RecipeGQL(recipeModel),
       };
     },
 
-    deleteSheet: async (_, args, context: Context): Promise<SheetDeleteResponseGQL> => {
-      const sheetModel = await context.dataSources.sheetAPI.deleteSheet(args.sheetId);
-      if (!sheetModel) {
+    deleteRecipe: async (_, args, context: Context): Promise<RecipeDeleteResponseGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.deleteRecipe(args.recipeId);
+      if (!recipeModel) {
         return {
           success: false,
-          message: 'Failed to delete sheet',
-          notebook: null,
+          message: 'Failed to delete recipe',
+          cookbook: null,
         };
       }
-      const notebookModel = await context.dataSources.notebookAPI.getNotebook(
+      const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(
         context.user.id
       );
       return {
         success: true,
-        message: 'Sheet deleted',
-        notebook: new NotebookGQL(notebookModel),
+        message: 'Recipe deleted',
+        cookbook: new CookbookGQL(cookbookModel),
       };
     },
 

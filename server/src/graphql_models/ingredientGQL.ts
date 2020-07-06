@@ -1,17 +1,17 @@
-import { TodoModel } from '../store';
+import { IngredientModel } from '../store';
 
-class TodoGQL {
+class IngredientGQL {
   id: number;
-  sheetId: number;
+  recipeId: number;
   text: string;
   isChecked: boolean;
 
-  constructor(todoModel: TodoModel) {
-    this.id = todoModel.id;
-    this.sheetId = todoModel.sheetId;
-    this.text = todoModel.text;
-    this.isChecked = todoModel.isChecked;
+  constructor(ingredientModel: IngredientModel) {
+    this.id = ingredientModel.id;
+    this.recipeId = ingredientModel.recipeId;
+    this.text = ingredientModel.text;
+    this.isChecked = ingredientModel.isChecked;
   }
 }
 
-export default TodoGQL;
+export default IngredientGQL;

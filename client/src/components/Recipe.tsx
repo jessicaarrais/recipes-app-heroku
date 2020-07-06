@@ -1,38 +1,38 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import Todo, { TODO_FRAGMENT } from './Ingredient';
-import CreateTodoButton from './CreateIngredientButton';
-import DeleteSheetButton from './DeleteRecipeButton';
-import SheetTitle from './RecipeTitle';
+import Ingredient, { INGREDIENT_FRAGMENT } from './Ingredient';
+import CreateIngredientButton from './CreateIngredientButton';
+import DeleteRecipeButton from './DeleteRecipeButton';
+import RecipeTitle from './RecipeTitle';
 import '../assets/css/recipe.css';
 import Button from './Button';
 import Icon from './Icon';
 
-export const SHEET_FRAGMENT = gql`
-  fragment SheetFragment on Sheet {
+export const RECIPE_FRAGMENT = gql`
+  fragment RecipeFragment on Recipe {
     __typename
     id
-    notebookId
+    cookbookId
     title
-    todos {
-      ...TodoFragment
+    ingredients {
+      ...IngredientFragment
     }
   }
-  ${TODO_FRAGMENT}
+  ${INGREDIENT_FRAGMENT}
 `;
 
 interface Props {
   id: number;
-  notebookId: number;
+  cookbookId: number;
   title: string;
-  todos: [];
+  ingredients: [];
 }
 
-function Sheet(props: Props) {
+function Recipe(props: Props) {
   return (
     <li className="sheet-li">
       <div className="sheet-header">
-        <SheetTitle id={props.id} notebookId={props.notebookId} title={props.title} />
+        <RecipeTitle id={props.id} cookbookId={props.cookbookId} title={props.title} />
         <div>
           <Button type="button" actionType="secondary">
             <Icon icon="favorite_border" />
@@ -40,26 +40,30 @@ function Sheet(props: Props) {
         </div>
       </div>
       <ul>
-        {props.todos.map((todo: any) => (
-          <Todo
-            key={todo.id}
-            id={todo.id}
-            sheetId={todo.sheetId}
-            isChecked={todo.isChecked}
-            text={todo.text}
+        {props.ingredients.map((ingredient: any) => (
+          <Ingredient
+            key={ingredient.id}
+            id={ingredient.id}
+            recipeId={ingredient.recipeId}
+            isChecked={ingredient.isChecked}
+            text={ingredient.text}
           />
         ))}
       </ul>
       <div className="sheet-btns-container">
         <div className="create-todo-container">
-          <CreateTodoButton text="todo" isChecked={false} sheetId={props.id} />
+          <CreateIngredientButton
+            text="ingredient"
+            isChecked={false}
+            recipeId={props.id}
+          />
         </div>
         <div className="delete-sheet-container">
-          <DeleteSheetButton sheetId={props.id} notebookId={props.notebookId} />
+          <DeleteRecipeButton recipeId={props.id} cookbookId={props.cookbookId} />
         </div>
       </div>
     </li>
   );
 }
 
-export default Sheet;
+export default Recipe;

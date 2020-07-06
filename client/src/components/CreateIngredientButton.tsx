@@ -1,41 +1,41 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { TODO_FRAGMENT } from './Ingredient';
+import { INGREDIENT_FRAGMENT } from './Ingredient';
 import Button from './Button';
 import Icon from './Icon';
 
-const CREATE_TODO = gql`
-  mutation CreateTodo($text: String, $isChecked: Boolean, $sheetId: ID!) {
-    createTodo(text: $text, isChecked: $isChecked, sheetId: $sheetId) {
+const CREATE_INGREDIENT = gql`
+  mutation CreateIngredient($text: String, $isChecked: Boolean, $recipeId: ID!) {
+    createIngredient(text: $text, isChecked: $isChecked, recipeId: $recipeId) {
       success
       message
-      sheet {
+      recipe {
         id
         title
-        todos {
-          ...TodoFragment
+        ingredients {
+          ...IngredientFragment
         }
       }
     }
   }
-  ${TODO_FRAGMENT}
+  ${INGREDIENT_FRAGMENT}
 `;
 
 interface Props {
   text: string;
   isChecked: boolean;
-  sheetId: number;
+  recipeId: number;
 }
 
-function CreateTodoButton(props: Props) {
-  const [createTodo] = useMutation(CREATE_TODO);
+function CreateIngredientButton(props: Props) {
+  const [createIngredient] = useMutation(CREATE_INGREDIENT);
 
   return (
     <Button
       type="button"
       actionType="primary"
-      handleOnClick={() => createTodo({ variables: props })}
+      handleOnClick={() => createIngredient({ variables: props })}
     >
       <Icon icon="add" />
       new todo
@@ -43,4 +43,4 @@ function CreateTodoButton(props: Props) {
   );
 }
 
-export default CreateTodoButton;
+export default CreateIngredientButton;

@@ -3,12 +3,22 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import '../assets/css/ingredient.css';
 
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($todoId: ID!, $text: String, $isChecked: Boolean, $sheetId: ID!) {
-    updateTodo(todoId: $todoId, text: $text, isChecked: $isChecked, sheetId: $sheetId) {
-      todo {
+const UPDATE_INGREDIENT = gql`
+  mutation UpdateIngredient(
+    $ingredientId: ID!
+    $text: String
+    $isChecked: Boolean
+    $recipeId: ID!
+  ) {
+    updateIngredient(
+      ingredientId: $ingredientId
+      text: $text
+      isChecked: $isChecked
+      recipeId: $recipeId
+    ) {
+      ingredient {
         id
-        sheetId
+        recipeId
         text
         isChecked
       }
@@ -17,18 +27,22 @@ const UPDATE_TODO = gql`
 `;
 
 interface Props {
-  todoId: number;
+  ingredientId: number;
   isChecked: boolean;
-  sheetId: number;
+  recipeId: number;
 }
 
-function TodoCheckbox(props: Props) {
-  const [updateTodo, { error }] = useMutation(UPDATE_TODO);
+function IngredientCheckbox(props: Props) {
+  const [updateIngredient, { error }] = useMutation(UPDATE_INGREDIENT);
 
-  const handleUpdateTodoCheckbox = (isChecked: boolean): void => {
+  const handleUpdateIngredientCheckbox = (isChecked: boolean): void => {
     if (isChecked !== props.isChecked) {
-      updateTodo({
-        variables: { todoId: props.todoId, isChecked, sheetId: props.sheetId },
+      updateIngredient({
+        variables: {
+          ingredientId: props.ingredientId,
+          isChecked,
+          recipeId: props.recipeId,
+        },
       });
     }
   };
@@ -41,10 +55,10 @@ function TodoCheckbox(props: Props) {
       type="checkbox"
       checked={props.isChecked}
       onChange={(e) => {
-        handleUpdateTodoCheckbox(e.target.checked);
+        handleUpdateIngredientCheckbox(e.target.checked);
       }}
     />
   );
 }
 
-export default TodoCheckbox;
+export default IngredientCheckbox;

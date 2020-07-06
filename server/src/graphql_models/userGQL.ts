@@ -1,7 +1,7 @@
 import { Context } from '..';
 import { UserModel } from '../store';
 import AvatarGQL from './AvatarGQL';
-import NotebookGQL from './cookbookGQL';
+import CookbookGQL from './cookbookGQL';
 
 class UserGQL {
   id: number;
@@ -22,10 +22,10 @@ class UserGQL {
     return new AvatarGQL(avatarModel);
   }
 
-  async notebook(_args, context: Context): Promise<NotebookGQL> {
-    const notebookModel = await context.dataSources.notebookAPI.getNotebook(this.id);
-    if (!notebookModel) return null;
-    return new NotebookGQL(notebookModel);
+  async cookbook(_args, context: Context): Promise<CookbookGQL> {
+    const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(this.id);
+    if (!cookbookModel) return null;
+    return new CookbookGQL(cookbookModel);
   }
 }
 

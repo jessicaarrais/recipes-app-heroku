@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import TodoCheckbox from './IngredientCheckbox';
-import TodoText from './IngredientText';
-import DeleteTodoButton from './DeleteIngredientButton';
+import IngredientCheckbox from './IngredientCheckbox';
+import IngredientText from './IngredientText';
+import DeleteIngredientButton from './DeleteIngredientButton';
 import '../assets/css/ingredient.css';
 
-export const TODO_FRAGMENT = gql`
-  fragment TodoFragment on Todo {
+export const INGREDIENT_FRAGMENT = gql`
+  fragment IngredientFragment on Ingredient {
     __typename
     id
-    sheetId
+    recipeId
     text
     isChecked
   }
@@ -17,32 +17,38 @@ export const TODO_FRAGMENT = gql`
 
 interface Props {
   id: number;
-  sheetId: number;
+  recipeId: number;
   isChecked: boolean;
   text: string;
 }
 
-function Todo(props: Props) {
-  const [isShowingDeleteTodoButton, setIsShowingDeleteTodoButton] = useState(false);
+function Ingredient(props: Props) {
+  const [isShowingDeleteIngredientButton, setIsShowingDeleteIngredientButton] = useState(
+    false
+  );
   return (
     <li
       className="todo-li"
-      onMouseOver={() => setIsShowingDeleteTodoButton(true)}
-      onMouseLeave={() => setIsShowingDeleteTodoButton(false)}
+      onMouseOver={() => setIsShowingDeleteIngredientButton(true)}
+      onMouseLeave={() => setIsShowingDeleteIngredientButton(false)}
     >
-      <TodoCheckbox
-        todoId={props.id}
+      <IngredientCheckbox
+        ingredientId={props.id}
         isChecked={props.isChecked}
-        sheetId={props.sheetId}
+        recipeId={props.recipeId}
       />
-      <TodoText todoId={props.id} text={props.text} sheetId={props.sheetId} />
-      {isShowingDeleteTodoButton && (
+      <IngredientText
+        ingredientId={props.id}
+        text={props.text}
+        recipeId={props.recipeId}
+      />
+      {isShowingDeleteIngredientButton && (
         <div>
-          <DeleteTodoButton todoId={props.id} sheetId={props.sheetId} />
+          <DeleteIngredientButton ingredientId={props.id} recipeId={props.recipeId} />
         </div>
       )}
     </li>
   );
 }
 
-export default Todo;
+export default Ingredient;

@@ -2,30 +2,30 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
-import { SHEET_FRAGMENT } from './Recipe';
+import { RECIPE_FRAGMENT } from './Recipe';
 import Icon from './Icon';
 
-const CREATE_SHEET = gql`
-  mutation CreateSheet($title: String, $notebookId: ID!) {
-    createSheet(title: $title, notebookId: $notebookId) {
-      notebook {
+const CREATE_RECIPE = gql`
+  mutation CreateRecipe($title: String, $cookbookId: ID!) {
+    createRecipe(title: $title, cookbookId: $cookbookId) {
+      cookbook {
         id
-        sheets {
-          ...SheetFragment
+        recipes {
+          ...RecipeFragment
         }
       }
     }
   }
-  ${SHEET_FRAGMENT}
+  ${RECIPE_FRAGMENT}
 `;
 
 interface Props {
   title: string;
-  notebookId: number;
+  cookbookId: number;
 }
 
-function CreateSheetButton(props: Props) {
-  const [createSheet, { error }] = useMutation(CREATE_SHEET);
+function CreateRecipeButton(props: Props) {
+  const [createRecipe, { error }] = useMutation(CREATE_RECIPE);
 
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
@@ -34,8 +34,8 @@ function CreateSheetButton(props: Props) {
       type="button"
       actionType="primary"
       handleOnClick={() =>
-        createSheet({
-          variables: { title: props.title, notebookId: props.notebookId },
+        createRecipe({
+          variables: { title: props.title, cookbookId: props.cookbookId },
         })
       }
     >
@@ -45,4 +45,4 @@ function CreateSheetButton(props: Props) {
   );
 }
 
-export default CreateSheetButton;
+export default CreateRecipeButton;

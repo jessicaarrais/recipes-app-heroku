@@ -1,51 +1,54 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { dbSheet, SheetModel } from '../store';
+import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
 
-interface NewSheet {
+interface NewRecipe {
   title: string;
-  notebookId: number;
+  cookbookId: number;
 }
 
-interface UpdatedSheet {
+interface UpdatedRecipe {
   title: string;
 }
 
-class Sheet extends DataSource {
+class Recipe extends DataSource {
   context: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
   }
 
-  async getSheet(sheetId: number): Promise<SheetModel> {
-    return await dbSheet.findOne({ where: { id: sheetId } });
+  async getRecipe(recipeId: number): Promise<RecipeModel> {
+    return await dbRecipe.findOne({ where: { id: recipeId } });
   }
 
-  async getSheets(notebookId: number): Promise<Array<SheetModel>> {
-    return await dbSheet.findAll({
-      where: { notebookId },
+  async getRecipes(cookbookId: number): Promise<Array<RecipeModel>> {
+    return await dbRecipe.findAll({
+      where: { cookbookId },
     });
   }
 
-  async createSheet({ title, notebookId }: NewSheet): Promise<SheetModel> {
-    return await dbSheet.create({
+  async createRecipe({ title, cookbookId }: NewRecipe): Promise<RecipeModel> {
+    return await dbRecipe.create({
       title,
-      notebookId,
+      cookbookId,
     });
   }
 
-  async updateSheet(updatedSheet: UpdatedSheet, sheetId: number): Promise<SheetModel> {
-    const sheet = await dbSheet.findOne({ where: { id: sheetId } });
-    if (!sheet) {
+  async updateRecipe(
+    updatedRecipe: UpdatedRecipe,
+    recipeId: number
+  ): Promise<RecipeModel> {
+    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    if (!recipe) {
       return null;
     }
-    return await sheet.update(updatedSheet);
+    return await recipe.update(updatedRecipe);
   }
 
-  async deleteSheet(sheetId: number): Promise<boolean> {
-    return (await dbSheet.destroy({ where: { id: sheetId } })) === 1;
+  async deleteRecipe(recipeId: number): Promise<boolean> {
+    return (await dbRecipe.destroy({ where: { id: recipeId } })) === 1;
   }
 }
 
-export default Sheet;
+export default Recipe;

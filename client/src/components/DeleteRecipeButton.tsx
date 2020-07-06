@@ -4,12 +4,12 @@ import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
 import Icon from './Icon';
 
-const DELETE_SHEET = gql`
-  mutation DeleteSheet($sheetId: ID!, $notebookId: ID!) {
-    deleteSheet(sheetId: $sheetId, notebookId: $notebookId) {
-      notebook {
+const DELETE_RECIPE = gql`
+  mutation DeleteRecipe($recipeId: ID!, $cookbookId: ID!) {
+    deleteRecipe(recipeId: $recipeId, cookbookId: $cookbookId) {
+      cookbook {
         id
-        sheets {
+        recipes {
           id
         }
       }
@@ -18,18 +18,18 @@ const DELETE_SHEET = gql`
 `;
 
 interface Props {
-  sheetId: number;
-  notebookId: number;
+  recipeId: number;
+  cookbookId: number;
 }
 
-function DeleteSheetButton(props: Props) {
-  const [deleteSheet] = useMutation(DELETE_SHEET);
+function DeleteRecipeButton(props: Props) {
+  const [deleteRecipe] = useMutation(DELETE_RECIPE);
 
   return (
     <Button
       type="button"
       actionType="danger"
-      handleOnClick={() => deleteSheet({ variables: props })}
+      handleOnClick={() => deleteRecipe({ variables: props })}
     >
       <Icon icon="delete" />
       delete sheet
@@ -37,4 +37,4 @@ function DeleteSheetButton(props: Props) {
   );
 }
 
-export default DeleteSheetButton;
+export default DeleteRecipeButton;

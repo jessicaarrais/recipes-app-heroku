@@ -1,9 +1,8 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import isEmail from 'isemail';
-import Notebook from './cookbook';
-import { db, dbUser, UserModel } from '../store';
 import { Context } from '..';
-import UserGQL from '../graphql_models/userGQL';
+import { db, dbUser, UserModel } from '../store';
+import Cookbook from './cookbook';
 
 interface CurrentUser {
   id?: number;
@@ -49,10 +48,10 @@ class User extends DataSource {
         username,
         token: Buffer.from(email).toString('base64'),
       });
-      const newNotebook = await Notebook.create(newUser.id);
-      if (newNotebook) {
+      const newCookbook = await Cookbook.create(newUser.id);
+      if (newCookbook) {
         await newUser.update({
-          notebookId: newNotebook.id,
+          cookbookId: newCookbook.id,
         });
       }
       return newUser;

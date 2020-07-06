@@ -12,7 +12,7 @@ export interface UserModel extends Model {
   id: number;
   username: string;
   email: string;
-  notebookId: number;
+  cookbookId: number;
   token: string;
   createdAt: Date;
   updatedAt: Date;
@@ -43,7 +43,7 @@ export const dbUser = <UserStatic>db.define('user', {
       notEmpty: true,
     },
   },
-  notebookId: DataType.INTEGER,
+  cookbookId: DataType.INTEGER,
   token: DataType.STRING,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
@@ -79,18 +79,18 @@ export const dbAvatar = <AvatarStatic>db.define('avatar', {
   deletedAt: DataType.DATE,
 });
 
-/* Notebook Model */
-export interface NotebookModel extends Model {
+/* Cookbook Model */
+export interface CookbookModel extends Model {
   id: number;
   userId: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 }
-export type NotebookStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): NotebookModel;
+export type CookbookStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): CookbookModel;
 };
-export const dbNotebook = <NotebookStatic>db.define('notebook', {
+export const dbCookbook = <CookbookStatic>db.define('cookbook', {
   id: {
     type: DataType.INTEGER,
     primaryKey: true,
@@ -102,51 +102,51 @@ export const dbNotebook = <NotebookStatic>db.define('notebook', {
   deletedAt: DataType.DATE,
 });
 
-/* Sheet Model */
-export interface SheetModel extends Model {
+/* Recipe Model */
+export interface RecipeModel extends Model {
   id: number;
-  notebookId: number;
+  cookbookId: number;
   title: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 }
-export type SheetStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): SheetModel;
+export type RecipeStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): RecipeModel;
 };
-export const dbSheet = <SheetStatic>db.define('sheet', {
+export const dbRecipe = <RecipeStatic>db.define('recipe', {
   id: {
     type: DataType.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  notebookId: DataType.INTEGER,
+  cookbookId: DataType.INTEGER,
   title: DataType.STRING,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
   deletedAt: DataType.DATE,
 });
 
-/* Sheet Model */
-export interface TodoModel extends Model {
+/* Ingredient Model */
+export interface IngredientModel extends Model {
   id: number;
   text: string;
   isChecked: boolean;
-  sheetId: number;
+  recipeId: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 }
-export type TodoStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): TodoModel;
+export type IngredientStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): IngredientModel;
 };
-export const dbTodo = <TodoStatic>db.define('todo', {
+export const dbIngredient = <IngredientStatic>db.define('ingredient', {
   id: {
     type: DataType.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  sheetId: DataType.INTEGER,
+  recipeId: DataType.INTEGER,
   text: DataType.STRING,
   isChecked: DataType.BOOLEAN,
   createdAt: DataType.DATE,
@@ -157,12 +157,12 @@ export const dbTodo = <TodoStatic>db.define('todo', {
 /* Assossiations */
 dbUser.hasOne(dbAvatar);
 dbAvatar.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
-dbUser.hasOne(dbNotebook);
-dbNotebook.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
-dbNotebook.hasMany(dbSheet);
-dbSheet.belongsTo(dbNotebook, {
-  foreignKey: 'notebookId',
+dbUser.hasOne(dbCookbook);
+dbCookbook.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
+dbCookbook.hasMany(dbRecipe);
+dbRecipe.belongsTo(dbCookbook, {
+  foreignKey: 'cookbookId',
   onDelete: 'CASCADE',
 });
-dbSheet.hasMany(dbTodo);
-dbTodo.belongsTo(dbSheet, { foreignKey: 'sheetId', onDelete: 'CASCADE' });
+dbRecipe.hasMany(dbIngredient);
+dbIngredient.belongsTo(dbRecipe, { foreignKey: 'recipeId', onDelete: 'CASCADE' });

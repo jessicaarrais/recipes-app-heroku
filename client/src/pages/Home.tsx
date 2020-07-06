@@ -1,15 +1,15 @@
 import React from 'react';
-import Notebook from '../components/Cookbook';
+import Cookbook from '../components/Cookbook';
 
 interface Props {
-  notebookId: number;
-  sheets: [];
+  cookbookId: number;
+  recipes: [];
 }
 
 function Home(props: Props) {
   return (
     <div>
-      <Notebook id={props.notebookId} sheets={props.sheets} />
+      <Cookbook id={props.cookbookId} recipes={props.recipes} />
     </div>
   );
 }

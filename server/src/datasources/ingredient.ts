@@ -1,46 +1,53 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { dbTodo, TodoModel, db } from '../store';
+import { dbIngredient, IngredientModel, db } from '../store';
 import { Context } from '..';
 
-interface NewTodo {
+interface NewIngredient {
   text: string;
   isChecked: boolean;
-  sheetId: number;
+  recipeId: number;
 }
 
-interface UpdatedTodo {
+interface UpdatedIngredient {
   text: string;
   isChecked: boolean;
 }
 
-class Todo extends DataSource {
+class Ingredient extends DataSource {
   context: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
   }
 
-  async getTodos(sheetId: number): Promise<Array<TodoModel>> {
-    return await dbTodo.findAll({
-      where: { sheetId },
+  async getIngredients(recipeId: number): Promise<Array<IngredientModel>> {
+    return await dbIngredient.findAll({
+      where: { recipeId },
     });
   }
 
-  async createTodo({ text, isChecked, sheetId }: NewTodo): Promise<TodoModel> {
-    return await dbTodo.create({ text, isChecked, sheetId });
+  async createIngredient({
+    text,
+    isChecked,
+    recipeId,
+  }: NewIngredient): Promise<IngredientModel> {
+    return await dbIngredient.create({ text, isChecked, recipeId });
   }
 
-  async updateTodo(updatedTodo: UpdatedTodo, todoId: number): Promise<TodoModel> {
-    const todo = await dbTodo.findOne({ where: { id: todoId } });
-    if (!todo) {
+  async updateIngredient(
+    updatedIngredient: UpdatedIngredient,
+    ingredientId: number
+  ): Promise<IngredientModel> {
+    const ingredient = await dbIngredient.findOne({ where: { id: ingredientId } });
+    if (!ingredient) {
       return null;
     }
-    return await todo.update(updatedTodo);
+    return await ingredient.update(updatedIngredient);
   }
 
-  async deleteTodo(todoId: number): Promise<boolean> {
-    return (await dbTodo.destroy({ where: { id: todoId } })) === 1;
+  async deleteIngredient(ingredientId: number): Promise<boolean> {
+    return (await dbIngredient.destroy({ where: { id: ingredientId } })) === 1;
   }
 }
 
-export default Todo;
+export default Ingredient;

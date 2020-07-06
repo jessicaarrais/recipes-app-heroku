@@ -1,19 +1,19 @@
-import { NotebookModel } from '../store';
-import SheetGQL from './recipeGQL';
 import { Context } from '..';
+import { CookbookModel } from '../store';
+import RecipeGQL from './recipeGQL';
 
-class NotebookGQL {
+class CookbookGQL {
   id: number;
 
-  constructor(notebookModel: NotebookModel) {
-    this.id = notebookModel.id;
+  constructor(cookbookModel: CookbookModel) {
+    this.id = cookbookModel.id;
   }
 
-  async sheets(_args, context: Context): Promise<Array<SheetGQL>> {
-    return (await context.dataSources.sheetAPI.getSheets(this.id)).map(
-      (sheetModel) => new SheetGQL(sheetModel)
+  async recipes(_args, context: Context): Promise<Array<RecipeGQL>> {
+    return (await context.dataSources.recipeAPI.getRecipes(this.id)).map(
+      (recipeModel) => new RecipeGQL(recipeModel)
     );
   }
 }
 
-export default NotebookGQL;
+export default CookbookGQL;

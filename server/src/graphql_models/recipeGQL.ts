@@ -1,23 +1,23 @@
-import { SheetModel } from '../store';
+import { RecipeModel } from '../store';
 import { Context } from '..';
-import TodoGQL from './ingredientGQL';
+import IngredientGQL from './ingredientGQL';
 
-class SheetGQL {
+class RecipeGQL {
   id: number;
-  notebookId: number;
+  cookbookId: number;
   title: string;
 
-  constructor(sheetModel: SheetModel) {
-    this.id = sheetModel.id;
-    this.notebookId = sheetModel.notebookId;
-    this.title = sheetModel.title;
+  constructor(recipeModel: RecipeModel) {
+    this.id = recipeModel.id;
+    this.cookbookId = recipeModel.cookbookId;
+    this.title = recipeModel.title;
   }
 
-  async todos(_args, context: Context): Promise<Array<TodoGQL>> {
-    return (await context.dataSources.todoAPI.getTodos(this.id)).map(
-      (todoModel) => new TodoGQL(todoModel)
+  async ingredients(_args, context: Context): Promise<Array<IngredientGQL>> {
+    return (await context.dataSources.ingredientAPI.getIngredients(this.id)).map(
+      (ingredientModel) => new IngredientGQL(ingredientModel)
     );
   }
 }
 
-export default SheetGQL;
+export default RecipeGQL;

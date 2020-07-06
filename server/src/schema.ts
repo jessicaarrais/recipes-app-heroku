@@ -1,9 +1,8 @@
 import { gql } from 'apollo-server';
 import UserGQL from './graphql_models/userGQL';
-import AvatarGQL from './graphql_models/AvatarGQL';
-import NotebookGQL from './graphql_models/cookbookGQL';
-import SheetGQL from './graphql_models/recipeGQL';
-import TodoGQL from './graphql_models/ingredientGQL';
+import CookbookGQL from './graphql_models/cookbookGQL';
+import RecipeGQL from './graphql_models/recipeGQL';
+import IngredientGQL from './graphql_models/ingredientGQL';
 
 export interface UserResponseGQL {
   success: boolean;
@@ -11,40 +10,40 @@ export interface UserResponseGQL {
   user: UserGQL;
 }
 
-export interface TodoCreateResponseGQL {
+export interface IngredientCreateResponseGQL {
   success: boolean;
   message: string;
-  sheet: SheetGQL;
+  recipe: RecipeGQL;
 }
 
-export interface TodoUpdateResponseGQL {
+export interface IngredientUpdateResponseGQL {
   success: boolean;
   message: string;
-  todo: TodoGQL;
+  ingredient: IngredientGQL;
 }
 
-export interface TodoDeleteResponseGQL {
+export interface IngredientDeleteResponseGQL {
   success: boolean;
   message: string;
-  sheet: SheetGQL;
+  recipe: RecipeGQL;
 }
 
-export interface SheetCreateResponseGQL {
+export interface RecipeCreateResponseGQL {
   success: boolean;
   message: string;
-  notebook: NotebookGQL;
+  cookbook: CookbookGQL;
 }
 
-export interface SheetUpdateResponseGQL {
+export interface RecipeUpdateResponseGQL {
   success: boolean;
   message: string;
-  sheet: SheetGQL;
+  recipe: RecipeGQL;
 }
 
-export interface SheetDeleteResponseGQL {
+export interface RecipeDeleteResponseGQL {
   success: boolean;
   message: string;
-  notebook: NotebookGQL;
+  cookbook: CookbookGQL;
 }
 
 export interface AvatarResponseGQL {
@@ -59,22 +58,26 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createTodo(text: String, isChecked: Boolean, sheetId: ID!): TodoCreateResponse
-
-    updateTodo(
-      todoId: ID!
+    createIngredient(
       text: String
       isChecked: Boolean
-      sheetId: ID!
-    ): TodoUpdateResponse
+      recipeId: ID!
+    ): IngredientCreateResponse
 
-    deleteTodo(todoId: ID!, sheetId: ID!): TodoDeleteResponse
+    updateIngredient(
+      ingredientId: ID!
+      text: String
+      isChecked: Boolean
+      recipeId: ID!
+    ): IngredientUpdateResponse
 
-    createSheet(title: String, notebookId: ID!): SheetCreateResponse
+    deleteIngredient(ingredientId: ID!, recipeId: ID!): IngredientDeleteResponse
 
-    updateSheet(sheetId: ID!, title: String, notebookId: ID!): SheetUpdateResponse
+    createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
 
-    deleteSheet(sheetId: ID!, notebookId: ID!): SheetDeleteResponse
+    updateRecipe(recipeId: ID!, title: String, cookbookId: ID!): RecipeUpdateResponse
+
+    deleteRecipe(recipeId: ID!, cookbookId: ID!): RecipeDeleteResponse
 
     signin(email: String!, username: String!): UserResponse
 
@@ -87,40 +90,40 @@ const typeDefs = gql`
     uploadAvatar(file: Upload!): AvatarResponseGQL
   }
 
-  type TodoCreateResponse {
+  type IngredientCreateResponse {
     success: Boolean
     message: String
-    sheet: Sheet
+    recipe: Recipe
   }
 
-  type TodoUpdateResponse {
+  type IngredientUpdateResponse {
     success: Boolean
     message: String
-    todo: Todo
+    ingredient: Ingredient
   }
 
-  type TodoDeleteResponse {
+  type IngredientDeleteResponse {
     success: Boolean
     message: String
-    sheet: Sheet
+    recipe: Recipe
   }
 
-  type SheetCreateResponse {
+  type RecipeCreateResponse {
     success: Boolean
     message: String
-    notebook: Notebook
+    cookbook: Cookbook
   }
 
-  type SheetUpdateResponse {
+  type RecipeUpdateResponse {
     success: Boolean
     message: String
-    sheet: Sheet
+    recipe: Recipe
   }
 
-  type SheetDeleteResponse {
+  type RecipeDeleteResponse {
     success: Boolean
     message: String
-    notebook: Notebook
+    cookbook: Cookbook
   }
 
   type AvatarResponseGQL {
@@ -135,23 +138,23 @@ const typeDefs = gql`
     user: User
   }
 
-  type Todo {
+  type Ingredient {
     id: ID!
-    sheetId: ID!
+    recipeId: ID!
     text: String
     isChecked: Boolean
   }
 
-  type Sheet {
+  type Recipe {
     id: ID!
-    notebookId: ID!
+    cookbookId: ID!
     title: String
-    todos: [Todo]
+    ingredients: [Ingredient]
   }
 
-  type Notebook {
+  type Cookbook {
     id: ID!
-    sheets: [Sheet]
+    recipes: [Recipe]
   }
 
   type Avatar {
@@ -164,7 +167,7 @@ const typeDefs = gql`
     email: String
     token: String
     avatar: Avatar
-    notebook: Notebook
+    cookbook: Cookbook
   }
 `;
 

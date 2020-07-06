@@ -4,12 +4,12 @@ import { useMutation } from '@apollo/react-hooks';
 import Button from './Button';
 import Icon from './Icon';
 
-const DELETE_TODO = gql`
-  mutation DeleteTodo($todoId: ID!, $sheetId: ID!) {
-    deleteTodo(todoId: $todoId, sheetId: $sheetId) {
-      sheet {
+const DELETE_INGREDIENT = gql`
+  mutation DeleteIngredient($ingredientId: ID!, $recipeId: ID!) {
+    deleteIngredient(ingredientId: $ingredientId, recipeId: $recipeId) {
+      recipe {
         id
-        todos {
+        ingredients {
           id
         }
       }
@@ -18,12 +18,12 @@ const DELETE_TODO = gql`
 `;
 
 interface Props {
-  todoId: number;
-  sheetId: number;
+  ingredientId: number;
+  recipeId: number;
 }
 
-function DeleteTodoButton(props: Props) {
-  const [deleteTodo, { error }] = useMutation(DELETE_TODO);
+function DeleteIngredientButton(props: Props) {
+  const [deleteIngredient, { error }] = useMutation(DELETE_INGREDIENT);
 
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
 
@@ -31,11 +31,11 @@ function DeleteTodoButton(props: Props) {
     <Button
       type="button"
       actionType="danger"
-      handleOnClick={() => deleteTodo({ variables: props })}
+      handleOnClick={() => deleteIngredient({ variables: props })}
     >
       <Icon icon="clear" />
     </Button>
   );
 }
 
-export default DeleteTodoButton;
+export default DeleteIngredientButton;
