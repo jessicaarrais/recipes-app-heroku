@@ -40,7 +40,7 @@ function CreateRecipeButton(props: Props) {
       }
     >
       <Icon icon="create" />
-      New Sheet
+      New Recipe
     </Button>
   );
 }
