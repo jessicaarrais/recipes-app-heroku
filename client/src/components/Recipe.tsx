@@ -7,6 +7,8 @@ import RecipeTitle from './RecipeTitle';
 import '../assets/css/recipe.css';
 import Button from './Button';
 import Icon from './Icon';
+import Instruction from './Instruction';
+import CreateInstructionButton from './CreateInstructionButton';
 
 export const RECIPE_FRAGMENT = gql`
   fragment RecipeFragment on Recipe {
@@ -17,6 +19,12 @@ export const RECIPE_FRAGMENT = gql`
     ingredients {
       ...IngredientFragment
     }
+    instructions {
+      id
+      recipeId
+      step
+      text
+    }
   }
   ${INGREDIENT_FRAGMENT}
 `;
@@ -26,6 +34,7 @@ interface Props {
   cookbookId: number;
   title: string;
   ingredients: [];
+  instructions?: [];
 }
 
 function Recipe(props: Props) {
@@ -50,11 +59,31 @@ function Recipe(props: Props) {
           />
         ))}
       </ul>
+      {props.instructions && (
+        <ul>
+          {props.instructions.map((instruction: any) => (
+            <Instruction
+              key={instruction.id}
+              id={instruction.id}
+              recipeId={instruction.recipeId}
+              step={instruction.step}
+              text={instruction.text}
+            />
+          ))}
+        </ul>
+      )}
       <div className="sheet-btns-container">
         <div className="create-todo-container">
           <CreateIngredientButton
             text="ingredient"
             isChecked={false}
+            recipeId={props.id}
+          />
+        </div>
+        <div className="create-instruction-container">
+          <CreateInstructionButton
+            step={props.instructions?.length ? props.instructions.length + 1 : 1}
+            text={'Instruction'}
             recipeId={props.id}
           />
         </div>

@@ -10,12 +10,19 @@ interface Props {
 function EditableTextArea(props: Props) {
   const [text, setNewText] = useState(props.children);
   const [isEditing, setIsEditing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const update = (text: string): void => {
-    setIsEditing(false);
     if (text !== props.children) {
-      props.onSubmit(text);
+      try {
+        props.onSubmit(text);
+      } catch (error) {
+        setErrorMessage(error.message);
+        return;
+      }
     }
+    setErrorMessage('');
+    setIsEditing(false);
   };
 
   return (
@@ -52,6 +59,7 @@ function EditableTextArea(props: Props) {
           {props.children}
         </span>
       )}
+      {errorMessage && <p>{errorMessage}</p>}
     </>
   );
 }

@@ -8,9 +8,10 @@ import typeDefs from './schema';
 import resolvers from './resolvers';
 import User from './datasources/user';
 import Avatar from './datasources/avatar';
-import Ingredient from './datasources/ingredient';
-import Recipe from './datasources/recipe';
 import Cookbook from './datasources/cookbook';
+import Recipe from './datasources/recipe';
+import Ingredient from './datasources/ingredient';
+import Instruction from './datasources/instruction';
 
 interface MyContext {
   user: UserModel | null;
@@ -22,6 +23,7 @@ interface MyDataSources {
     cookbookAPI: Cookbook;
     recipeAPI: Recipe;
     ingredientAPI: Ingredient;
+    instructionAPI: Instruction;
   };
 }
 export type Context = MyContext & MyDataSources;
@@ -32,6 +34,7 @@ const dataSources = (): DataSources<Context> => ({
   cookbookAPI: new Cookbook(),
   recipeAPI: new Recipe(),
   ingredientAPI: new Ingredient(),
+  instructionAPI: new Instruction(),
 });
 
 const context = async ({ req }): Promise<MyContext> => {

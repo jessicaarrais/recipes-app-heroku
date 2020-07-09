@@ -26,6 +26,7 @@ function Ingredient(props: Props) {
   const [isShowingDeleteIngredientButton, setIsShowingDeleteIngredientButton] = useState(
     false
   );
+
   return (
     <li
       className="todo-li"

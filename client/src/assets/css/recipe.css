@@ -25,6 +25,7 @@
 }
 
 .create-todo-container,
+.create-instruction-container,
 .delete-sheet-container {
   display: flex;
   flex: 1;

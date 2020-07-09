@@ -38,6 +38,7 @@ function Cookbook(props: Props) {
             cookbookId={recipe.cookbookId}
             title={recipe.title}
             ingredients={recipe.ingredients}
+            instructions={recipe.instructions}
           />
         ))}
       </ul>

@@ -3,6 +3,7 @@ import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
 import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
+import InstructionGQl from './graphql_models/instructionGQL';
 
 export interface UserResponseGQL {
   success: boolean;
@@ -10,22 +11,10 @@ export interface UserResponseGQL {
   user: UserGQL;
 }
 
-export interface IngredientCreateResponseGQL {
+export interface AvatarResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL;
-}
-
-export interface IngredientUpdateResponseGQL {
-  success: boolean;
-  message: string;
-  ingredient: IngredientGQL;
-}
-
-export interface IngredientDeleteResponseGQL {
-  success: boolean;
-  message: string;
-  recipe: RecipeGQL;
+  user: UserGQL;
 }
 
 export interface RecipeCreateResponseGQL {
@@ -46,10 +35,40 @@ export interface RecipeDeleteResponseGQL {
   cookbook: CookbookGQL;
 }
 
-export interface AvatarResponseGQL {
+export interface IngredientCreateResponseGQL {
   success: boolean;
   message: string;
-  user: UserGQL;
+  recipe: RecipeGQL;
+}
+
+export interface IngredientUpdateResponseGQL {
+  success: boolean;
+  message: string;
+  ingredient: IngredientGQL;
+}
+
+export interface IngredientDeleteResponseGQL {
+  success: boolean;
+  message: string;
+  recipe: RecipeGQL;
+}
+
+export interface InstructionCreateResponseGQL {
+  success: boolean;
+  message: string;
+  recipe: RecipeGQL;
+}
+
+export interface InstructionUpdateResponseGQL {
+  success: boolean;
+  message: string;
+  instruction: InstructionGQl;
+}
+
+export interface InstructionDeleteResponseGQL {
+  success: boolean;
+  message: string;
+  recipe: RecipeGQL;
 }
 
 const typeDefs = gql`
@@ -58,6 +77,22 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    signin(email: String!, username: String!): UserResponse
+
+    login(email: String): UserResponse
+
+    updateUser(username: String): UserResponse
+
+    deleteUser: UserResponse
+
+    uploadAvatar(file: Upload!): AvatarResponseGQL
+
+    createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
+
+    updateRecipe(recipeId: ID!, title: String, cookbookId: ID!): RecipeUpdateResponse
+
+    deleteRecipe(recipeId: ID!, cookbookId: ID!): RecipeDeleteResponse
+
     createIngredient(
       text: String
       isChecked: Boolean
@@ -73,39 +108,28 @@ const typeDefs = gql`
 
     deleteIngredient(ingredientId: ID!, recipeId: ID!): IngredientDeleteResponse
 
-    createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
+    createInstruction(step: Int, text: String, recipeId: ID!): InstructionCreateResponse
 
-    updateRecipe(recipeId: ID!, title: String, cookbookId: ID!): RecipeUpdateResponse
+    updateInstruction(
+      instructionId: ID!
+      step: Int
+      text: String
+      recipeId: ID!
+    ): InstructionUpdateResponse
 
-    deleteRecipe(recipeId: ID!, cookbookId: ID!): RecipeDeleteResponse
-
-    signin(email: String!, username: String!): UserResponse
-
-    login(email: String): UserResponse
-
-    updateUser(username: String): UserResponse
-
-    deleteUser: UserResponse
-
-    uploadAvatar(file: Upload!): AvatarResponseGQL
+    deleteInstruction(instructionId: ID!, recipeId: ID!): InstructionDeleteResponse
   }
 
-  type IngredientCreateResponse {
+  type UserResponse {
     success: Boolean
     message: String
-    recipe: Recipe
+    user: User
   }
 
-  type IngredientUpdateResponse {
+  type AvatarResponseGQL {
     success: Boolean
     message: String
-    ingredient: Ingredient
-  }
-
-  type IngredientDeleteResponse {
-    success: Boolean
-    message: String
-    recipe: Recipe
+    user: User
   }
 
   type RecipeCreateResponse {
@@ -126,39 +150,40 @@ const typeDefs = gql`
     cookbook: Cookbook
   }
 
-  type AvatarResponseGQL {
+  type IngredientCreateResponse {
     success: Boolean
     message: String
-    user: User
+    recipe: Recipe
   }
 
-  type UserResponse {
+  type IngredientUpdateResponse {
     success: Boolean
     message: String
-    user: User
+    ingredient: Ingredient
   }
 
-  type Ingredient {
-    id: ID!
-    recipeId: ID!
-    text: String
-    isChecked: Boolean
+  type IngredientDeleteResponse {
+    success: Boolean
+    message: String
+    recipe: Recipe
   }
 
-  type Recipe {
-    id: ID!
-    cookbookId: ID!
-    title: String
-    ingredients: [Ingredient]
+  type InstructionCreateResponse {
+    success: Boolean
+    message: String
+    recipe: Recipe
   }
 
-  type Cookbook {
-    id: ID!
-    recipes: [Recipe]
+  type InstructionUpdateResponse {
+    success: Boolean
+    message: String
+    instruction: Instruction
   }
 
-  type Avatar {
-    uri: String
+  type InstructionDeleteResponse {
+    success: Boolean
+    message: String
+    recipe: Recipe
   }
 
   type User {
@@ -168,6 +193,37 @@ const typeDefs = gql`
     token: String
     avatar: Avatar
     cookbook: Cookbook
+  }
+
+  type Avatar {
+    uri: String
+  }
+
+  type Cookbook {
+    id: ID!
+    recipes: [Recipe]
+  }
+
+  type Recipe {
+    id: ID!
+    cookbookId: ID!
+    title: String
+    ingredients: [Ingredient]
+    instructions: [Instruction]
+  }
+
+  type Ingredient {
+    id: ID!
+    recipeId: ID!
+    text: String
+    isChecked: Boolean
+  }
+
+  type Instruction {
+    id: ID!
+    recipeId: ID!
+    step: Int
+    text: String
   }
 `;
 

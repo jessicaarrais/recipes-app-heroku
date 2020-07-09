@@ -131,8 +131,8 @@ export const dbRecipe = <RecipeStatic>db.define('recipe', {
 export interface IngredientModel extends Model {
   id: number;
   text: string;
-  isChecked: boolean;
   recipeId: number;
+  isChecked: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -154,6 +154,33 @@ export const dbIngredient = <IngredientStatic>db.define('ingredient', {
   deletedAt: DataType.DATE,
 });
 
+/* Instruction Model */
+export interface InstructionModel extends Model {
+  id: number;
+  recipeId: number;
+  step: number;
+  text: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+}
+export type InstructionStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): InstructionModel;
+};
+export const dbInstruction = <InstructionStatic>db.define('instruction', {
+  id: {
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  recipeId: DataType.STRING,
+  step: DataType.INTEGER,
+  text: DataType.STRING,
+  createdAt: DataType.DATE,
+  updatedAt: DataType.DATE,
+  deletedAt: DataType.DATE,
+});
+
 /* Assossiations */
 dbUser.hasOne(dbAvatar);
 dbAvatar.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
@@ -166,3 +193,5 @@ dbRecipe.belongsTo(dbCookbook, {
 });
 dbRecipe.hasMany(dbIngredient);
 dbIngredient.belongsTo(dbRecipe, { foreignKey: 'recipeId', onDelete: 'CASCADE' });
+dbRecipe.hasMany(dbInstruction);
+dbInstruction.belongsTo(dbRecipe, { foreignKey: 'recipeId', onDelete: 'CASCADE' });
