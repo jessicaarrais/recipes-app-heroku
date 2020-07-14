@@ -7,7 +7,7 @@ import '../assets/css/instruction.css';
 interface Props {
   id: number;
   recipeId: number;
-  step: number;
+  step: string;
   text: string;
 }
 
@@ -19,21 +19,22 @@ function Instruction(props: Props) {
 
   return (
     <li
-      style={{ marginBottom: '32px' }}
       className="instruction-li"
       onMouseOver={() => setIsShowingDeleteInstructionButton(true)}
       onMouseLeave={() => setIsShowingDeleteInstructionButton(false)}
     >
-      <InstructionStep
-        instructionId={props.id}
-        recipeId={props.recipeId}
-        step={props.step}
-      />
-      <InstructionText
-        instructionId={props.id}
-        recipeId={props.recipeId}
-        text={props.text}
-      />
+      <div className="instructions-container">
+        <InstructionStep
+          instructionId={props.id}
+          recipeId={props.recipeId}
+          step={props.step}
+        />
+        <InstructionText
+          instructionId={props.id}
+          recipeId={props.recipeId}
+          text={props.text}
+        />
+      </div>
       {isShowingDeleteInstructionButton && (
         <div>
           <DeleteInstructionButton instructionId={props.id} recipeId={props.recipeId} />

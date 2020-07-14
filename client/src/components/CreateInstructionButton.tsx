@@ -5,7 +5,7 @@ import Button from './Button';
 import Icon from './Icon';
 
 const CREATE_INSTRUCTION = gql`
-  mutation CreateInstruction($step: Int, $text: String, $recipeId: ID!) {
+  mutation CreateInstruction($step: String, $text: String, $recipeId: ID!) {
     createInstruction(step: $step, text: $text, recipeId: $recipeId) {
       recipe {
         id
@@ -21,7 +21,7 @@ const CREATE_INSTRUCTION = gql`
 `;
 
 interface Props {
-  step: number;
+  step: string;
   text: string;
   recipeId: number;
 }

@@ -3,7 +3,7 @@ import { InstructionModel } from '../store';
 class InstructionGQl {
   id: number;
   recipeId: number;
-  step: number;
+  step: string;
   text: string;
 
   constructor(instructionModel: InstructionModel) {

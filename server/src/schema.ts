@@ -108,11 +108,15 @@ const typeDefs = gql`
 
     deleteIngredient(ingredientId: ID!, recipeId: ID!): IngredientDeleteResponse
 
-    createInstruction(step: Int, text: String, recipeId: ID!): InstructionCreateResponse
+    createInstruction(
+      step: String
+      text: String
+      recipeId: ID!
+    ): InstructionCreateResponse
 
     updateInstruction(
       instructionId: ID!
-      step: Int
+      step: String
       text: String
       recipeId: ID!
     ): InstructionUpdateResponse
@@ -222,7 +226,7 @@ const typeDefs = gql`
   type Instruction {
     id: ID!
     recipeId: ID!
-    step: Int
+    step: String
     text: String
   }
 `;

@@ -3,13 +3,13 @@ import { Context } from '..';
 import { InstructionModel, dbInstruction } from '../store';
 
 interface NewInstruction {
-  step: number;
+  step: string;
   text: string;
   recipeId: number;
 }
 
 interface UpdatedInstruction {
-  step: number;
+  step: string;
   text: string;
 }
 

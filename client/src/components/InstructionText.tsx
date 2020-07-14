@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 const UPDATE_INSTRUCTION = gql`
   mutation UpdateInstruction(
     $instructionId: ID!
-    $step: Int
+    $step: String
     $text: String
     $recipeId: ID!
   ) {

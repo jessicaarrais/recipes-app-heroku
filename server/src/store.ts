@@ -158,7 +158,7 @@ export const dbIngredient = <IngredientStatic>db.define('ingredient', {
 export interface InstructionModel extends Model {
   id: number;
   recipeId: number;
-  step: number;
+  step: string;
   text: string;
   createdAt: Date;
   updatedAt: Date;
@@ -174,7 +174,7 @@ export const dbInstruction = <InstructionStatic>db.define('instruction', {
     autoIncrement: true,
   },
   recipeId: DataType.STRING,
-  step: DataType.INTEGER,
+  step: DataType.STRING,
   text: DataType.STRING,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,

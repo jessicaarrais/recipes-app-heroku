@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 const UPDATE_INSTRUCTION = gql`
   mutation UpdateInstruction(
     $instructionId: ID!
-    $step: Int
+    $step: String
     $text: String
     $recipeId: ID!
   ) {
@@ -27,40 +27,26 @@ const UPDATE_INSTRUCTION = gql`
 interface Props {
   instructionId: number;
   recipeId: number;
-  step: number;
+  step: string;
 }
 
 function InstructionStep(props: Props) {
   const [updateInstruction] = useMutation(UPDATE_INSTRUCTION);
 
-  const validate = (step: string): number => {
-    const stepToInt = parseInt(step, 10);
-    if (isNaN(stepToInt)) {
-      throw new Error('Step must be a number');
-    }
-    return stepToInt;
-  };
-
   const onSubmit = (step: string): void => {
-    const validatedStep = validate(step);
-    if (validatedStep) {
-      updateInstruction({
-        variables: {
-          instructionId: props.instructionId,
-          step: parseInt(step, 10),
-          recipeId: props.recipeId,
-        },
-      });
-    }
+    updateInstruction({
+      variables: {
+        instructionId: props.instructionId,
+        step,
+        recipeId: props.recipeId,
+      },
+    });
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <label>Step</label>
-      <EditableTextArea semanticalType="p" onSubmit={onSubmit}>
-        {props.step.toString()}
-      </EditableTextArea>
-    </div>
+    <EditableTextArea semanticalType="p" onSubmit={onSubmit}>
+      {props.step}
+    </EditableTextArea>
   );
 }
 
