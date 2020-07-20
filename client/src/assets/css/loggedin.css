@@ -10,10 +10,19 @@
   padding: 80px 0;
 }
 
-.back-to-top-icon {
+.back-to-top-icon,
+.showed {
+  display: block;
   width: 32px;
   height: 32px;
   position: fixed;
   right: 64px;
   bottom: 64px;
+  opacity: 1;
+  transition: opacity cubic-bezier(0, 0.3, 0.6, 1) 0.5s;
+}
+
+.hidden {
+  opacity: 0;
+  transition: opacity cubic-bezier(1, 0.6, 0.3, 0) 0.5s;
 }

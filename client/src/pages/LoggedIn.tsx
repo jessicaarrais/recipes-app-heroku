@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
@@ -38,7 +38,21 @@ export const GET_COOKBOOK = gql`
 `;
 
 function LoggedIn() {
+  const [isShowingArrowUp, setIsShowingArrowUp] = useState('hidden');
   const { data, loading, error } = useQuery(GET_COOKBOOK);
+
+  const handleScroll = () => {
+    if (window.scrollY <= 260) {
+      setIsShowingArrowUp('hidden');
+    } else {
+      setIsShowingArrowUp('showed');
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>An error has occurred. ${error.message}</h1>;
@@ -57,8 +71,14 @@ function LoggedIn() {
                   cookbookId={data.user.cookbook.id}
                   recipes={data.user.cookbook.recipes}
                 />
-                <div className="back-to-top-icon">
-                  <Button type="button" actionType="default">
+                <div className={`back-to-top-icon ${isShowingArrowUp}`}>
+                  <Button
+                    type="button"
+                    actionType="default"
+                    handleOnClick={() => {
+                      window.scrollTo(0, 0);
+                    }}
+                  >
                     <Icon icon="keyboard_arrow_up" />
                   </Button>
                 </div>
