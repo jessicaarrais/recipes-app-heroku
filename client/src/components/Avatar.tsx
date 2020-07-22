@@ -7,7 +7,7 @@ const UPLOAD_AVATAR = gql`
     uploadAvatar(file: $file) {
       success
       message
-      user {
+      me {
         id
         avatar {
           uri
@@ -31,7 +31,7 @@ function Avatar(props: Props) {
         setErrorMessage(data.uploadAvatar.message);
         return;
       }
-      setUriState(data.uploadAvatar.user.avatar.uri);
+      setUriState(data.uploadAvatar.me.avatar.uri);
     },
   });
 

@@ -20,7 +20,6 @@ const CREATE_RECIPE = gql`
 `;
 
 interface Props {
-  title: string;
   cookbookId: number;
 }
 
@@ -35,7 +34,7 @@ function CreateRecipeButton(props: Props) {
       actionType="primary"
       handleOnClick={() =>
         createRecipe({
-          variables: { title: props.title, cookbookId: props.cookbookId },
+          variables: { title: 'Title', cookbookId: props.cookbookId },
         })
       }
     >

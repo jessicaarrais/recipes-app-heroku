@@ -21,8 +21,6 @@ const CREATE_INSTRUCTION = gql`
 `;
 
 interface Props {
-  step: string;
-  text: string;
   recipeId: number;
 }
 
@@ -33,7 +31,11 @@ function CreateInstructionButton(props: Props) {
     <Button
       type="button"
       actionType="primary"
-      handleOnClick={() => createInstruction({ variables: props })}
+      handleOnClick={() =>
+        createInstruction({
+          variables: { recipeId: props.recipeId, step: 'Step: ', text: 'Instruction' },
+        })
+      }
     >
       <Icon icon="add" />
       add instruction

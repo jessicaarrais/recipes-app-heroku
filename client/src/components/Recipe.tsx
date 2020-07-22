@@ -74,18 +74,10 @@ function Recipe(props: Props) {
       )}
       <div className="sheet-btns-container">
         <div className="create-todo-container">
-          <CreateIngredientButton
-            text="ingredient"
-            isChecked={false}
-            recipeId={props.id}
-          />
+          <CreateIngredientButton recipeId={props.id} />
         </div>
         <div className="create-instruction-container">
-          <CreateInstructionButton
-            step="Step:"
-            text={'Instruction'}
-            recipeId={props.id}
-          />
+          <CreateInstructionButton recipeId={props.id} />
         </div>
         <div className="delete-sheet-container">
           <DeleteRecipeButton recipeId={props.id} cookbookId={props.cookbookId} />

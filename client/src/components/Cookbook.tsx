@@ -15,7 +15,7 @@ function Cookbook(props: Props) {
     <div>
       <div className="notebook-header">
         <div className="create-sheet-container">
-          <CreateRecipeButton title="Title" cookbookId={props.id} />
+          <CreateRecipeButton cookbookId={props.id} />
         </div>
         <div className="notebook-list-organizers-container">
           <div className="filter-list-container">

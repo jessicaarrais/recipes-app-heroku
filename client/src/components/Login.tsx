@@ -9,7 +9,7 @@ const LOGIN = gql`
     login(email: $email) {
       success
       message
-      user {
+      me {
         username
         token
       }
@@ -28,7 +28,7 @@ function Login() {
         setErrorMessage(data.login.message);
         return;
       }
-      localStorage.setItem('token', data.login.user.token);
+      localStorage.setItem('token', data.login.me.token);
       client.writeData({ data: { isLoggedIn: true } });
     },
   });

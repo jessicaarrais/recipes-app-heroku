@@ -5,16 +5,16 @@ import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
 import InstructionGQl from './graphql_models/instructionGQL';
 
-export interface UserResponseGQL {
+export interface MeResponseGQL {
   success: boolean;
   message: string;
-  user: UserGQL;
+  me: UserGQL;
 }
 
 export interface AvatarResponseGQL {
   success: boolean;
   message: string;
-  user: UserGQL;
+  me: UserGQL;
 }
 
 export interface RecipeCreateResponseGQL {
@@ -73,17 +73,18 @@ export interface InstructionDeleteResponseGQL {
 
 const typeDefs = gql`
   type Query {
-    user(email: String): User
+    me: User
+    user(username: String): User
   }
 
   type Mutation {
-    signin(email: String!, username: String!): UserResponse
+    signin(email: String!, username: String!): MeResponse
 
-    login(email: String): UserResponse
+    login(email: String): MeResponse
 
-    updateUser(username: String): UserResponse
+    updateUser(username: String): MeResponse
 
-    deleteUser: UserResponse
+    deleteUser: MeResponse
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
@@ -124,16 +125,16 @@ const typeDefs = gql`
     deleteInstruction(instructionId: ID!, recipeId: ID!): InstructionDeleteResponse
   }
 
-  type UserResponse {
+  type MeResponse {
     success: Boolean
     message: String
-    user: User
+    me: User
   }
 
   type AvatarResponseGQL {
     success: Boolean
     message: String
-    user: User
+    me: User
   }
 
   type RecipeCreateResponse {

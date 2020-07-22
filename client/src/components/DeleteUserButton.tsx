@@ -8,7 +8,7 @@ import Icon from './Icon';
 const DELETE_USER = gql`
   mutation DeleteUser {
     deleteUser {
-      user {
+      me {
         id
         email
       }

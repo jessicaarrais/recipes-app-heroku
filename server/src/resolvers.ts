@@ -1,6 +1,6 @@
 import { Context } from '.';
 import {
-  UserResponseGQL,
+  MeResponseGQL,
   AvatarResponseGQL,
   RecipeCreateResponseGQL,
   RecipeUpdateResponseGQL,
@@ -20,81 +20,91 @@ import InstructionGQl from './graphql_models/instructionGQL';
 
 const resolvers = {
   Query: {
-    user: async (_, __, context: Context): Promise<UserGQL> => {
-      const userModel = await context.dataSources.userAPI.getUser();
+    me: async (_, __, context: Context): Promise<UserGQL> => {
+      const meModel = await context.dataSources.userAPI.getUser();
+      if (!meModel) return null;
+      return new UserGQL(meModel);
+    },
+
+    user: async (_, args, context: Context): Promise<UserGQL> => {
+      const userModel = await context.dataSources.userAPI.getUser({
+        username: args.username,
+      });
       if (!userModel) return null;
       return new UserGQL(userModel);
     },
   },
 
   Mutation: {
-    signin: async (_, args, context: Context): Promise<UserResponseGQL> => {
+    signin: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
         const newUserModel = await context.dataSources.userAPI.createUser({
           email: args.email,
           username: args.username,
         });
+        context.user = newUserModel;
         return {
           success: true,
           message: 'Created',
-          user: new UserGQL(newUserModel),
+          me: new UserGQL(newUserModel),
         };
       } catch (error) {
         return {
           success: false,
           message: error.message,
-          user: null,
+          me: null,
         };
       }
     },
 
-    login: async (_, args, context: Context): Promise<UserResponseGQL> => {
+    login: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
-        const userModel = await context.dataSources.userAPI.findUserByEmail(args.email);
+        const meModel = await context.dataSources.userAPI.findUserByEmail(args.email);
+        context.user = meModel;
         return {
           success: true,
           message: 'Logged',
-          user: new UserGQL(userModel),
+          me: new UserGQL(meModel),
         };
       } catch (error) {
         return {
           success: false,
           message: error.message,
-          user: null,
+          me: null,
         };
       }
     },
 
-    updateUser: async (_, args, context: Context): Promise<UserResponseGQL> => {
+    updateUser: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
-        const userModel = await context.dataSources.userAPI.updateUser({
+        const meModel = await context.dataSources.userAPI.updateUser({
           username: args.username,
         });
         return {
           success: true,
           message: 'Updated',
-          user: new UserGQL(userModel),
+          me: new UserGQL(meModel),
         };
       } catch (error) {
         return {
           success: false,
           message: error.message,
-          user: null,
+          me: null,
         };
       }
     },
 
-    deleteUser: async (_, __, context: Context): Promise<UserResponseGQL> => {
-      const user = new UserGQL(context.user);
+    deleteUser: async (_, __, context: Context): Promise<MeResponseGQL> => {
+      const me = new UserGQL(context.user);
       const deletedUser = await context.dataSources.userAPI.deleteUser();
       if (!deletedUser) {
         return {
           success: false,
           message: 'User not deleted',
-          user: null,
+          me: null,
         };
       }
-      return { success: true, message: 'User deleted', user };
+      return { success: true, message: 'User deleted', me };
     },
 
     uploadAvatar: async (_, args, context: Context): Promise<AvatarResponseGQL> => {
@@ -103,13 +113,13 @@ const resolvers = {
         return {
           success: true,
           message: 'Avatar updated',
-          user: new UserGQL(context.user),
+          me: new UserGQL(context.user),
         };
       } catch (error) {
         return {
           success: false,
           message: error.message,
-          user: null,
+          me: null,
         };
       }
     },

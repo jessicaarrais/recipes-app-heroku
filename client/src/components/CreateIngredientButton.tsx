@@ -23,8 +23,6 @@ const CREATE_INGREDIENT = gql`
 `;
 
 interface Props {
-  text: string;
-  isChecked: boolean;
   recipeId: number;
 }
 
@@ -35,7 +33,15 @@ function CreateIngredientButton(props: Props) {
     <Button
       type="button"
       actionType="primary"
-      handleOnClick={() => createIngredient({ variables: props })}
+      handleOnClick={() =>
+        createIngredient({
+          variables: {
+            recipeId: props.recipeId,
+            text: 'New Ingredient',
+            isChecked: false,
+          },
+        })
+      }
     >
       <Icon icon="add" />
       add ingredient

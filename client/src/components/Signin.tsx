@@ -10,7 +10,7 @@ const CREATE_USER = gql`
       __typename
       success
       message
-      user {
+      me {
         username
         token
       }
@@ -30,7 +30,7 @@ function Signin() {
         setErrorMessage(data.signin.message);
         return;
       }
-      localStorage.setItem('token', data.signin.user.token);
+      localStorage.setItem('token', data.signin.me.token);
       client.writeData({ data: { isLoggedIn: true } });
     },
   });

@@ -5,7 +5,7 @@ import { db, dbUser, UserModel } from '../store';
 import Cookbook from './cookbook';
 
 interface CurrentUser {
-  id?: number;
+  username?: string;
 }
 
 interface NewUser {
@@ -24,9 +24,11 @@ class User extends DataSource {
     this.context = config.context;
   }
 
-  async getUser({ id }: CurrentUser = {}): Promise<UserModel> {
+  async getUser({ username }: CurrentUser = {}): Promise<UserModel> {
     await db.sync();
-    const user = id ? await dbUser.findOne({ where: { id } }) : this.context.user;
+    const user = username
+      ? await dbUser.findOne({ where: { username } })
+      : this.context.user;
     if (!user) return null;
     return user;
   }

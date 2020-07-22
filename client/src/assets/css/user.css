@@ -1,0 +1,22 @@
+.recipes {
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1em;
+  width: 100%;
+}
+
+.recipe {
+  grid-column-end: span 1;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.recipes > li {
+  list-style: none;
+}
+
+.recipes > li > h2 {
+  text-align: center;
+}

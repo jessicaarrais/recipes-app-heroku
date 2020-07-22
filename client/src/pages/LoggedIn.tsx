@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from 'react-router';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import Home from './Home';
+import User from './User';
 import Settings from './Settings';
 import { RECIPE_FRAGMENT } from '../components/Recipe';
 import NavigationBar from '../components/NavigationBar';
@@ -22,8 +23,8 @@ export const COOKBOOK_FRAGMENT = gql`
 `;
 
 export const GET_COOKBOOK = gql`
-  query User {
-    user {
+  query Me {
+    me {
       id
       username
       avatar {
@@ -59,7 +60,7 @@ function LoggedIn() {
 
   return (
     <div className="body-loggedin">
-      <NavigationBar username={data.user.username} uri={data.user.avatar?.uri} />
+      <NavigationBar username={data.me.username} uri={data.me.avatar?.uri} />
       <section className="loggedin-section">
         <Switch>
           <Redirect exact from="/" to="/home" />
@@ -68,8 +69,8 @@ function LoggedIn() {
             render={() => (
               <>
                 <Home
-                  cookbookId={data.user.cookbook.id}
-                  recipes={data.user.cookbook.recipes}
+                  cookbookId={data.me.cookbook.id}
+                  recipes={data.me.cookbook.recipes}
                 />
                 <div className={`back-to-top-icon ${isShowingArrowUp}`}>
                   <Button
@@ -88,9 +89,10 @@ function LoggedIn() {
           <Route
             path="/account-settings"
             render={() => (
-              <Settings username={data.user.username} uri={data.user.avatar?.uri} />
+              <Settings username={data.me.username} uri={data.me.avatar?.uri} />
             )}
           />
+          <Route path="/:username" children={<User />} />
         </Switch>
       </section>
     </div>
