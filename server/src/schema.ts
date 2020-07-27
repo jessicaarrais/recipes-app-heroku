@@ -75,6 +75,7 @@ const typeDefs = gql`
   type Query {
     me: User
     user(username: String): User
+    searchRecipes(value: String): [Recipe]
   }
 
   type Mutation {

@@ -10,6 +10,7 @@ interface Props {
     | 'delete_forever'
     | 'filter_list'
     | 'sort'
+    | 'search'
     | 'favorite_border'
     | 'keyboard_arrow_up';
 }

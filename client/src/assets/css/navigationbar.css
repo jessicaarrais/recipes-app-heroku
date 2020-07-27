@@ -1,13 +1,13 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   position: fixed;
   top: 0px;
   left: 0;
   right: 0;
   z-index: 1;
-  padding: 8px;
+  padding: 16px 24px;
   background-color: #ffccbc;
   box-shadow: 0 0 4px 0 #bdbdbd;
 }
@@ -16,8 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 8px 16px;
-  border-radius: 50%;
+  border-radius: 16px;
   cursor: pointer;
   text-decoration: none;
 }
@@ -33,7 +32,7 @@
 
 .nav-span-username {
   color: #000000;
-  margin: 0;
+  margin-left: 8px;
   font-weight: bold;
 }
 

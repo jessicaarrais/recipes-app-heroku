@@ -1,4 +1,5 @@
 import { Context } from '.';
+import { RecipeModel } from './store';
 import {
   MeResponseGQL,
   AvatarResponseGQL,
@@ -32,6 +33,12 @@ const resolvers = {
       });
       if (!userModel) return null;
       return new UserGQL(userModel);
+    },
+
+    searchRecipes: async (_, args, context: Context): Promise<Array<RecipeGQL>> => {
+      const recipesModel = await context.dataSources.recipeAPI.searchRecipes(args.value);
+      if (!recipesModel) return null;
+      return recipesModel.map((recipe: RecipeModel) => new RecipeGQL(recipe));
     },
   },
 

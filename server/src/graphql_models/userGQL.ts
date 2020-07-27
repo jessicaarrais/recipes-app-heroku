@@ -17,7 +17,7 @@ class UserGQL {
   }
 
   async token(_args, context: Context): Promise<string> {
-    return this.id != context.user.id ? null : this._token;
+    return this.id !== context.user.id ? null : this._token;
   }
 
   async avatar(_args, context: Context): Promise<AvatarGQL> {

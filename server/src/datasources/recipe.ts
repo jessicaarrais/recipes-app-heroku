@@ -1,6 +1,7 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
+import { Op } from 'sequelize';
 
 interface NewRecipe {
   title: string;
@@ -16,6 +17,14 @@ class Recipe extends DataSource {
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
+  }
+
+  async searchRecipes(value: string): Promise<Array<RecipeModel>> {
+    const recipes = await dbRecipe.findAll({
+      where: { title: { [Op.like]: `%${value}%` } },
+    });
+    if (!recipes) return null;
+    return recipes;
   }
 
   async getRecipe(recipeId: number): Promise<RecipeModel> {

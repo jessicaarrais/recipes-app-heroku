@@ -5,6 +5,7 @@ interface Props {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   children?: ButtonHTMLAttributes<HTMLButtonElement>['children'];
   actionType: 'default' | 'primary' | 'secondary' | 'danger';
+  disabled?: boolean;
   handleOnClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 
@@ -13,6 +14,7 @@ function Button(props: Props) {
     <button
       type={props.type}
       className={`base ${props.actionType}`}
+      disabled={props.disabled}
       onClick={props.handleOnClick}
     >
       {props.children}

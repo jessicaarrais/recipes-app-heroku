@@ -23,6 +23,10 @@
   background-color: #b6c2b7;
 }
 
+.default:hover {
+  background-color: #8d9e8e;
+}
+
 .primary,
 .danger {
   background-color: #e8f5e9;
@@ -30,6 +34,11 @@
 
 .primary:hover {
   background-color: #b6c2b7;
+}
+
+.secondary:hover {
+  border-radius: 50%;
+  background-color: antiquewhite;
 }
 
 .danger:hover {

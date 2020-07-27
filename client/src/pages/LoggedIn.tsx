@@ -10,6 +10,7 @@ import NavigationBar from '../components/NavigationBar';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import '../assets/css/loggedin.css';
+import { SearchResponse } from '../components/Search';
 
 export const COOKBOOK_FRAGMENT = gql`
   fragment CookbookFragment on Cookbook {
@@ -92,7 +93,8 @@ function LoggedIn() {
               <Settings username={data.me.username} uri={data.me.avatar?.uri} />
             )}
           />
-          <Route path="/:username" children={<User />} />
+          <Route path="/user/:username" children={<User />} />
+          <Route path="/search/:value" children={<SearchResponse />} />
         </Switch>
       </section>
     </div>
