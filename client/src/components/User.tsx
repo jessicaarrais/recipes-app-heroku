@@ -10,7 +10,7 @@ const UPDATE_USER = gql`
     updateUser(username: $username) {
       success
       message
-      user {
+      me {
         id
         username
       }
@@ -25,10 +25,13 @@ interface Props {
 
 function User(props: Props) {
   const [errorMessage, setErrorMessage] = useState(null);
+
   const [updateUser, { error }] = useMutation(UPDATE_USER, {
     onCompleted(data) {
       if (!data.updateUser.success) {
         setErrorMessage(data.updateUser.message);
+      } else {
+        setErrorMessage(null);
       }
     },
   });
@@ -44,7 +47,7 @@ function User(props: Props) {
       <EditableTextArea semanticalType="p" onSubmit={onSubmit}>
         {props.username}
       </EditableTextArea>
-      {errorMessage && <p>{errorMessage}</p>}
+      <p>{errorMessage}</p>
       <Avatar uri={props.uri} />
       <DeleteUserButton />
     </>

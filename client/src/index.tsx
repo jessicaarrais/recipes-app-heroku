@@ -1,6 +1,7 @@
-import React from 'react';
+import * as serviceWorker from './serviceWorker';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, Redirect, Switch } from 'react-router';
+import { Router } from 'react-router';
 import { createBrowserHistory } from 'history';
 import gql from 'graphql-tag';
 import ApolloClient from 'apollo-client';
@@ -11,9 +12,9 @@ import { setContext } from 'apollo-link-context';
 import { typeDefs } from './resolvers';
 import LoggedIn from './pages/LoggedIn';
 import LoggedOut from './pages/LoggedOut';
-import * as serviceWorker from './serviceWorker';
 import './index.css';
-import User from './pages/User';
+import Button from './components/Button';
+import Icon from './components/Icon';
 
 const httpLink = createUploadLink({ uri: 'http://localhost:4000/graphql' });
 const authLink = setContext((_, { headers }) => {
@@ -48,8 +49,39 @@ const IS_LOGGED_IN = gql`
 `;
 
 function LandingPage() {
+  const [isShowingArrowUp, setIsShowingArrowUp] = useState('hidden');
+
   const { data } = useQuery(IS_LOGGED_IN);
-  return data.isLoggedIn ? <LoggedIn /> : <Redirect to="/" />;
+
+  const handleScroll = () => {
+    if (window.scrollY <= 260) {
+      setIsShowingArrowUp('hidden');
+    } else {
+      setIsShowingArrowUp('showed');
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
+
+  return (
+    <>
+      {data.isLoggedIn ? <LoggedIn /> : <LoggedOut />}
+      <div className={`back-to-top-icon ${isShowingArrowUp}`} title="back to top">
+        <Button
+          type="button"
+          actionType="default"
+          handleOnClick={() => {
+            window.scrollTo(0, 0);
+          }}
+        >
+          <Icon icon="keyboard_arrow_up" />
+        </Button>
+      </div>
+    </>
+  );
 }
 
 ReactDOM.render(
@@ -57,7 +89,6 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <Router history={history}>
         <LandingPage />
-        <Route exact path="/" component={LoggedOut} />
       </Router>
     </ApolloProvider>
   </React.StrictMode>,

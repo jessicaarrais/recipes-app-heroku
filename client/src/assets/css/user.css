@@ -11,12 +11,17 @@
   background-color: #ffffff;
   border-radius: 8px;
   padding: 16px;
-}
-
-.recipes > li {
   list-style: none;
 }
 
-.recipes > li > h2 {
+.recipe:hover {
+  background-color: #cb9b8c;
+}
+
+.recipe > li > h2 {
   text-align: center;
+}
+
+.user-profile-avatar {
+  border-radius: 50%;
 }

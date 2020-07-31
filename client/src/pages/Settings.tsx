@@ -18,7 +18,7 @@ function Settings(props: Props) {
     localStorage.clear();
     client.cache.reset();
     client.writeData({ data: { isLoggedIn: false } });
-    history.push('/');
+    history.push('/home');
   };
 
   return (

@@ -24,7 +24,7 @@ function DeleteUserButton() {
       localStorage.clear();
       client.cache.reset();
       client.writeData({ data: { isLoggedIn: false, notebook: [] } });
-      history.push('/');
+      history.push('/home');
     },
   });
 

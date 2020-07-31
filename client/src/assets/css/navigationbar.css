@@ -12,10 +12,23 @@
   box-shadow: 0 0 4px 0 #bdbdbd;
 }
 
+.navbar > div {
+  display: flex;
+}
+
+.navbar > div > span {
+  height: 32px;
+  width: 32px;
+  border-radius: 16px;
+  background-color: #cb9b8c;
+  cursor: pointer;
+}
+
 .nav-link {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  margin: 0 24px;
   border-radius: 16px;
   cursor: pointer;
   text-decoration: none;
@@ -37,10 +50,14 @@
 }
 
 .nav-avatar {
-  margin-left: 16px;
+  margin-left: 8px;
   width: 32px;
   height: 32px;
   object-fit: cover;
   font-size: 12px;
   border-radius: 16px;
+}
+
+.navbar-padding {
+  height: 80px;
 }
