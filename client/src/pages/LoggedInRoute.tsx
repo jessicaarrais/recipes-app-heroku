@@ -3,11 +3,11 @@ import { Route, Switch, Redirect } from 'react-router';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import NavigationBar from '../components/NavigationBar';
-import ProfileButton from '../components/UserProfileButton';
+import UserProfileButton from '../components/UserProfileButton';
 import AccountSettingsButton from '../components/AccountSettingsButton';
-import Home from './HomeLoggedInPage';
-import User from './UserProfilePage';
-import Settings from './AccountSettingsPage';
+import HomeLoggedInPage from './HomeLoggedInPage';
+import UserProfilePage from './UserProfilePage';
+import AccountSettingsPage from './AccountSettingsPage';
 import { SearchResponse } from '../components/Search';
 import { RECIPE_FRAGMENT } from '../components/Recipe';
 import '../assets/css/loggedin.css';
@@ -39,7 +39,7 @@ export const GET_COOKBOOK = gql`
   ${COOKBOOK_FRAGMENT}
 `;
 
-function LoggedIn() {
+function LoggedInRoute() {
   const { data, loading, error } = useQuery(GET_COOKBOOK);
 
   if (loading) return <h1>Loading...</h1>;
@@ -50,7 +50,7 @@ function LoggedIn() {
       <NavigationBar
         rightItems={
           <>
-            <ProfileButton username={data.me.username} uri={data.me.avatar?.uri} />
+            <UserProfileButton username={data.me.username} uri={data.me.avatar?.uri} />
             <AccountSettingsButton />
           </>
         }
@@ -61,16 +61,22 @@ function LoggedIn() {
           <Route
             path="/home"
             render={() => (
-              <Home cookbookId={data.me.cookbook.id} recipes={data.me.cookbook.recipes} />
+              <HomeLoggedInPage
+                cookbookId={data.me.cookbook.id}
+                recipes={data.me.cookbook.recipes}
+              />
             )}
           />
           <Route
             path="/account-settings"
             render={() => (
-              <Settings username={data.me.username} uri={data.me.avatar?.uri} />
+              <AccountSettingsPage
+                username={data.me.username}
+                uri={data.me.avatar?.uri}
+              />
             )}
           />
-          <Route path="/users/:username" component={User} />
+          <Route path="/users/:username" component={UserProfilePage} />
           <Route path="/search/:value" component={SearchResponse} />
           <Route path="/:recipeTitle/:recipeId" render={() => <div>recipe page</div>} />
         </Switch>
@@ -79,4 +85,4 @@ function LoggedIn() {
   );
 }
 
-export default LoggedIn;
+export default LoggedInRoute;

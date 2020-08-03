@@ -23,7 +23,7 @@ interface Props {
   uri?: string;
 }
 
-function User(props: Props) {
+function UserSettings(props: Props) {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [updateUser, { error }] = useMutation(UPDATE_USER, {
@@ -54,4 +54,4 @@ function User(props: Props) {
   );
 }
 
-export default User;
+export default UserSettings;

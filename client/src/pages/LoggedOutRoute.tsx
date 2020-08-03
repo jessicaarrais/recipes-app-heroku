@@ -2,19 +2,19 @@ import React from 'react';
 import NavigationBar from '../components/NavigationBar';
 import '../assets/css/loggedout.css';
 import { Redirect, Route, Switch } from 'react-router';
-import User from './UserProfilePage';
+import UserProfilePage from './UserProfilePage';
 import { SearchResponse } from '../components/Search';
-import HomeLoggedOut from './HomeLoggedOutPage';
+import HomeLoggedOutPage from './HomeLoggedOutPage';
 
-function LoggedOut() {
+function LoggedOutRoute() {
   return (
     <div className="body-loggedout">
       <NavigationBar />
       <section className="loggedout-section">
         <Switch>
           <Redirect from="/home" to="/" />
-          <Route exact path="/" component={HomeLoggedOut} />
-          <Route path="/users/:username" component={User} />
+          <Route exact path="/" component={HomeLoggedOutPage} />
+          <Route path="/users/:username" component={UserProfilePage} />
           <Route path="/search/:value" component={SearchResponse} />
         </Switch>
       </section>
@@ -22,4 +22,4 @@ function LoggedOut() {
   );
 }
 
-export default LoggedOut;
+export default LoggedOutRoute;

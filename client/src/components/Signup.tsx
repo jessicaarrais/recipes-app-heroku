@@ -6,7 +6,7 @@ import '../assets/css/login-signup.css';
 
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $username: String!) {
-    signin(email: $email, username: $username) {
+    signup(email: $email, username: $username) {
       __typename
       success
       message
@@ -18,19 +18,19 @@ const CREATE_USER = gql`
   }
 `;
 
-function Signin() {
+function Signup() {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [emailInputSignin, setEmailInputSignin] = useState('');
-  const [usernameInputSignin, setUsernameInputSignin] = useState('');
+  const [emailInputSignup, setEmailInputSignup] = useState('');
+  const [usernameInputSignup, setUsernameInputSignup] = useState('');
   const client = useApolloClient();
 
-  const [signin, { error, loading }] = useMutation(CREATE_USER, {
+  const [signup, { error, loading }] = useMutation(CREATE_USER, {
     onCompleted(data) {
-      if (!data.signin.success) {
-        setErrorMessage(data.signin.message);
+      if (!data.signup.success) {
+        setErrorMessage(data.signup.message);
         return;
       }
-      localStorage.setItem('token', data.signin.me.token);
+      localStorage.setItem('token', data.signup.me.token);
       client.writeData({ data: { isLoggedIn: true } });
     },
   });
@@ -43,30 +43,30 @@ function Signin() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          signin({
-            variables: { email: emailInputSignin, username: usernameInputSignin },
+          signup({
+            variables: { email: emailInputSignup, username: usernameInputSignup },
           });
         }}
       >
         <input
           className="login-signup-input"
           placeholder="E-mail"
-          value={emailInputSignin}
+          value={emailInputSignup}
           onChange={(e) => {
-            setEmailInputSignin(e.target.value);
+            setEmailInputSignup(e.target.value);
           }}
         />
         <input
           className="login-signup-input"
           placeholder="Username"
-          value={usernameInputSignin}
+          value={usernameInputSignup}
           onChange={(e) => {
-            setUsernameInputSignin(e.target.value);
+            setUsernameInputSignup(e.target.value);
           }}
         />
         <div className="login-signup-btn">
           <Button type="submit" actionType="default">
-            Signin
+            Signup
           </Button>
         </div>
       </form>
@@ -75,4 +75,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default Signup;

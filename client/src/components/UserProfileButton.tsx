@@ -7,7 +7,7 @@ interface Props {
   uri?: string;
 }
 
-function ProfileButton(props: Props) {
+function UserProfileButton(props: Props) {
   return (
     <Link to={`/users/${props.username}`} className="nav-link">
       <span className="nav-span-username">{props.username}</span>
@@ -20,4 +20,4 @@ function ProfileButton(props: Props) {
   );
 }
 
-export default ProfileButton;
+export default UserProfileButton;

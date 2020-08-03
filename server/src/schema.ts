@@ -79,7 +79,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    signin(email: String!, username: String!): MeResponse
+    signup(email: String!, username: String!): MeResponse
 
     login(email: String): MeResponse
 

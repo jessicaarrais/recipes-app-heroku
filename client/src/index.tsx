@@ -10,8 +10,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
 import { typeDefs } from './resolvers';
-import LoggedIn from './pages/LoggedInRoute';
-import LoggedOut from './pages/LoggedOutRoute';
+import LoggedInRoute from './pages/LoggedInRoute';
+import LoggedOutRoute from './pages/LoggedOutRoute';
 import './index.css';
 import Button from './components/Button';
 import Icon from './components/Icon';
@@ -68,7 +68,7 @@ function LandingPage() {
 
   return (
     <>
-      {data.isLoggedIn ? <LoggedIn /> : <LoggedOut />}
+      {data.isLoggedIn ? <LoggedInRoute /> : <LoggedOutRoute />}
       <div className={`back-to-top-icon ${isShowingArrowUp}`} title="back to top">
         <Button
           type="button"

@@ -43,7 +43,7 @@ const resolvers = {
   },
 
   Mutation: {
-    signin: async (_, args, context: Context): Promise<MeResponseGQL> => {
+    signup: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
         const newUserModel = await context.dataSources.userAPI.createUser({
           email: args.email,

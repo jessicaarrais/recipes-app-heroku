@@ -3,14 +3,14 @@ import { useApolloClient } from '@apollo/react-hooks';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
-import User from '../components/UserSettings';
+import UserSettings from '../components/UserSettings';
 
 interface Props {
   username: string;
   uri?: string;
 }
 
-function Settings(props: Props) {
+function AccountSettingsPage(props: Props) {
   const client = useApolloClient();
   const history = useHistory();
 
@@ -27,9 +27,9 @@ function Settings(props: Props) {
       <Button type="button" actionType="default" handleOnClick={handleLogout}>
         Logout
       </Button>
-      <User username={props.username} uri={props.uri} />
+      <UserSettings username={props.username} uri={props.uri} />
     </>
   );
 }
 
-export default Settings;
+export default AccountSettingsPage;

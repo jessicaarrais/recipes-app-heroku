@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Button from '../components/Button';
 import Login from '../components/Login';
-import Signin from '../components/Signup';
+import Signup from '../components/Signup';
 
-function HomeLoggedOut() {
+function HomeLoggedOutPage() {
   const [login, setLogin] = useState(false);
   const [signin, setSignin] = useState(false);
 
@@ -34,10 +34,10 @@ function HomeLoggedOut() {
       </div>
       <div>
         {login && <Login />}
-        {signin && <Signin />}
+        {signin && <Signup />}
       </div>
     </>
   );
 }
 
-export default HomeLoggedOut;
+export default HomeLoggedOutPage;

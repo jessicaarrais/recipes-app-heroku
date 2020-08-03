@@ -31,7 +31,7 @@ const GET_USER = gql`
   }
 `;
 
-function User() {
+function UserProfilePage() {
   const { username } = useParams();
 
   const { data, loading, error } = useQuery(GET_USER, { variables: { username } });
@@ -62,4 +62,4 @@ function User() {
   );
 }
 
-export default User;
+export default UserProfilePage;

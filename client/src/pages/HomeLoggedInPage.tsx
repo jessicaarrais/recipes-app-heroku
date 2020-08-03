@@ -6,7 +6,7 @@ interface Props {
   recipes: [];
 }
 
-function Home(props: Props) {
+function HomeLoggedInPage(props: Props) {
   return (
     <div>
       <Cookbook id={props.cookbookId} recipes={props.recipes} />
@@ -14,4 +14,4 @@ function Home(props: Props) {
   );
 }
 
-export default Home;
+export default HomeLoggedInPage;
