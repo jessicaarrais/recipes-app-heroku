@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from './Button';
-import Login from './Login';
-import Signin from './Signin';
+import Button from '../components/Button';
+import Login from '../components/Login';
+import Signin from '../components/Signup';
 
 function HomeLoggedOut() {
   const [login, setLogin] = useState(false);

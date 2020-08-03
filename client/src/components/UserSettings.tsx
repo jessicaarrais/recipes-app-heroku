@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import DeleteUserButton from '../components/DeleteUserButton';
+import DeleteUserButton from './DeleteUserButton';
 import Avatar from './Avatar';
 import EditableTextArea from './EditableTextArea';
 

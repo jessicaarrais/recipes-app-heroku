@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import Button from '../components/Button';
+import Button from './Button';
 import '../assets/css/login-signup.css';
 
 const CREATE_USER = gql`

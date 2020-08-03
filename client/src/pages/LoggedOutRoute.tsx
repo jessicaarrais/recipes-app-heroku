@@ -2,9 +2,9 @@ import React from 'react';
 import NavigationBar from '../components/NavigationBar';
 import '../assets/css/loggedout.css';
 import { Redirect, Route, Switch } from 'react-router';
-import User from './User';
+import User from './UserProfilePage';
 import { SearchResponse } from '../components/Search';
-import HomeLoggedOut from '../components/HomeLoggedOut';
+import HomeLoggedOut from './HomeLoggedOutPage';
 
 function LoggedOut() {
   return (
