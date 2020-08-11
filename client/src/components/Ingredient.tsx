@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 import IngredientCheckbox from './IngredientCheckbox';
 import IngredientText from './IngredientText';
 import DeleteIngredientButton from './DeleteIngredientButton';

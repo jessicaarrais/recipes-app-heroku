@@ -1,9 +1,8 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { useParams } from 'react-router';
-import { useQuery } from '@apollo/react-hooks';
-import '../assets/css/user.css';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router';
+import { gql, useQuery } from '@apollo/client';
+import '../assets/css/user.css';
 
 const GET_USER = gql`
   query User($username: String) {

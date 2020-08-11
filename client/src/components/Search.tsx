@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import { gql, useQuery } from '@apollo/client';
 import Button from './Button';
 import Icon from './Icon';
 import '../assets/css/search.css';

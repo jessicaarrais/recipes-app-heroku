@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient } from '@apollo/client';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
@@ -17,7 +17,6 @@ function AccountSettingsPage(props: Props) {
   const handleLogout = () => {
     localStorage.clear();
     client.cache.reset();
-    client.writeData({ data: { isLoggedIn: false } });
     history.push('/home');
   };
 

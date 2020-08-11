@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import { gql, useQuery } from '@apollo/client';
 import NavigationBar from '../components/NavigationBar';
 import UserProfileButton from '../components/UserProfileButton';
 import AccountSettingsButton from '../components/AccountSettingsButton';

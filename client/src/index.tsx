@@ -3,50 +3,81 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
 import { createBrowserHistory } from 'history';
-import gql from 'graphql-tag';
-import ApolloClient from 'apollo-client';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  InMemoryCache,
+  gql,
+  useQuery,
+} from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from 'apollo-link-context';
 import { typeDefs } from './resolvers';
 import LoggedInRoute from './pages/LoggedInRoute';
 import LoggedOutRoute from './pages/LoggedOutRoute';
-import './index.css';
 import Button from './components/Button';
 import Icon from './components/Icon';
+import './index.css';
 
-const httpLink = createUploadLink({ uri: 'http://localhost:4000/graphql' });
-const authLink = setContext((_, { headers }) => {
-  return {
+const IS_LOGGED_IN = gql`
+  query IsLoggedIn {
+    me {
+      id
+    }
+  }
+`;
+
+const uploadLink = createUploadLink({ uri: 'http://localhost:4000/graphql' });
+const authMiddleware = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
-      authorization: localStorage.getItem('token'),
+      authorization: localStorage.getItem('token') || null,
       'client-name': 'recipes-app',
       'client-version': '1.0.0',
     },
-  };
+  }));
+  return forward(operation);
 });
-const cache = new InMemoryCache();
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Cookbook: {
+      fields: {
+        recipes: {
+          merge(existing = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+      },
+    },
+    Recipe: {
+      fields: {
+        ingredients: {
+          merge(existing = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+        instructions: {
+          merge(existing = [], incoming: any[]) {
+            return incoming;
+          },
+        },
+      },
+    },
+  },
+});
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  // typescript "Argument of type 'ApolloLink' is not assignable to parameter of type 'ApolloLink | RequestHandler'." error being ignored on uploadLink"
+  // @ts-ignore
+  link: authMiddleware.concat(uploadLink),
   cache,
   typeDefs,
   resolvers: {},
 });
-cache.writeData({
-  data: {
-    isLoggedIn: !!localStorage.getItem('token'),
-  },
-});
 
 const history = createBrowserHistory();
-
-const IS_LOGGED_IN = gql`
-  query IsLoggedIn {
-    isLoggedIn @client
-  }
-`;
 
 function LandingPage() {
   const [isShowingArrowUp, setIsShowingArrowUp] = useState('hidden');
@@ -68,7 +99,7 @@ function LandingPage() {
 
   return (
     <>
-      {data.isLoggedIn ? <LoggedInRoute /> : <LoggedOutRoute />}
+      {data?.me?.id ? <LoggedInRoute /> : <LoggedOutRoute />}
       <div className={`back-to-top-icon ${isShowingArrowUp}`} title="back to top">
         <Button
           type="button"

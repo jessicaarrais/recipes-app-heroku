@@ -1,14 +1,14 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 import Ingredient, { INGREDIENT_FRAGMENT } from './Ingredient';
 import CreateIngredientButton from './CreateIngredientButton';
 import DeleteRecipeButton from './DeleteRecipeButton';
 import RecipeTitle from './RecipeTitle';
-import '../assets/css/recipe.css';
 import Button from './Button';
 import Icon from './Icon';
 import Instruction from './Instruction';
 import CreateInstructionButton from './CreateInstructionButton';
+import '../assets/css/recipe.css';
 
 export const RECIPE_FRAGMENT = gql`
   fragment RecipeFragment on Recipe {

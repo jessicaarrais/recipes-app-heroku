@@ -1,6 +1,5 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import '../assets/css/ingredient.css';
 
 const UPDATE_INGREDIENT = gql`
