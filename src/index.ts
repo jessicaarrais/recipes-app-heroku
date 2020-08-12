@@ -13,6 +13,8 @@ import Recipe from './datasources/recipe';
 import Ingredient from './datasources/ingredient';
 import Instruction from './datasources/instruction';
 
+const PORT = process.env.PORT || 4000;
+
 interface MyContext {
   user: UserModel | null;
 }
@@ -57,6 +59,6 @@ const app = express();
 app.use('/images', express.static(path.join(__dirname, '../images')));
 server.applyMiddleware({ app });
 
-app.listen(4000, () => {
-  console.log(`server running on port http://localhost:4000`);
+app.listen(PORT, () => {
+  console.log(`server running on port http://localhost:${PORT}`);
 });
