@@ -1,6 +1,6 @@
 import { Context } from '..';
 import { UserModel } from '../store';
-import AvatarGQL from './AvatarGQL';
+import AvatarGQL from './avatarGQL';
 import CookbookGQL from './cookbookGQL';
 
 class UserGQL {
