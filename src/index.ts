@@ -53,6 +53,7 @@ const server = new ApolloServer({
   dataSources,
   typeDefs,
   resolvers,
+  introspection: true,
   playground: true,
 });
 
