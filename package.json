@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && nodemon js/index.js",
+    "build-ts": "tsc",
+    "tsc-watch": "tsc -w",
+    "postinstall": "npm run build-ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,13 +22,15 @@
     "graphql": "^15.0.0",
     "isemail": "^3.2.0",
     "nodemon": "^2.0.3",
+    "pg": "^8.3.0",
+    "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.21.7",
     "sequelize-typescript": "^1.1.0",
-    "sharp": "^0.25.4",
-    "sqlite3": "^4.2.0"
+    "sharp": "^0.25.4"
   },
   "devDependencies": {
-    "@types/sharp": "^0.25.0"
+    "@types/sharp": "^0.25.0",
+    "typescript": "^3.9.7"
   }
 }

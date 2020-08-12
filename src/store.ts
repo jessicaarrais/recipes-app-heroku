@@ -1,10 +1,15 @@
 import { Sequelize, DataType, Model } from 'sequelize-typescript';
 import { BuildOptions } from 'sequelize/types';
 
-export const db = new Sequelize('database', 'username', 'password', {
-  dialect: 'sqlite',
-  storage: './database.sqlite',
-  logging: false,
+export const db = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  ssl: true,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 /* User Model */
@@ -173,7 +178,7 @@ export const dbInstruction = <InstructionStatic>db.define('instruction', {
     primaryKey: true,
     autoIncrement: true,
   },
-  recipeId: DataType.STRING,
+  recipeId: DataType.INTEGER,
   step: DataType.STRING,
   text: DataType.STRING,
   createdAt: DataType.DATE,
