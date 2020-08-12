@@ -19,10 +19,7 @@
     "apollo-cache-control": "^0.11.0",
     "apollo-server": "^2.12.0",
     "apollo-server-express": "^2.15.0",
-<<<<<<< HEAD
     "cors": "^2.8.5",
-=======
->>>>>>> 1363bc5d6d23b3e0730fa12757d4f3bb62853561
     "graphql": "^15.0.0",
     "isemail": "^3.2.0",
     "nodemon": "^2.0.3",
