@@ -4,7 +4,7 @@ class AvatarGQL {
   uri: string;
 
   constructor(avatarModel: AvatarModel) {
-    this.uri = `http://localhost:4000/images/${avatarModel.filename}`;
+    this.uri = `https://rocky-oasis-65465.herokuapp.com/images/${avatarModel.filename}`;
   }
 }
 
