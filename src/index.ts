@@ -53,6 +53,7 @@ const server = new ApolloServer({
   dataSources,
   typeDefs,
   resolvers,
+  playground: true,
 });
 
 const app = express();
