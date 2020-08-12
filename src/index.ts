@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
+import cors from 'cors';
 import path from 'path';
 import isEmail from 'isemail';
 import { dbUser, UserModel } from './store';
@@ -58,6 +59,7 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(cors());
 app.use('/images', express.static(path.join(__dirname, '../images')));
 server.applyMiddleware({ app });
 
