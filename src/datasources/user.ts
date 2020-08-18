@@ -16,7 +16,7 @@ interface NewUser {
   confirmPassword: string;
 }
 
-interface LoggingUser {
+interface UserLoginCredentials {
   email: string;
   password: string;
 }
@@ -42,7 +42,7 @@ class User extends DataSource {
     return user;
   }
 
-  async loggingUser({ email, password }: LoggingUser): Promise<UserModel> {
+  async login({ email, password }: UserLoginCredentials): Promise<UserModel> {
     if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
 
     await db.sync();

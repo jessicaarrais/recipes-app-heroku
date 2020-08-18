@@ -68,7 +68,7 @@ const resolvers = {
 
     login: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
-        const meModel = await context.dataSources.userAPI.loggingUser({
+        const meModel = await context.dataSources.userAPI.login({
           email: args.email,
           password: args.password,
         });
