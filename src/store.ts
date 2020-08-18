@@ -17,6 +17,7 @@ export interface UserModel extends Model {
   id: number;
   username: string;
   email: string;
+  password: string;
   cookbookId: number;
   token: string;
   createdAt: Date;
@@ -44,6 +45,13 @@ export const dbUser = <UserStatic>db.define('user', {
     type: DataType.STRING,
     allowNull: false,
     unique: true,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  password: {
+    type: DataType.STRING,
+    allowNull: false,
     validate: {
       notEmpty: true,
     },

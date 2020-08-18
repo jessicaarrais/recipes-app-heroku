@@ -48,6 +48,8 @@ const resolvers = {
         const newUserModel = await context.dataSources.userAPI.createUser({
           email: args.email,
           username: args.username,
+          password: args.password,
+          confirmPassword: args.confirmPassword,
         });
         context.user = newUserModel;
         return {
@@ -66,7 +68,10 @@ const resolvers = {
 
     login: async (_, args, context: Context): Promise<MeResponseGQL> => {
       try {
-        const meModel = await context.dataSources.userAPI.findUserByEmail(args.email);
+        const meModel = await context.dataSources.userAPI.login({
+          email: args.email,
+          password: args.password,
+        });
         context.user = meModel;
         return {
           success: true,
