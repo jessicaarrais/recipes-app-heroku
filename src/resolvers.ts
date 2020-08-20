@@ -35,6 +35,12 @@ const resolvers = {
       return new UserGQL(userModel);
     },
 
+    recipe: async (_, args, context: Context): Promise<RecipeGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return null;
+      return new RecipeGQL(recipeModel);
+    },
+
     searchRecipes: async (_, args, context: Context): Promise<Array<RecipeGQL>> => {
       const recipesModel = await context.dataSources.recipeAPI.searchRecipes(args.value);
       if (!recipesModel) return null;

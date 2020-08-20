@@ -21,7 +21,7 @@ class Recipe extends DataSource {
 
   async searchRecipes(value: string): Promise<Array<RecipeModel>> {
     const recipes = await dbRecipe.findAll({
-      where: { title: { [Op.like]: `%${value}%` } },
+      where: { title: { [Op.iLike]: `%${value}%` } },
     });
     if (!recipes) return null;
     return recipes;
