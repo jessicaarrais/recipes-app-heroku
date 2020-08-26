@@ -7,11 +7,13 @@ class RecipeGQL {
   id: number;
   cookbookId: number;
   title: string;
+  isPublic: boolean;
 
   constructor(recipeModel: RecipeModel) {
     this.id = recipeModel.id;
     this.cookbookId = recipeModel.cookbookId;
     this.title = recipeModel.title;
+    this.isPublic = recipeModel.isPublic;
   }
 
   async ingredients(_args, context: Context): Promise<Array<IngredientGQL>> {

@@ -27,7 +27,7 @@ const resolvers = {
       return new UserGQL(meModel);
     },
 
-    user: async (_, args, context: Context): Promise<UserGQL> => {
+    user: async (_, args: { username: string }, context: Context): Promise<UserGQL> => {
       const userModel = await context.dataSources.userAPI.getUser({
         username: args.username,
       });
@@ -35,13 +35,21 @@ const resolvers = {
       return new UserGQL(userModel);
     },
 
-    recipe: async (_, args, context: Context): Promise<RecipeGQL> => {
+    recipe: async (
+      _,
+      args: { recipeId: number; cookbookId: number },
+      context: Context
+    ): Promise<RecipeGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
-      if (!recipeModel) return null;
+      if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
       return new RecipeGQL(recipeModel);
     },
 
-    searchRecipes: async (_, args, context: Context): Promise<Array<RecipeGQL>> => {
+    searchRecipes: async (
+      _,
+      args: { value: string },
+      context: Context
+    ): Promise<Array<RecipeGQL>> => {
       const recipesModel = await context.dataSources.recipeAPI.searchRecipes(args.value);
       if (!recipesModel) return null;
       return recipesModel.map((recipe: RecipeModel) => new RecipeGQL(recipe));
@@ -49,7 +57,16 @@ const resolvers = {
   },
 
   Mutation: {
-    signup: async (_, args, context: Context): Promise<MeResponseGQL> => {
+    signup: async (
+      _,
+      args: {
+        email: string;
+        username: string;
+        password: string;
+        confirmPassword: string;
+      },
+      context: Context
+    ): Promise<MeResponseGQL> => {
       try {
         const newUserModel = await context.dataSources.userAPI.createUser({
           email: args.email,
@@ -72,7 +89,11 @@ const resolvers = {
       }
     },
 
-    login: async (_, args, context: Context): Promise<MeResponseGQL> => {
+    login: async (
+      _,
+      args: { email: string; password: string },
+      context: Context
+    ): Promise<MeResponseGQL> => {
       try {
         const meModel = await context.dataSources.userAPI.login({
           email: args.email,
@@ -93,7 +114,11 @@ const resolvers = {
       }
     },
 
-    updateUser: async (_, args, context: Context): Promise<MeResponseGQL> => {
+    updateUser: async (
+      _,
+      args: { username: string },
+      context: Context
+    ): Promise<MeResponseGQL> => {
       try {
         const meModel = await context.dataSources.userAPI.updateUser({
           username: args.username,
@@ -125,7 +150,11 @@ const resolvers = {
       return { success: true, message: 'User deleted', me };
     },
 
-    uploadAvatar: async (_, args, context: Context): Promise<AvatarResponseGQL> => {
+    uploadAvatar: async (
+      _,
+      args: { file: any },
+      context: Context
+    ): Promise<AvatarResponseGQL> => {
       try {
         await context.dataSources.avatarAPI.uploadAvatar(args);
         return {
@@ -142,7 +171,11 @@ const resolvers = {
       }
     },
 
-    createRecipe: async (_, args, context: Context): Promise<RecipeCreateResponseGQL> => {
+    createRecipe: async (
+      _,
+      args: { title: string; cookbookId: number },
+      context: Context
+    ): Promise<RecipeCreateResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.createRecipe({
         title: args.title,
         cookbookId: args.cookbookId,
@@ -164,9 +197,13 @@ const resolvers = {
       };
     },
 
-    updateRecipe: async (_, args, context: Context): Promise<RecipeUpdateResponseGQL> => {
+    updateRecipe: async (
+      _,
+      args: { title: string; isPublic: boolean; recipeId: number },
+      context: Context
+    ): Promise<RecipeUpdateResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.updateRecipe(
-        { title: args.title },
+        { title: args.title, isPublic: args.isPublic },
         args.recipeId
       );
       if (!recipeModel) {
@@ -183,7 +220,11 @@ const resolvers = {
       };
     },
 
-    deleteRecipe: async (_, args, context: Context): Promise<RecipeDeleteResponseGQL> => {
+    deleteRecipe: async (
+      _,
+      args: { recipeId: number },
+      context: Context
+    ): Promise<RecipeDeleteResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.deleteRecipe(args.recipeId);
       if (!recipeModel) {
         return {
@@ -204,7 +245,7 @@ const resolvers = {
 
     createIngredient: async (
       _,
-      args,
+      args: { text: any; isChecked: any; recipeId: number },
       context: Context
     ): Promise<IngredientCreateResponseGQL> => {
       const newIngredientModel = await context.dataSources.ingredientAPI.createIngredient(
@@ -217,21 +258,21 @@ const resolvers = {
       if (!newIngredientModel) {
         return {
           success: false,
-          message: 'Failed creating todo',
+          message: 'Failed creating ingredient',
           recipe: null,
         };
       }
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
-        message: 'Todo created',
+        message: 'Ingredient created',
         recipe: new RecipeGQL(recipeModel),
       };
     },
 
     updateIngredient: async (
       _,
-      args,
+      args: { text: string; isChecked: boolean; ingredientId: number },
       context: Context
     ): Promise<IngredientUpdateResponseGQL> => {
       const ingredientModel = await context.dataSources.ingredientAPI.updateIngredient(
@@ -241,20 +282,20 @@ const resolvers = {
       if (!ingredientModel) {
         return {
           success: false,
-          message: 'Failed updating todo',
+          message: 'Failed updating ingredient',
           ingredient: null,
         };
       }
       return {
         success: true,
-        message: 'Todo updated',
+        message: 'Ingredient updated',
         ingredient: new IngredientGQL(ingredientModel),
       };
     },
 
     deleteIngredient: async (
       _,
-      args,
+      args: { ingredientId: number; recipeId: number },
       context: Context
     ): Promise<IngredientDeleteResponseGQL> => {
       const ingredientModel = await context.dataSources.ingredientAPI.deleteIngredient(
@@ -263,21 +304,21 @@ const resolvers = {
       if (!ingredientModel) {
         return {
           success: false,
-          message: 'Failed deleting todo',
+          message: 'Failed deleting ingredient',
           recipe: null,
         };
       }
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
-        message: 'Todo deleted',
+        message: 'Ingredient deleted',
         recipe: new RecipeGQL(recipeModel),
       };
     },
 
     createInstruction: async (
       _,
-      args,
+      args: { step: string; text: string; recipeId: number },
       context: Context
     ): Promise<InstructionCreateResponseGQL> => {
       const newInstructionModel = await context.dataSources.instructionAPI.createInstruction(
@@ -293,14 +334,14 @@ const resolvers = {
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
-        message: 'Todo created',
+        message: 'Ingredient created',
         recipe: new RecipeGQL(recipeModel),
       };
     },
 
     updateInstruction: async (
       _,
-      args,
+      args: { step: string; text: string; instructionId: number; recipeId: number },
       context: Context
     ): Promise<InstructionUpdateResponseGQL> => {
       const instructionModel = await context.dataSources.instructionAPI.updateInstruction(
@@ -324,7 +365,7 @@ const resolvers = {
 
     deleteInstruction: async (
       _,
-      args,
+      args: { instructionId: number; recipeId: number },
       context: Context
     ): Promise<InstructionDeleteResponseGQL> => {
       const instructionModel = context.dataSources.instructionAPI.deleteInstruction(
@@ -341,7 +382,7 @@ const resolvers = {
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
-        message: 'Todo created',
+        message: 'Ingredient created',
         recipe: new RecipeGQL(recipeModel),
       };
     },
