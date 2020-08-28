@@ -1,5 +1,5 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { createWriteStream, unlink, existsSync, mkdirSync } from 'fs';
+import { createWriteStream, unlink, existsSync, mkdirSync, ReadStream } from 'fs';
 import sharp from 'sharp';
 import path from 'path';
 import { Context } from '..';
@@ -12,7 +12,16 @@ class Avatar extends DataSource {
     this.context = config.context;
   }
 
-  async uploadAvatar({ file }): Promise<AvatarModel> {
+  async uploadAvatar({
+    file,
+  }: {
+    file: {
+      filename: string;
+      mimetype: string;
+      encoding: string;
+      createReadStream: () => ReadStream;
+    };
+  }): Promise<AvatarModel> {
     await db.sync();
     try {
       const { filename, mimetype, encoding, createReadStream } = await file;

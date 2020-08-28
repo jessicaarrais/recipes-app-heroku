@@ -75,7 +75,7 @@ const typeDefs = gql`
   type Query {
     me: User
     user(username: String): User
-    recipe(recipeId: ID!): Recipe
+    recipe(recipeId: ID!, cookbookId: ID!): Recipe
     searchRecipes(value: String): [Recipe]
   }
 
@@ -97,7 +97,12 @@ const typeDefs = gql`
 
     createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
 
-    updateRecipe(recipeId: ID!, title: String, cookbookId: ID!): RecipeUpdateResponse
+    updateRecipe(
+      recipeId: ID!
+      title: String
+      isPublic: Boolean
+      cookbookId: ID!
+    ): RecipeUpdateResponse
 
     deleteRecipe(recipeId: ID!, cookbookId: ID!): RecipeDeleteResponse
 
@@ -220,6 +225,7 @@ const typeDefs = gql`
     id: ID!
     cookbookId: ID!
     title: String
+    isPublic: Boolean
     ingredients: [Ingredient]
     instructions: [Instruction]
   }

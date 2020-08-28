@@ -120,6 +120,7 @@ export interface RecipeModel extends Model {
   id: number;
   cookbookId: number;
   title: string;
+  isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -135,6 +136,7 @@ export const dbRecipe = <RecipeStatic>db.define('recipe', {
   },
   cookbookId: DataType.INTEGER,
   title: DataType.STRING,
+  isPublic: { type: DataType.BOOLEAN, defaultValue: false },
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
   deletedAt: DataType.DATE,

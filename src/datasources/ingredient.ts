@@ -1,5 +1,5 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { dbIngredient, IngredientModel, db } from '../store';
+import { dbIngredient, IngredientModel } from '../store';
 import { Context } from '..';
 
 interface NewIngredient {

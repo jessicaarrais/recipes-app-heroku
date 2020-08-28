@@ -10,6 +10,7 @@ interface NewRecipe {
 
 interface UpdatedRecipe {
   title: string;
+  isPublic: boolean;
 }
 
 class Recipe extends DataSource {
@@ -20,20 +21,28 @@ class Recipe extends DataSource {
   }
 
   async searchRecipes(value: string): Promise<Array<RecipeModel>> {
-    const recipes = await dbRecipe.findAll({
-      where: { title: { [Op.iLike]: `%${value}%` } },
+    return await dbRecipe.findAll({
+      where: { title: { [Op.iLike]: `%${value}%` }, isPublic: true },
     });
-    if (!recipes) return null;
-    return recipes;
   }
 
-  async getRecipe(recipeId: number): Promise<RecipeModel> {
-    return await dbRecipe.findOne({ where: { id: recipeId } });
+  async getRecipe(id: number): Promise<RecipeModel> {
+    const recipe = await dbRecipe.findOne({ where: { id } });
+    if (!recipe) return null;
+    const isOwner = this.context.user?.cookbookId === recipe.cookbookId;
+    return isOwner || recipe.isPublic ? recipe : null;
   }
 
   async getRecipes(cookbookId: number): Promise<Array<RecipeModel>> {
+    if (this.context.user?.cookbookId !== cookbookId) {
+      return await dbRecipe.findAll({
+        where: { cookbookId, isPublic: true },
+        order: [['title', 'ASC']],
+      });
+    }
     return await dbRecipe.findAll({
       where: { cookbookId },
+      order: [['title', 'ASC']],
     });
   }
 
