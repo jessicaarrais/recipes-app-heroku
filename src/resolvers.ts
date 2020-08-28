@@ -1,3 +1,4 @@
+import { ReadStream } from 'fs';
 import { Context } from '.';
 import { RecipeModel } from './store';
 import {
@@ -152,7 +153,14 @@ const resolvers = {
 
     uploadAvatar: async (
       _,
-      args: { file: any },
+      args: {
+        file: {
+          filename: string;
+          mimetype: string;
+          encoding: string;
+          createReadStream: () => ReadStream;
+        };
+      },
       context: Context
     ): Promise<AvatarResponseGQL> => {
       try {

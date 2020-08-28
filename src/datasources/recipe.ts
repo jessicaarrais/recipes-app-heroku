@@ -37,10 +37,12 @@ class Recipe extends DataSource {
     if (this.context.user?.cookbookId !== cookbookId) {
       return await dbRecipe.findAll({
         where: { cookbookId, isPublic: true },
+        order: [['title', 'ASC']],
       });
     }
     return await dbRecipe.findAll({
       where: { cookbookId },
+      order: [['title', 'ASC']],
     });
   }
 
