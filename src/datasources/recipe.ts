@@ -1,7 +1,7 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
-import { Op } from 'sequelize';
+import { Op, OrderItem } from 'sequelize';
 
 interface NewRecipe {
   title: string;
@@ -11,6 +11,11 @@ interface NewRecipe {
 interface UpdatedRecipe {
   title: string;
   isPublic: boolean;
+}
+
+enum RecipesListOrder {
+  DEFAULT = 'DEFAULT',
+  TITLE_ASCENDING = 'TITLE_ASCENDING',
 }
 
 class Recipe extends DataSource {
@@ -33,16 +38,24 @@ class Recipe extends DataSource {
     return isOwner || recipe.isPublic ? recipe : null;
   }
 
-  async getRecipes(cookbookId: number): Promise<Array<RecipeModel>> {
-    if (this.context.user?.cookbookId !== cookbookId) {
+  async getRecipes(
+    cookbookId: number,
+    order?: RecipesListOrder
+  ): Promise<Array<RecipeModel>> {
+    const listOrderer: OrderItem =
+      order === RecipesListOrder.TITLE_ASCENDING
+        ? ['title', 'ASC']
+        : ['createdAt', 'DESC'];
+
+    if (this.context.user?.cookbookId != cookbookId) {
       return await dbRecipe.findAll({
         where: { cookbookId, isPublic: true },
-        order: [['title', 'ASC']],
+        order: [listOrderer],
       });
     }
     return await dbRecipe.findAll({
       where: { cookbookId },
-      order: [['title', 'ASC']],
+      order: [listOrderer],
     });
   }
 

@@ -9,8 +9,8 @@ class CookbookGQL {
     this.id = cookbookModel.id;
   }
 
-  async recipes(_args, context: Context): Promise<Array<RecipeGQL>> {
-    return (await context.dataSources.recipeAPI.getRecipes(this.id)).map(
+  async recipes(args, context: Context): Promise<Array<RecipeGQL>> {
+    return (await context.dataSources.recipeAPI.getRecipes(this.id, args.order)).map(
       (recipeModel) => new RecipeGQL(recipeModel)
     );
   }

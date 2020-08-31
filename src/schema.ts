@@ -76,6 +76,7 @@ const typeDefs = gql`
     me: User
     user(username: String): User
     recipe(recipeId: ID!, cookbookId: ID!): Recipe
+    sortRecipes(cookbookId: ID!, listOrder: [String]): [Recipe]
     searchRecipes(value: String): [Recipe]
   }
 
@@ -216,9 +217,14 @@ const typeDefs = gql`
     uri: String
   }
 
+  enum RecipesListOrder {
+    DEFAULT
+    TITLE_ASCENDING
+  }
+
   type Cookbook {
     id: ID!
-    recipes: [Recipe]
+    recipes(order: RecipesListOrder): [Recipe]
   }
 
   type Recipe {
