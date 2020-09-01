@@ -1,8 +1,8 @@
 import { IngredientModel } from '../store';
 
 class IngredientGQL {
-  id: number;
-  recipeId: number;
+  id: string;
+  recipeId: string;
   text: string;
   isChecked: boolean;
 

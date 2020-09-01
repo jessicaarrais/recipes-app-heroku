@@ -4,7 +4,7 @@ import AvatarGQL from './avatarGQL';
 import CookbookGQL from './cookbookGQL';
 
 class UserGQL {
-  id: number;
+  id: string;
   username: string;
   email: string;
   _token: string;

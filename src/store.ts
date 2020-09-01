@@ -14,11 +14,11 @@ export const db = new Sequelize(process.env.DATABASE_URL, {
 
 /* User Model */
 export interface UserModel extends Model {
-  id: number;
+  id: string;
   username: string;
   email: string;
   password: string;
-  cookbookId: number;
+  cookbookId: string;
   token: string;
   createdAt: Date;
   updatedAt: Date;
@@ -29,9 +29,9 @@ export type UserStatic = typeof Model & {
 };
 export const dbUser = <UserStatic>db.define('user', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
   username: {
     type: DataType.STRING,
@@ -56,7 +56,7 @@ export const dbUser = <UserStatic>db.define('user', {
       notEmpty: true,
     },
   },
-  cookbookId: DataType.INTEGER,
+  cookbookId: DataType.UUID,
   token: DataType.STRING,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
@@ -65,8 +65,8 @@ export const dbUser = <UserStatic>db.define('user', {
 
 /* Avatar Model */
 export interface AvatarModel extends Model {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   filename: string;
   mimetype: string;
   encoding: string;
@@ -79,11 +79,11 @@ export type AvatarStatic = typeof Model & {
 };
 export const dbAvatar = <AvatarStatic>db.define('avatar', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
-  userId: DataType.INTEGER,
+  userId: DataType.UUID,
   filename: DataType.STRING,
   mimetype: DataType.STRING,
   encoding: DataType.STRING,
@@ -94,8 +94,8 @@ export const dbAvatar = <AvatarStatic>db.define('avatar', {
 
 /* Cookbook Model */
 export interface CookbookModel extends Model {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -105,11 +105,11 @@ export type CookbookStatic = typeof Model & {
 };
 export const dbCookbook = <CookbookStatic>db.define('cookbook', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
-  userId: DataType.INTEGER,
+  userId: DataType.UUID,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
   deletedAt: DataType.DATE,
@@ -117,8 +117,8 @@ export const dbCookbook = <CookbookStatic>db.define('cookbook', {
 
 /* Recipe Model */
 export interface RecipeModel extends Model {
-  id: number;
-  cookbookId: number;
+  id: string;
+  cookbookId: string;
   title: string;
   isPublic: boolean;
   createdAt: Date;
@@ -130,11 +130,11 @@ export type RecipeStatic = typeof Model & {
 };
 export const dbRecipe = <RecipeStatic>db.define('recipe', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
-  cookbookId: DataType.INTEGER,
+  cookbookId: DataType.UUID,
   title: DataType.STRING,
   isPublic: { type: DataType.BOOLEAN, defaultValue: false },
   createdAt: DataType.DATE,
@@ -144,9 +144,9 @@ export const dbRecipe = <RecipeStatic>db.define('recipe', {
 
 /* Ingredient Model */
 export interface IngredientModel extends Model {
-  id: number;
+  id: string;
   text: string;
-  recipeId: number;
+  recipeId: string;
   isChecked: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -157,11 +157,11 @@ export type IngredientStatic = typeof Model & {
 };
 export const dbIngredient = <IngredientStatic>db.define('ingredient', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
-  recipeId: DataType.INTEGER,
+  recipeId: DataType.UUID,
   text: DataType.STRING,
   isChecked: DataType.BOOLEAN,
   createdAt: DataType.DATE,
@@ -171,8 +171,8 @@ export const dbIngredient = <IngredientStatic>db.define('ingredient', {
 
 /* Instruction Model */
 export interface InstructionModel extends Model {
-  id: number;
-  recipeId: number;
+  id: string;
+  recipeId: string;
   step: string;
   text: string;
   createdAt: Date;
@@ -184,11 +184,11 @@ export type InstructionStatic = typeof Model & {
 };
 export const dbInstruction = <InstructionStatic>db.define('instruction', {
   id: {
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataType.UUIDV4,
   },
-  recipeId: DataType.INTEGER,
+  recipeId: DataType.UUID,
   step: DataType.STRING,
   text: DataType.STRING,
   createdAt: DataType.DATE,

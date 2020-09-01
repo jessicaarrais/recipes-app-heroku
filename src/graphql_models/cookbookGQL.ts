@@ -3,7 +3,7 @@ import { CookbookModel } from '../store';
 import RecipeGQL from './recipeGQL';
 
 class CookbookGQL {
-  id: number;
+  id: string;
 
   constructor(cookbookModel: CookbookModel) {
     this.id = cookbookModel.id;
