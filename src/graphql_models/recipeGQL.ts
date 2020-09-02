@@ -4,8 +4,8 @@ import IngredientGQL from './ingredientGQL';
 import InstructionGQl from './instructionGQL';
 
 class RecipeGQL {
-  id: number;
-  cookbookId: number;
+  id: string;
+  cookbookId: string;
   title: string;
   isPublic: boolean;
 

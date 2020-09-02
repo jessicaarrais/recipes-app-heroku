@@ -1,8 +1,8 @@
 import { InstructionModel } from '../store';
 
 class InstructionGQl {
-  id: number;
-  recipeId: number;
+  id: string;
+  recipeId: string;
   step: string;
   text: string;
 

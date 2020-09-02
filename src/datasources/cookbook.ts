@@ -9,12 +9,12 @@ class Cookbook extends DataSource {
     this.context = config.context;
   }
 
-  static async create(userId: number): Promise<CookbookModel> {
+  static async create(userId: string): Promise<CookbookModel> {
     await db.sync();
     return await dbCookbook.create({ userId });
   }
 
-  async getCookbook(userId: number): Promise<CookbookModel> {
+  async getCookbook(userId: string): Promise<CookbookModel> {
     await db.sync();
     return await dbCookbook.findOne({ where: { userId } });
   }

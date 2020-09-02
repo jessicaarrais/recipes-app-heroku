@@ -5,7 +5,7 @@ import { InstructionModel, dbInstruction } from '../store';
 interface NewInstruction {
   step: string;
   text: string;
-  recipeId: number;
+  recipeId: string;
 }
 
 interface UpdatedInstruction {
@@ -20,7 +20,7 @@ class Instruction extends DataSource {
     this.context = config.context;
   }
 
-  async getInstructions(recipeId: number): Promise<Array<InstructionModel>> {
+  async getInstructions(recipeId: string): Promise<Array<InstructionModel>> {
     return await dbInstruction.findAll({ where: { recipeId } });
   }
 
@@ -34,8 +34,8 @@ class Instruction extends DataSource {
 
   async updateInstruction(
     updatedInstruction: UpdatedInstruction,
-    instructionId: number,
-    recipeId: number
+    instructionId: string,
+    recipeId: string
   ): Promise<InstructionModel> {
     const instruction = await dbInstruction.findOne({
       where: { id: instructionId, recipeId },
@@ -46,7 +46,7 @@ class Instruction extends DataSource {
     return await instruction.update(updatedInstruction);
   }
 
-  async deleteInstruction(instructionId: number, recipeId: number): Promise<boolean> {
+  async deleteInstruction(instructionId: string, recipeId: string): Promise<boolean> {
     return (
       (await dbInstruction.destroy({ where: { id: instructionId, recipeId } })) === 1
     );

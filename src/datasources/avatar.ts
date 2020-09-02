@@ -64,7 +64,7 @@ class Avatar extends DataSource {
     }
   }
 
-  async getAvatar(userId: number): Promise<AvatarModel> {
+  async getAvatar(userId: string): Promise<AvatarModel> {
     await db.sync();
     return await dbAvatar.findOne({ where: { userId } });
   }

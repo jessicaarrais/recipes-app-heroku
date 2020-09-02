@@ -5,7 +5,7 @@ import { Op, OrderItem } from 'sequelize';
 
 interface NewRecipe {
   title: string;
-  cookbookId: number;
+  cookbookId: string;
 }
 
 interface UpdatedRecipe {
@@ -31,7 +31,7 @@ class Recipe extends DataSource {
     });
   }
 
-  async getRecipe(id: number): Promise<RecipeModel> {
+  async getRecipe(id: string): Promise<RecipeModel> {
     const recipe = await dbRecipe.findOne({ where: { id } });
     if (!recipe) return null;
     const isOwner = this.context.user?.cookbookId === recipe.cookbookId;
@@ -39,7 +39,7 @@ class Recipe extends DataSource {
   }
 
   async getRecipes(
-    cookbookId: number,
+    cookbookId: string,
     order?: RecipesListOrder
   ): Promise<Array<RecipeModel>> {
     const listOrderer: OrderItem =
@@ -68,7 +68,7 @@ class Recipe extends DataSource {
 
   async updateRecipe(
     updatedRecipe: UpdatedRecipe,
-    recipeId: number
+    recipeId: string
   ): Promise<RecipeModel> {
     const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
     if (!recipe) {
@@ -77,7 +77,7 @@ class Recipe extends DataSource {
     return await recipe.update(updatedRecipe);
   }
 
-  async deleteRecipe(recipeId: number): Promise<boolean> {
+  async deleteRecipe(recipeId: string): Promise<boolean> {
     return (await dbRecipe.destroy({ where: { id: recipeId } })) === 1;
   }
 }

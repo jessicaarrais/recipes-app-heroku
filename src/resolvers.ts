@@ -38,7 +38,7 @@ const resolvers = {
 
     recipe: async (
       _,
-      args: { recipeId: number; cookbookId: number },
+      args: { recipeId: string; cookbookId: string },
       context: Context
     ): Promise<RecipeGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
@@ -181,7 +181,7 @@ const resolvers = {
 
     createRecipe: async (
       _,
-      args: { title: string; cookbookId: number },
+      args: { title: string; cookbookId: string },
       context: Context
     ): Promise<RecipeCreateResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.createRecipe({
@@ -207,7 +207,7 @@ const resolvers = {
 
     updateRecipe: async (
       _,
-      args: { title: string; isPublic: boolean; recipeId: number },
+      args: { title: string; isPublic: boolean; recipeId: string },
       context: Context
     ): Promise<RecipeUpdateResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.updateRecipe(
@@ -230,7 +230,7 @@ const resolvers = {
 
     deleteRecipe: async (
       _,
-      args: { recipeId: number },
+      args: { recipeId: string },
       context: Context
     ): Promise<RecipeDeleteResponseGQL> => {
       const recipeModel = await context.dataSources.recipeAPI.deleteRecipe(args.recipeId);
@@ -253,7 +253,7 @@ const resolvers = {
 
     createIngredient: async (
       _,
-      args: { text: any; isChecked: any; recipeId: number },
+      args: { text: any; isChecked: any; recipeId: string },
       context: Context
     ): Promise<IngredientCreateResponseGQL> => {
       const newIngredientModel = await context.dataSources.ingredientAPI.createIngredient(
@@ -280,7 +280,7 @@ const resolvers = {
 
     updateIngredient: async (
       _,
-      args: { text: string; isChecked: boolean; ingredientId: number },
+      args: { text: string; isChecked: boolean; ingredientId: string },
       context: Context
     ): Promise<IngredientUpdateResponseGQL> => {
       const ingredientModel = await context.dataSources.ingredientAPI.updateIngredient(
@@ -303,7 +303,7 @@ const resolvers = {
 
     deleteIngredient: async (
       _,
-      args: { ingredientId: number; recipeId: number },
+      args: { ingredientId: string; recipeId: string },
       context: Context
     ): Promise<IngredientDeleteResponseGQL> => {
       const ingredientModel = await context.dataSources.ingredientAPI.deleteIngredient(
@@ -326,7 +326,7 @@ const resolvers = {
 
     createInstruction: async (
       _,
-      args: { step: string; text: string; recipeId: number },
+      args: { step: string; text: string; recipeId: string },
       context: Context
     ): Promise<InstructionCreateResponseGQL> => {
       const newInstructionModel = await context.dataSources.instructionAPI.createInstruction(
@@ -349,7 +349,7 @@ const resolvers = {
 
     updateInstruction: async (
       _,
-      args: { step: string; text: string; instructionId: number; recipeId: number },
+      args: { step: string; text: string; instructionId: string; recipeId: string },
       context: Context
     ): Promise<InstructionUpdateResponseGQL> => {
       const instructionModel = await context.dataSources.instructionAPI.updateInstruction(
@@ -373,7 +373,7 @@ const resolvers = {
 
     deleteInstruction: async (
       _,
-      args: { instructionId: number; recipeId: number },
+      args: { instructionId: string; recipeId: string },
       context: Context
     ): Promise<InstructionDeleteResponseGQL> => {
       const instructionModel = context.dataSources.instructionAPI.deleteInstruction(
