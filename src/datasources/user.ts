@@ -110,13 +110,14 @@ class User extends DataSource {
     }
   }
 
-  async logout(token: string): Promise<boolean> {
+  async logout(): Promise<boolean> {
     await db.sync();
     const user = await dbUser.findOne({ where: { id: this.context.user.id } });
     if (!user) {
       return null;
     }
     try {
+      const token = user.token[user.token.length - 1];
       await user.update({
         token: Sequelize.fn('array_remove', Sequelize.col('token'), token),
       });

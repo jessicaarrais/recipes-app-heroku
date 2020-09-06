@@ -138,13 +138,9 @@ const resolvers = {
       }
     },
 
-    logout: async (
-      _,
-      args: { token: string },
-      context: Context
-    ): Promise<MeResponseGQL> => {
+    logout: async (_, __, context: Context): Promise<MeResponseGQL> => {
       const me = new UserGQL(context.user);
-      const loggedOutUser = await context.dataSources.userAPI.logout(args.token);
+      const loggedOutUser = await context.dataSources.userAPI.logout();
       if (!loggedOutUser) {
         return {
           success: false,

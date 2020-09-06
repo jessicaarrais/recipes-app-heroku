@@ -91,7 +91,7 @@ const typeDefs = gql`
 
     updateUser(username: String): MeResponse
 
-    logout(token: String): MeResponse
+    logout: MeResponse
 
     deleteUser: MeResponse
 
