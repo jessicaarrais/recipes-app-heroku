@@ -9,14 +9,14 @@ class UserGQL {
   email: string;
   _token: string;
 
-  constructor(userModel: UserModel) {
+  constructor(userModel: UserModel, token?: string) {
     this.id = userModel.id;
     this.username = userModel.username;
     this.email = userModel.email;
-    this._token = userModel.token;
+    this._token = token;
   }
 
-  async token(_args, context: Context): Promise<string> {
+  async token(_args, context: Context): Promise<String> {
     return this.id !== context.user.id ? null : this._token;
   }
 

@@ -1,9 +1,10 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
+import { Op } from 'sequelize';
 import cors from 'cors';
+import jwt, { VerifyErrors } from 'jsonwebtoken';
 import path from 'path';
-import isEmail from 'isemail';
 import { dbUser, UserModel } from './store';
 import typeDefs from './schema';
 import resolvers from './resolvers';
@@ -42,9 +43,13 @@ const dataSources = (): DataSources<Context> => ({
 
 const context = async ({ req }): Promise<MyContext> => {
   const auth = (req.headers && req.headers.authorization) || '';
-  const email = Buffer.from(auth, 'base64').toString('ascii');
-  if (!isEmail.validate(email)) return { user: null };
-  const user = await dbUser.findOne({ where: { email } });
+  let user = await dbUser.findOne({ where: { token: { [Op.contains]: [auth] } } });
+
+  jwt.verify(auth, process.env.JWT_SECRET, (err: VerifyErrors | null) => {
+    if (err) {
+      user = null;
+    }
+  });
 
   return { user: user };
 };

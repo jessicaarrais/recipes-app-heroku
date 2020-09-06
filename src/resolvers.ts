@@ -69,17 +69,17 @@ const resolvers = {
       context: Context
     ): Promise<MeResponseGQL> => {
       try {
-        const newUserModel = await context.dataSources.userAPI.createUser({
+        const { userModel, token } = await context.dataSources.userAPI.createUser({
           email: args.email,
           username: args.username,
           password: args.password,
           confirmPassword: args.confirmPassword,
         });
-        context.user = newUserModel;
+        context.user = userModel;
         return {
           success: true,
           message: 'Created',
-          me: new UserGQL(newUserModel),
+          me: new UserGQL(userModel, token),
         };
       } catch (error) {
         return {
@@ -96,15 +96,15 @@ const resolvers = {
       context: Context
     ): Promise<MeResponseGQL> => {
       try {
-        const meModel = await context.dataSources.userAPI.login({
+        const { userModel, token } = await context.dataSources.userAPI.login({
           email: args.email,
           password: args.password,
         });
-        context.user = meModel;
+        context.user = userModel;
         return {
           success: true,
           message: 'Logged',
-          me: new UserGQL(meModel),
+          me: new UserGQL(userModel, token),
         };
       } catch (error) {
         return {
@@ -136,6 +136,23 @@ const resolvers = {
           me: null,
         };
       }
+    },
+
+    logout: async (
+      _,
+      args: { token: string },
+      context: Context
+    ): Promise<MeResponseGQL> => {
+      const me = new UserGQL(context.user);
+      const loggedOutUser = await context.dataSources.userAPI.logout(args.token);
+      if (!loggedOutUser) {
+        return {
+          success: false,
+          message: 'Logout failed',
+          me: null,
+        };
+      }
+      return { success: true, message: 'User loggedout', me };
     },
 
     deleteUser: async (_, __, context: Context): Promise<MeResponseGQL> => {
