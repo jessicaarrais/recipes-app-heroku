@@ -110,19 +110,16 @@ class User extends DataSource {
     }
   }
 
-  async logout(): Promise<boolean> {
+  async logout(): Promise<UserModel> {
     await db.sync();
     const user = await dbUser.findOne({ where: { id: this.context.user.id } });
     if (!user) {
       return null;
     }
     try {
-      const token = user.token[user.token.length - 1];
-      await user.update({
-        token: Sequelize.fn('array_remove', Sequelize.col('token'), token),
+      return await user.update({
+        token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
       });
-
-      return true;
     } catch (error) {
       throw new Error(error.errors[0].message);
     }

@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 4000;
 
 interface MyContext {
   user: UserModel | null;
+  token: string;
 }
 interface MyDataSources {
   dataSources: {
@@ -50,8 +51,9 @@ const context = async ({ req }): Promise<MyContext> => {
       user = null;
     }
   });
+  console.log(auth);
 
-  return { user: user };
+  return { user: user, token: auth };
 };
 
 const server = new ApolloServer({

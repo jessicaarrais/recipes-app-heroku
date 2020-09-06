@@ -7,17 +7,11 @@ class UserGQL {
   id: string;
   username: string;
   email: string;
-  _token: string;
 
-  constructor(userModel: UserModel, token?: string) {
+  constructor(userModel: UserModel) {
     this.id = userModel.id;
     this.username = userModel.username;
     this.email = userModel.email;
-    this._token = token;
-  }
-
-  async token(_args, context: Context): Promise<String> {
-    return this.id !== context.user.id ? null : this._token;
   }
 
   async avatar(_args, context: Context): Promise<AvatarGQL> {
