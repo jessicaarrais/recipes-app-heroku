@@ -44,6 +44,8 @@ const dataSources = (): DataSources<Context> => ({
 
 const context = async ({ req }): Promise<MyContext> => {
   const auth = (req.headers && req.headers.authorization) || '';
+  if (auth == null || auth === '') return { user: null, token: null };
+
   let user = await dbUser.findOne({ where: { token: { [Op.contains]: [auth] } } });
 
   jwt.verify(auth, process.env.JWT_SECRET, (err: VerifyErrors | null) => {
@@ -51,7 +53,6 @@ const context = async ({ req }): Promise<MyContext> => {
       user = null;
     }
   });
-  console.log(auth);
 
   return { user: user, token: auth };
 };
