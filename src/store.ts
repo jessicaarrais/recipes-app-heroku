@@ -1,16 +1,18 @@
 import { Sequelize, DataType, Model } from 'sequelize-typescript';
 import { BuildOptions } from 'sequelize/types';
 
-export const db = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  ssl: true,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-});
+export const db = process.env.DEV
+  ? new Sequelize(process.env.DATABASE_URL)
+  : new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      ssl: true,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
+    });
 
 /* User Model */
 export interface UserModel extends Model {
@@ -19,7 +21,7 @@ export interface UserModel extends Model {
   email: string;
   password: string;
   cookbookId: string;
-  token: string;
+  token: Array<String>;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -56,8 +58,8 @@ export const dbUser = <UserStatic>db.define('user', {
       notEmpty: true,
     },
   },
+  token: { type: DataType.ARRAY(DataType.STRING), defaultValue: [] },
   cookbookId: DataType.UUID,
-  token: DataType.STRING,
   createdAt: DataType.DATE,
   updatedAt: DataType.DATE,
   deletedAt: DataType.DATE,

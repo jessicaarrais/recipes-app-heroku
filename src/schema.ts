@@ -5,6 +5,13 @@ import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
 import InstructionGQl from './graphql_models/instructionGQL';
 
+export interface AuthResponseGQL {
+  success: boolean;
+  message: string;
+  token: string;
+  me: UserGQL;
+}
+
 export interface MeResponseGQL {
   success: boolean;
   message: string;
@@ -85,11 +92,13 @@ const typeDefs = gql`
       username: String!
       password: String!
       confirmPassword: String!
-    ): MeResponse
+    ): AuthResponse
 
-    login(email: String!, password: String!): MeResponse
+    login(email: String!, password: String!): AuthResponse
 
     updateUser(username: String): MeResponse
+
+    logout: MeResponse
 
     deleteUser: MeResponse
 
@@ -135,6 +144,13 @@ const typeDefs = gql`
     ): InstructionUpdateResponse
 
     deleteInstruction(instructionId: ID!, recipeId: ID!): InstructionDeleteResponse
+  }
+
+  type AuthResponse {
+    success: Boolean
+    message: String
+    token: String
+    me: User
   }
 
   type MeResponse {
@@ -207,7 +223,6 @@ const typeDefs = gql`
     id: ID!
     username: String
     email: String
-    token: String
     avatar: Avatar
     cookbook: Cookbook
   }
