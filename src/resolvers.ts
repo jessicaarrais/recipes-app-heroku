@@ -20,7 +20,6 @@ import CookbookGQL from './graphql_models/cookbookGQL';
 import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
 import InstructionGQl from './graphql_models/instructionGQL';
-import User from './datasources/user';
 
 const resolvers = {
   Query: {

@@ -121,7 +121,7 @@ class User extends DataSource {
         token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
       });
     } catch (error) {
-      throw new Error(error.errors[0].message);
+      throw new Error('An error has ocurred');
     }
   }
 
