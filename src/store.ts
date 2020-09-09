@@ -1,5 +1,4 @@
-import { Sequelize, DataType, Model } from 'sequelize-typescript';
-import { BuildOptions } from 'sequelize/types';
+import { Sequelize, Model, DataTypes } from 'sequelize';
 
 export const db = process.env.DEV
   ? new Sequelize(process.env.DATABASE_URL)
@@ -26,17 +25,15 @@ export interface UserModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type UserStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): UserModel;
-};
-export const dbUser = <UserStatic>db.define('user', {
+
+export const dbUser = db.define<UserModel>('user', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
   username: {
-    type: DataType.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     validate: {
@@ -44,7 +41,7 @@ export const dbUser = <UserStatic>db.define('user', {
     },
   },
   email: {
-    type: DataType.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     validate: {
@@ -52,17 +49,17 @@ export const dbUser = <UserStatic>db.define('user', {
     },
   },
   password: {
-    type: DataType.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notEmpty: true,
     },
   },
-  token: { type: DataType.ARRAY(DataType.STRING), defaultValue: [] },
-  cookbookId: DataType.UUID,
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  token: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
+  cookbookId: DataTypes.UUID,
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Avatar Model */
@@ -76,22 +73,20 @@ export interface AvatarModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type AvatarStatic = typeof Model & {
-  new (values?: object, option?: BuildOptions): AvatarModel;
-};
-export const dbAvatar = <AvatarStatic>db.define('avatar', {
+
+export const dbAvatar = db.define<AvatarModel>('avatar', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
-  userId: DataType.UUID,
-  filename: DataType.STRING,
-  mimetype: DataType.STRING,
-  encoding: DataType.STRING,
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  userId: DataTypes.UUID,
+  filename: DataTypes.STRING,
+  mimetype: DataTypes.STRING,
+  encoding: DataTypes.STRING,
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Cookbook Model */
@@ -102,19 +97,17 @@ export interface CookbookModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type CookbookStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): CookbookModel;
-};
-export const dbCookbook = <CookbookStatic>db.define('cookbook', {
+
+export const dbCookbook = db.define<CookbookModel>('cookbook', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
-  userId: DataType.UUID,
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  userId: DataTypes.UUID,
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Recipe Model */
@@ -127,21 +120,19 @@ export interface RecipeModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type RecipeStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): RecipeModel;
-};
-export const dbRecipe = <RecipeStatic>db.define('recipe', {
+
+export const dbRecipe = db.define<RecipeModel>('recipe', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
-  cookbookId: DataType.UUID,
-  title: DataType.STRING,
-  isPublic: { type: DataType.BOOLEAN, defaultValue: false },
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  cookbookId: DataTypes.UUID,
+  title: DataTypes.STRING,
+  isPublic: { type: DataTypes.BOOLEAN, defaultValue: false },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Ingredient Model */
@@ -154,21 +145,19 @@ export interface IngredientModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type IngredientStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): IngredientModel;
-};
-export const dbIngredient = <IngredientStatic>db.define('ingredient', {
+
+export const dbIngredient = db.define<IngredientModel>('ingredient', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
-  recipeId: DataType.UUID,
-  text: DataType.STRING,
-  isChecked: DataType.BOOLEAN,
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  recipeId: DataTypes.UUID,
+  text: DataTypes.STRING,
+  isChecked: DataTypes.BOOLEAN,
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Instruction Model */
@@ -181,21 +170,19 @@ export interface InstructionModel extends Model {
   updatedAt: Date;
   deletedAt: Date;
 }
-export type InstructionStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): InstructionModel;
-};
-export const dbInstruction = <InstructionStatic>db.define('instruction', {
+
+export const dbInstruction = db.define<InstructionModel>('instruction', {
   id: {
-    type: DataType.UUID,
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataType.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
   },
-  recipeId: DataType.UUID,
-  step: DataType.STRING,
-  text: DataType.STRING,
-  createdAt: DataType.DATE,
-  updatedAt: DataType.DATE,
-  deletedAt: DataType.DATE,
+  recipeId: DataTypes.UUID,
+  step: DataTypes.STRING,
+  text: DataTypes.STRING,
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE,
+  deletedAt: DataTypes.DATE,
 });
 
 /* Assossiations */
