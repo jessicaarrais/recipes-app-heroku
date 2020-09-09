@@ -72,5 +72,5 @@ app.use('/images', express.static(path.join(__dirname, '../images')));
 server.applyMiddleware({ app });
 
 app.listen(PORT, () => {
-  console.log(`server running on port http://localhost:${PORT}`);
+  console.log(`server running on port http://localhost:${PORT}/graphql`);
 });
