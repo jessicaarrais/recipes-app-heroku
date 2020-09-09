@@ -1,5 +1,5 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { Sequelize } from 'sequelize-typescript';
+import { Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
 import isEmail from 'isemail';
 import jwt from 'jsonwebtoken';
