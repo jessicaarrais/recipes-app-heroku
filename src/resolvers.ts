@@ -2,9 +2,11 @@ import { ReadStream } from 'fs';
 import { Context } from '.';
 import { RecipeModel } from './store';
 import {
+  InstructionDeleteResponseGQL,
   MeResponseGQL,
   AuthResponseGQL,
   AvatarResponseGQL,
+  FavoriteRecipesResponseGQL,
   RecipeCreateResponseGQL,
   RecipeUpdateResponseGQL,
   RecipeDeleteResponseGQL,
@@ -13,7 +15,7 @@ import {
   IngredientDeleteResponseGQL,
   InstructionCreateResponseGQL,
   InstructionUpdateResponseGQL,
-  InstructionDeleteResponseGQL,
+  RecipeResponseGQL,
 } from './schema';
 import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
@@ -37,14 +39,27 @@ const resolvers = {
       return new UserGQL(userModel);
     },
 
-    recipe: async (
+    getRecipe: async (
       _,
       args: { recipeId: string; cookbookId: string },
       context: Context
-    ): Promise<RecipeGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
-      if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
-      return new RecipeGQL(recipeModel);
+    ): Promise<RecipeResponseGQL> => {
+      try {
+        const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+        if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
+
+        const owner = await context.dataSources.userAPI.getUser({
+          cookbookId: args.cookbookId,
+        });
+        const me = await context.dataSources.userAPI.getUser();
+        return {
+          owner: new UserGQL(owner),
+          recipe: new RecipeGQL(recipeModel),
+          me: new UserGQL(me),
+        };
+      } catch (error) {
+        return null;
+      }
     },
 
     searchRecipes: async (
@@ -153,6 +168,44 @@ const resolvers = {
         };
       }
       return { success: true, message: 'User loggedout', me: new UserGQL(me) };
+    },
+
+    addRecipeToFavorites: async (
+      _,
+      args: { recipeId: string },
+      context: Context
+    ): Promise<FavoriteRecipesResponseGQL> => {
+      const me = await context.dataSources.userAPI.addRecipeToFavorites(args.recipeId);
+      if (!me) {
+        return {
+          success: false,
+          message: 'Could not add recipe to favorites',
+          me: null,
+        };
+      }
+      return { success: true, message: 'Recipe added to favorites', me: new UserGQL(me) };
+    },
+
+    removeRecipeFromFavorites: async (
+      _,
+      args: { recipeId: string },
+      context: Context
+    ): Promise<FavoriteRecipesResponseGQL> => {
+      const me = await context.dataSources.userAPI.removeRecipeFromFavorites(
+        args.recipeId
+      );
+      if (!me) {
+        return {
+          success: false,
+          message: 'Could not remove recipe from favorites',
+          me: null,
+        };
+      }
+      return {
+        success: true,
+        message: 'Recipe removed from favorites',
+        me: new UserGQL(me),
+      };
     },
 
     deleteUser: async (_, __, context: Context): Promise<MeResponseGQL> => {

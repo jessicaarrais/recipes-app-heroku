@@ -6,12 +6,22 @@ import CookbookGQL from './cookbookGQL';
 class UserGQL {
   id: string;
   username: string;
-  email: string;
+  _email: string;
+  _favoriteRecipes: Array<String>;
 
   constructor(userModel: UserModel) {
     this.id = userModel.id;
     this.username = userModel.username;
-    this.email = userModel.email;
+    this._email = userModel.email;
+    this._favoriteRecipes = userModel.favoriteRecipes;
+  }
+
+  email(_args, context: Context): string {
+    return this.id === context.user.id ? this._email : null;
+  }
+
+  favoriteRecipes(_args, context: Context): Array<String> {
+    return this.id === context.user.id ? this._favoriteRecipes : [];
   }
 
   async avatar(_args, context: Context): Promise<AvatarGQL> {

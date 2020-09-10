@@ -5,6 +5,12 @@ import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
 import InstructionGQl from './graphql_models/instructionGQL';
 
+export interface RecipeResponseGQL {
+  owner: UserGQL;
+  recipe: RecipeGQL;
+  me: UserGQL;
+}
+
 export interface AuthResponseGQL {
   success: boolean;
   message: string;
@@ -19,6 +25,12 @@ export interface MeResponseGQL {
 }
 
 export interface AvatarResponseGQL {
+  success: boolean;
+  message: string;
+  me: UserGQL;
+}
+
+export interface FavoriteRecipesResponseGQL {
   success: boolean;
   message: string;
   me: UserGQL;
@@ -82,7 +94,7 @@ const typeDefs = gql`
   type Query {
     me: User
     user(username: String): User
-    recipe(recipeId: ID!, cookbookId: ID!): Recipe
+    getRecipe(recipeId: ID!, cookbookId: ID!): RecipeResponse
     searchRecipes(value: String): [Recipe]
   }
 
@@ -99,6 +111,10 @@ const typeDefs = gql`
     updateUser(username: String): MeResponse
 
     logout: MeResponse
+
+    addRecipeToFavorites(recipeId: String!): FavoriteRecipesResponse
+
+    removeRecipeFromFavorites(recipeId: String!): FavoriteRecipesResponse
 
     deleteUser: MeResponse
 
@@ -146,6 +162,12 @@ const typeDefs = gql`
     deleteInstruction(instructionId: ID!, recipeId: ID!): InstructionDeleteResponse
   }
 
+  type RecipeResponse {
+    owner: User
+    recipe: Recipe
+    me: User
+  }
+
   type AuthResponse {
     success: Boolean
     message: String
@@ -160,6 +182,12 @@ const typeDefs = gql`
   }
 
   type AvatarResponseGQL {
+    success: Boolean
+    message: String
+    me: User
+  }
+
+  type FavoriteRecipesResponse {
     success: Boolean
     message: String
     me: User
@@ -225,6 +253,7 @@ const typeDefs = gql`
     email: String
     avatar: Avatar
     cookbook: Cookbook
+    favoriteRecipes: [String]
   }
 
   type Avatar {
