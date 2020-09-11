@@ -93,8 +93,7 @@ class User extends DataSource {
   async updateUser(updatedUser: UpdatedUser): Promise<UserModel> {
     await db.sync();
     try {
-      const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-      return await user.update(updatedUser);
+      return await this.context.user.update(updatedUser);
     } catch (error) {
       throw new Error(error.errors[0].message);
     }
@@ -102,45 +101,33 @@ class User extends DataSource {
 
   async logout(): Promise<UserModel> {
     await db.sync();
-    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!user) {
-      return null;
-    }
-    return await user.update({
+    return await this.context.user.update({
       token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
     });
   }
 
   async addRecipeToFavorites(recipeId: string): Promise<UserModel> {
     await db.sync();
-    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!user) {
-      return null;
-    }
-    await user.update({
+    await this.context.user.update({
       favoriteRecipes: Sequelize.fn(
         'array_append',
         Sequelize.col('favoriteRecipes'),
         recipeId
       ),
     });
-    return await user.reload();
+    return await this.context.user.reload();
   }
 
   async removeRecipeFromFavorites(recipeId: string): Promise<UserModel> {
     await db.sync();
-    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!user) {
-      return null;
-    }
-    await user.update({
+    await this.context.user.update({
       favoriteRecipes: Sequelize.fn(
         'array_remove',
         Sequelize.col('favoriteRecipes'),
         recipeId
       ),
     });
-    return await user.reload();
+    return await this.context.user.reload();
   }
 
   async deleteUser(): Promise<boolean> {
