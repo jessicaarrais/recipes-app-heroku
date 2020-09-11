@@ -115,6 +115,7 @@ export const dbCookbook = db.define<CookbookModel>('cookbook', {
 /* Recipe Model */
 export interface RecipeModel extends Model {
   id: string;
+  ownerId: string;
   cookbookId: string;
   title: string;
   isPublic: boolean;
@@ -129,6 +130,7 @@ export const dbRecipe = db.define<RecipeModel>('recipe', {
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
   },
+  ownerId: DataTypes.UUID,
   cookbookId: DataTypes.UUID,
   title: DataTypes.STRING,
   isPublic: { type: DataTypes.BOOLEAN, defaultValue: false },

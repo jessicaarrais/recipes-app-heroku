@@ -15,7 +15,6 @@ import {
   IngredientDeleteResponseGQL,
   InstructionCreateResponseGQL,
   InstructionUpdateResponseGQL,
-  RecipeResponseGQL,
 } from './schema';
 import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
@@ -25,41 +24,33 @@ import InstructionGQl from './graphql_models/instructionGQL';
 
 const resolvers = {
   Query: {
-    me: async (_, __, context: Context): Promise<UserGQL> => {
-      const meModel = await context.dataSources.userAPI.getUser();
+    me: (_, __, context: Context): UserGQL => {
+      const meModel = context.user;
       if (!meModel) return null;
       return new UserGQL(meModel);
     },
 
-    user: async (_, args: { username: string }, context: Context): Promise<UserGQL> => {
+    user: async (
+      _,
+      args: { username: string; id: string },
+      context: Context
+    ): Promise<UserGQL> => {
       const userModel = await context.dataSources.userAPI.getUser({
         username: args.username,
+        id: args.id,
       });
       if (!userModel) return null;
       return new UserGQL(userModel);
     },
 
-    getRecipe: async (
+    recipe: async (
       _,
       args: { recipeId: string; cookbookId: string },
       context: Context
-    ): Promise<RecipeResponseGQL> => {
-      try {
-        const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
-        if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
-
-        const owner = await context.dataSources.userAPI.getUser({
-          cookbookId: args.cookbookId,
-        });
-        const me = await context.dataSources.userAPI.getUser();
-        return {
-          owner: new UserGQL(owner),
-          recipe: new RecipeGQL(recipeModel),
-          me: new UserGQL(me),
-        };
-      } catch (error) {
-        return null;
-      }
+    ): Promise<RecipeGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
+      return new RecipeGQL(recipeModel);
     },
 
     searchRecipes: async (
@@ -180,10 +171,16 @@ const resolvers = {
         return {
           success: false,
           message: 'Could not add recipe to favorites',
-          me: null,
+          recipe: null,
         };
       }
-      return { success: true, message: 'Recipe added to favorites', me: new UserGQL(me) };
+      context.user = me;
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      return {
+        success: true,
+        message: 'Recipe added to favorites',
+        recipe: new RecipeGQL(recipeModel),
+      };
     },
 
     removeRecipeFromFavorites: async (
@@ -198,13 +195,15 @@ const resolvers = {
         return {
           success: false,
           message: 'Could not remove recipe from favorites',
-          me: null,
+          recipe: null,
         };
       }
+      context.user = me;
+      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
       return {
         success: true,
         message: 'Recipe removed from favorites',
-        me: new UserGQL(me),
+        recipe: new RecipeGQL(recipeModel),
       };
     },
 
@@ -249,15 +248,8 @@ const resolvers = {
       }
     },
 
-    createRecipe: async (
-      _,
-      args: { title: string; cookbookId: string },
-      context: Context
-    ): Promise<RecipeCreateResponseGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.createRecipe({
-        title: args.title,
-        cookbookId: args.cookbookId,
-      });
+    createRecipe: async (_, __, context: Context): Promise<RecipeCreateResponseGQL> => {
+      const recipeModel = await context.dataSources.recipeAPI.createRecipe();
       if (!recipeModel) {
         return {
           success: false,

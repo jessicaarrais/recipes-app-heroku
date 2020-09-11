@@ -7,19 +7,19 @@ import { Context } from '..';
 import { db, dbUser, UserModel } from '../store';
 import Cookbook from './cookbook';
 
-interface FindUser {
+interface GetUserParams {
   username?: string;
-  cookbookId?: string;
+  id?: string;
 }
 
-interface NewUser {
+interface CreateUserParams {
   email: string;
   username: string;
   password: string;
   confirmPassword: string;
 }
 
-interface UserLoginCredentials {
+interface LoginParams {
   email: string;
   password: string;
 }
@@ -36,19 +36,16 @@ class User extends DataSource {
     this.context = config.context;
   }
 
-  async getUser({ username, cookbookId }: FindUser = {}): Promise<UserModel> {
+  async getUser({ username, id }: GetUserParams): Promise<UserModel> {
     await db.sync();
-    const userFinderField =
-      (username && { username }) || (cookbookId && { cookbookId }) || null;
-    return userFinderField
-      ? await dbUser.findOne({ where: userFinderField })
-      : this.context.user;
+    const userFinderField = (username && { username }) || (id && { id });
+    return userFinderField ? await dbUser.findOne({ where: userFinderField }) : null;
   }
 
   async login({
     email,
     password,
-  }: UserLoginCredentials): Promise<{ userModel: UserModel; token: string }> {
+  }: LoginParams): Promise<{ userModel: UserModel; token: string }> {
     if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
@@ -67,7 +64,7 @@ class User extends DataSource {
     username,
     password,
     confirmPassword,
-  }: NewUser): Promise<{ userModel: UserModel; token: string }> {
+  }: CreateUserParams): Promise<{ userModel: UserModel; token: string }> {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
     if (!this.regex.test(password)) throw new Error('Invalid password');
     if (password !== confirmPassword) throw new Error('Passwords do not match.');

@@ -3,17 +3,12 @@ import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
 import { Op, OrderItem } from 'sequelize';
 
-interface NewRecipe {
-  title: string;
-  cookbookId: string;
-}
-
-interface UpdatedRecipe {
+interface UpdateRecipeParams {
   title: string;
   isPublic: boolean;
 }
 
-enum RecipesListOrder {
+export enum RecipesListOrder {
   DEFAULT = 'DEFAULT',
   TITLE_ASCENDING = 'TITLE_ASCENDING',
 }
@@ -34,7 +29,7 @@ class Recipe extends DataSource {
   async getRecipe(id: string): Promise<RecipeModel> {
     const recipe = await dbRecipe.findOne({ where: { id } });
     if (!recipe) return null;
-    const isOwner = this.context.user?.cookbookId === recipe.cookbookId;
+    const isOwner = this.context.user?.id === recipe.ownerId;
     return isOwner || recipe.isPublic ? recipe : null;
   }
 
@@ -59,15 +54,16 @@ class Recipe extends DataSource {
     });
   }
 
-  async createRecipe({ title, cookbookId }: NewRecipe): Promise<RecipeModel> {
+  async createRecipe(): Promise<RecipeModel> {
     return await dbRecipe.create({
-      title,
-      cookbookId,
+      title: 'Title',
+      ownerId: this.context.user.id,
+      cookbookId: this.context.user.cookbookId,
     });
   }
 
   async updateRecipe(
-    updatedRecipe: UpdatedRecipe,
+    updatedRecipe: UpdateRecipeParams,
     recipeId: string
   ): Promise<RecipeModel> {
     const recipe = await dbRecipe.findOne({ where: { id: recipeId } });

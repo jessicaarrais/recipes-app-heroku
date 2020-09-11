@@ -5,12 +5,6 @@ import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
 import InstructionGQl from './graphql_models/instructionGQL';
 
-export interface RecipeResponseGQL {
-  owner: UserGQL;
-  recipe: RecipeGQL;
-  me: UserGQL;
-}
-
 export interface AuthResponseGQL {
   success: boolean;
   message: string;
@@ -33,7 +27,7 @@ export interface AvatarResponseGQL {
 export interface FavoriteRecipesResponseGQL {
   success: boolean;
   message: string;
-  me: UserGQL;
+  recipe: RecipeGQL;
 }
 
 export interface RecipeCreateResponseGQL {
@@ -93,8 +87,8 @@ export interface InstructionDeleteResponseGQL {
 const typeDefs = gql`
   type Query {
     me: User
-    user(username: String): User
-    getRecipe(recipeId: ID!, cookbookId: ID!): RecipeResponse
+    user(username: String, id: ID): User
+    recipe(recipeId: ID!, cookbookId: ID!): Recipe
     searchRecipes(value: String): [Recipe]
   }
 
@@ -112,15 +106,15 @@ const typeDefs = gql`
 
     logout: MeResponse
 
-    addRecipeToFavorites(recipeId: String!): FavoriteRecipesResponse
+    addRecipeToFavorites(recipeId: ID!): FavoriteRecipesResponse
 
-    removeRecipeFromFavorites(recipeId: String!): FavoriteRecipesResponse
+    removeRecipeFromFavorites(recipeId: ID!): FavoriteRecipesResponse
 
     deleteUser: MeResponse
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
-    createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
+    createRecipe: RecipeCreateResponse
 
     updateRecipe(
       recipeId: ID!
@@ -162,12 +156,6 @@ const typeDefs = gql`
     deleteInstruction(instructionId: ID!, recipeId: ID!): InstructionDeleteResponse
   }
 
-  type RecipeResponse {
-    owner: User
-    recipe: Recipe
-    me: User
-  }
-
   type AuthResponse {
     success: Boolean
     message: String
@@ -190,7 +178,7 @@ const typeDefs = gql`
   type FavoriteRecipesResponse {
     success: Boolean
     message: String
-    me: User
+    recipe: Recipe
   }
 
   type RecipeCreateResponse {
@@ -272,9 +260,11 @@ const typeDefs = gql`
 
   type Recipe {
     id: ID!
+    owner: User
     cookbookId: ID!
     title: String
     isPublic: Boolean
+    isFavorite: Boolean
     ingredients: [Ingredient]
     instructions: [Instruction]
   }
