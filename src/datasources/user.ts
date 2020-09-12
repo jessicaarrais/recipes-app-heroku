@@ -38,8 +38,13 @@ class User extends DataSource {
 
   async getUser({ username, id }: GetUserParams): Promise<UserModel> {
     await db.sync();
-    const userFinderField = (username && { username }) || (id && { id });
-    return userFinderField ? await dbUser.findOne({ where: userFinderField }) : null;
+    if (username) {
+      return await dbUser.findOne({ where: { username } });
+    }
+    if (id && { id }) {
+      return await dbUser.findOne({ where: { id } });
+    }
+    return null;
   }
 
   async login({

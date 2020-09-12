@@ -25,9 +25,7 @@ import InstructionGQl from './graphql_models/instructionGQL';
 const resolvers = {
   Query: {
     me: (_, __, context: Context): UserGQL => {
-      const meModel = context.user;
-      if (!meModel) return null;
-      return new UserGQL(meModel);
+      return context.user ? new UserGQL(context.user) : null;
     },
 
     user: async (

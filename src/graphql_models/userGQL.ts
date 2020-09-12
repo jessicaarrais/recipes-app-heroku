@@ -17,11 +17,7 @@ class UserGQL {
   }
 
   email(_args, context: Context): string {
-    return this.id === context.user.id ? this._email : null;
-  }
-
-  favoriteRecipes(_args, context: Context): Array<String> {
-    return this.id === context.user.id ? this._favoriteRecipes : [];
+    return context.user?.id === this.id ? this._email : null;
   }
 
   async avatar(_args, context: Context): Promise<AvatarGQL> {
@@ -34,6 +30,10 @@ class UserGQL {
     const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(this.id);
     if (!cookbookModel) return null;
     return new CookbookGQL(cookbookModel);
+  }
+
+  favoriteRecipes(_args, context: Context): Array<String> {
+    return context.user?.id === this.id ? this._favoriteRecipes : null;
   }
 }
 
