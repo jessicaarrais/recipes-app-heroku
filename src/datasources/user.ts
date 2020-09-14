@@ -41,7 +41,7 @@ class User extends DataSource {
     if (username) {
       return await dbUser.findOne({ where: { username } });
     }
-    if (id && { id }) {
+    if (id) {
       return await dbUser.findOne({ where: { id } });
     }
     return null;
@@ -120,6 +120,8 @@ class User extends DataSource {
         recipeId
       ),
     });
+    // We need to reload because fns are not automatically converted
+    // Ref: sequelize/sequelize#9151
     return await this.context.user.reload();
   }
 
@@ -132,6 +134,8 @@ class User extends DataSource {
         recipeId
       ),
     });
+    // We need to reload because fns are not automatically converted
+    // Ref: sequelize/sequelize#9151
     return await this.context.user.reload();
   }
 
