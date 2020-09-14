@@ -24,6 +24,12 @@ export interface AvatarResponseGQL {
   me: UserGQL;
 }
 
+export interface FavoriteRecipesResponseGQL {
+  success: boolean;
+  message: string;
+  recipe: RecipeGQL;
+}
+
 export interface RecipeCreateResponseGQL {
   success: boolean;
   message: string;
@@ -81,7 +87,7 @@ export interface InstructionDeleteResponseGQL {
 const typeDefs = gql`
   type Query {
     me: User
-    user(username: String): User
+    user(username: String, id: ID): User
     recipe(recipeId: ID!, cookbookId: ID!): Recipe
     searchRecipes(value: String): [Recipe]
   }
@@ -100,11 +106,15 @@ const typeDefs = gql`
 
     logout: MeResponse
 
+    addRecipeToFavorites(recipeId: ID!): FavoriteRecipesResponse
+
+    removeRecipeFromFavorites(recipeId: ID!): FavoriteRecipesResponse
+
     deleteUser: MeResponse
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
-    createRecipe(title: String, cookbookId: ID!): RecipeCreateResponse
+    createRecipe: RecipeCreateResponse
 
     updateRecipe(
       recipeId: ID!
@@ -163,6 +173,12 @@ const typeDefs = gql`
     success: Boolean
     message: String
     me: User
+  }
+
+  type FavoriteRecipesResponse {
+    success: Boolean
+    message: String
+    recipe: Recipe
   }
 
   type RecipeCreateResponse {
@@ -225,6 +241,7 @@ const typeDefs = gql`
     email: String
     avatar: Avatar
     cookbook: Cookbook
+    favoriteRecipes: [String]
   }
 
   type Avatar {
@@ -243,9 +260,11 @@ const typeDefs = gql`
 
   type Recipe {
     id: ID!
+    owner: User
     cookbookId: ID!
     title: String
     isPublic: Boolean
+    isFavorite: Boolean
     ingredients: [Ingredient]
     instructions: [Instruction]
   }

@@ -7,18 +7,19 @@ import { Context } from '..';
 import { db, dbUser, UserModel } from '../store';
 import Cookbook from './cookbook';
 
-interface CurrentUser {
+interface GetUserParams {
   username?: string;
+  id?: string;
 }
 
-interface NewUser {
+interface CreateUserParams {
   email: string;
   username: string;
   password: string;
   confirmPassword: string;
 }
 
-interface UserLoginCredentials {
+interface LoginParams {
   email: string;
   password: string;
 }
@@ -35,27 +36,27 @@ class User extends DataSource {
     this.context = config.context;
   }
 
-  async getUser({ username }: CurrentUser = {}): Promise<UserModel> {
+  async getUser({ username, id }: GetUserParams): Promise<UserModel> {
     await db.sync();
-    const user = username
-      ? await dbUser.findOne({ where: { username } })
-      : this.context.user;
-    if (!user) return null;
-    return user;
+    if (username) {
+      return await dbUser.findOne({ where: { username } });
+    }
+    if (id) {
+      return await dbUser.findOne({ where: { id } });
+    }
+    return null;
   }
 
   async login({
     email,
     password,
-  }: UserLoginCredentials): Promise<{ userModel: UserModel; token: string }> {
+  }: LoginParams): Promise<{ userModel: UserModel; token: string }> {
     if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
-
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
     if (!user) throw new Error('User does not exist.');
     if (!bcrypt.compareSync(password, user.password))
       throw new Error('Password is incorrect');
-
     const newToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     await user.update({
       token: Sequelize.fn('array_append', Sequelize.col('token'), newToken),
@@ -68,7 +69,7 @@ class User extends DataSource {
     username,
     password,
     confirmPassword,
-  }: NewUser): Promise<{ userModel: UserModel; token: string }> {
+  }: CreateUserParams): Promise<{ userModel: UserModel; token: string }> {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
     if (!this.regex.test(password)) throw new Error('Invalid password');
     if (password !== confirmPassword) throw new Error('Passwords do not match.');
@@ -80,17 +81,14 @@ class User extends DataSource {
         username,
         password: bcrypt.hashSync(password, 10),
       });
-
       const newCookbook = await Cookbook.create(newUser.id);
       await newUser.update({
         cookbookId: newCookbook.id,
       });
-
       const newToken = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET);
       await newUser.update({
         token: Sequelize.fn('array_append', Sequelize.col('token'), newToken),
       });
-
       return { userModel: newUser, token: newToken };
     } catch (error) {
       throw new Error(error.errors[0].message);
@@ -99,12 +97,8 @@ class User extends DataSource {
 
   async updateUser(updatedUser: UpdatedUser): Promise<UserModel> {
     await db.sync();
-    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!user) {
-      return null;
-    }
     try {
-      return await user.update(updatedUser);
+      return await this.context.user.update(updatedUser);
     } catch (error) {
       throw new Error(error.errors[0].message);
     }
@@ -112,17 +106,37 @@ class User extends DataSource {
 
   async logout(): Promise<UserModel> {
     await db.sync();
-    const user = await dbUser.findOne({ where: { id: this.context.user.id } });
-    if (!user) {
-      return null;
-    }
-    try {
-      return await user.update({
-        token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
-      });
-    } catch (error) {
-      throw new Error('An error has ocurred');
-    }
+    return await this.context.user.update({
+      token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
+    });
+  }
+
+  async addRecipeToFavorites(recipeId: string): Promise<UserModel> {
+    await db.sync();
+    await this.context.user.update({
+      favoriteRecipes: Sequelize.fn(
+        'array_append',
+        Sequelize.col('favoriteRecipes'),
+        recipeId
+      ),
+    });
+    // We need to reload because fns are not automatically converted
+    // Ref: sequelize/sequelize#9151
+    return await this.context.user.reload();
+  }
+
+  async removeRecipeFromFavorites(recipeId: string): Promise<UserModel> {
+    await db.sync();
+    await this.context.user.update({
+      favoriteRecipes: Sequelize.fn(
+        'array_remove',
+        Sequelize.col('favoriteRecipes'),
+        recipeId
+      ),
+    });
+    // We need to reload because fns are not automatically converted
+    // Ref: sequelize/sequelize#9151
+    return await this.context.user.reload();
   }
 
   async deleteUser(): Promise<boolean> {

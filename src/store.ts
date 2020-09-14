@@ -21,6 +21,7 @@ export interface UserModel extends Model {
   password: string;
   cookbookId: string;
   token: Array<String>;
+  favoriteRecipes: Array<String>;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -55,8 +56,9 @@ export const dbUser = db.define<UserModel>('user', {
       notEmpty: true,
     },
   },
-  token: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
   cookbookId: DataTypes.UUID,
+  token: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
+  favoriteRecipes: { type: DataTypes.ARRAY(DataTypes.UUID), defaultValue: [] },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
   deletedAt: DataTypes.DATE,
@@ -113,6 +115,7 @@ export const dbCookbook = db.define<CookbookModel>('cookbook', {
 /* Recipe Model */
 export interface RecipeModel extends Model {
   id: string;
+  ownerId: string;
   cookbookId: string;
   title: string;
   isPublic: boolean;
@@ -127,6 +130,7 @@ export const dbRecipe = db.define<RecipeModel>('recipe', {
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
   },
+  ownerId: DataTypes.UUID,
   cookbookId: DataTypes.UUID,
   title: DataTypes.STRING,
   isPublic: { type: DataTypes.BOOLEAN, defaultValue: false },
