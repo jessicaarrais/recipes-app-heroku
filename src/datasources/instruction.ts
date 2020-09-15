@@ -2,19 +2,19 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { Context } from '..';
 import { InstructionModel, dbInstruction } from '../store';
 
-interface NewInstruction {
+interface CreateInstructionParams {
   step: string;
   text: string;
   recipeId: string;
 }
 
-interface UpdatedInstruction {
+interface UpdateInstructionParams {
   step: string;
   text: string;
 }
 
 class Instruction extends DataSource {
-  context: Context;
+  context!: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
@@ -28,21 +28,21 @@ class Instruction extends DataSource {
     step,
     text,
     recipeId,
-  }: NewInstruction): Promise<InstructionModel> {
+  }: CreateInstructionParams): Promise<InstructionModel | null> {
+    if (!this.context.user) return null;
     return await dbInstruction.create({ step, text, recipeId });
   }
 
   async updateInstruction(
-    updatedInstruction: UpdatedInstruction,
+    updatedInstruction: UpdateInstructionParams,
     instructionId: string,
     recipeId: string
-  ): Promise<InstructionModel> {
+  ): Promise<InstructionModel | null> {
+    if (!this.context.user) return null;
     const instruction = await dbInstruction.findOne({
       where: { id: instructionId, recipeId },
     });
-    if (!instruction) {
-      return null;
-    }
+    if (!instruction) return null;
     return await instruction.update(updatedInstruction);
   }
 

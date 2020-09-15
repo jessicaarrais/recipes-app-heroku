@@ -24,19 +24,19 @@ interface LoginParams {
   password: string;
 }
 
-interface UpdatedUser {
+interface UpdateUserParams {
   username: string;
 }
 
 class User extends DataSource {
-  context: Context;
+  context!: Context;
   regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,12}$');
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
   }
 
-  async getUser({ username, id }: GetUserParams): Promise<UserModel> {
+  async getUser({ username, id }: GetUserParams): Promise<UserModel | null> {
     await db.sync();
     if (username) {
       return await dbUser.findOne({ where: { username } });
@@ -47,10 +47,7 @@ class User extends DataSource {
     return null;
   }
 
-  async login({
-    email,
-    password,
-  }: LoginParams): Promise<{ userModel: UserModel; token: string }> {
+  async login({ email, password }: LoginParams): Promise<string> {
     if (!email || !isEmail.validate(email)) throw new Error('Invalid email.');
     await db.sync();
     const user = await dbUser.findOne({ where: { email } });
@@ -61,7 +58,7 @@ class User extends DataSource {
     await user.update({
       token: Sequelize.fn('array_append', Sequelize.col('token'), newToken),
     });
-    return { userModel: user, token: newToken };
+    return newToken;
   }
 
   async createUser({
@@ -69,7 +66,7 @@ class User extends DataSource {
     username,
     password,
     confirmPassword,
-  }: CreateUserParams): Promise<{ userModel: UserModel; token: string }> {
+  }: CreateUserParams): Promise<string> {
     if (!isEmail.validate(email)) throw new Error('Invalid email.');
     if (!this.regex.test(password)) throw new Error('Invalid password');
     if (password !== confirmPassword) throw new Error('Passwords do not match.');
@@ -89,13 +86,14 @@ class User extends DataSource {
       await newUser.update({
         token: Sequelize.fn('array_append', Sequelize.col('token'), newToken),
       });
-      return { userModel: newUser, token: newToken };
+      return newToken;
     } catch (error) {
       throw new Error(error.errors[0].message);
     }
   }
 
-  async updateUser(updatedUser: UpdatedUser): Promise<UserModel> {
+  async updateUser(updatedUser: UpdateUserParams): Promise<UserModel | null> {
+    if (!this.context.user) return null;
     await db.sync();
     try {
       return await this.context.user.update(updatedUser);
@@ -104,14 +102,16 @@ class User extends DataSource {
     }
   }
 
-  async logout(): Promise<UserModel> {
+  async logout(): Promise<UserModel | null> {
+    if (!this.context.user) return null;
     await db.sync();
     return await this.context.user.update({
       token: Sequelize.fn('array_remove', Sequelize.col('token'), this.context.token),
     });
   }
 
-  async addRecipeToFavorites(recipeId: string): Promise<UserModel> {
+  async addRecipeToFavorites(recipeId: string): Promise<UserModel | null> {
+    if (!this.context.user) return null;
     await db.sync();
     await this.context.user.update({
       favoriteRecipes: Sequelize.fn(
@@ -125,7 +125,8 @@ class User extends DataSource {
     return await this.context.user.reload();
   }
 
-  async removeRecipeFromFavorites(recipeId: string): Promise<UserModel> {
+  async removeRecipeFromFavorites(recipeId: string): Promise<UserModel | null> {
+    if (!this.context.user) return null;
     await db.sync();
     await this.context.user.update({
       favoriteRecipes: Sequelize.fn(
@@ -142,7 +143,7 @@ class User extends DataSource {
   async deleteUser(): Promise<boolean> {
     return (
       (await dbUser.destroy({
-        where: { id: this.context.user.id },
+        where: { id: this.context.user?.id },
       })) === 1
     );
   }

@@ -20,43 +20,43 @@ import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
 import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
-import InstructionGQl from './graphql_models/instructionGQL';
+import InstructionGQL from './graphql_models/instructionGQL';
+import ErrorResponseGQL from './graphql_models/errorResponseGQL';
 
 const resolvers = {
   Query: {
-    me: (_, __, context: Context): UserGQL => {
-      return context.user ? new UserGQL(context.user) : null;
+    me: (_: undefined, __: {}, { user }: Context): UserGQL | null => {
+      return user ? new UserGQL(user) : null;
     },
 
     user: async (
-      _,
+      _: undefined,
       args: { username: string; id: string },
-      context: Context
-    ): Promise<UserGQL> => {
-      const userModel = await context.dataSources.userAPI.getUser({
+      { dataSources }: Context
+    ): Promise<UserGQL | null> => {
+      const userModel = await dataSources.userAPI.getUser({
         username: args.username,
         id: args.id,
       });
-      if (!userModel) return null;
-      return new UserGQL(userModel);
+      return userModel ? new UserGQL(userModel) : null;
     },
 
     recipe: async (
-      _,
+      _: undefined,
       args: { recipeId: string; cookbookId: string },
-      context: Context
-    ): Promise<RecipeGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      { dataSources }: Context
+    ): Promise<RecipeGQL | null> => {
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
       if (!recipeModel || args.cookbookId != recipeModel.cookbookId) return null;
       return new RecipeGQL(recipeModel);
     },
 
     searchRecipes: async (
-      _,
+      _: undefined,
       args: { value: string },
-      context: Context
-    ): Promise<Array<RecipeGQL>> => {
-      const recipesModel = await context.dataSources.recipeAPI.searchRecipes(args.value);
+      { dataSources }: Context
+    ): Promise<Array<RecipeGQL> | null> => {
+      const recipesModel = await dataSources.recipeAPI.searchRecipes(args.value);
       if (!recipesModel) return null;
       return recipesModel.map((recipe: RecipeModel) => new RecipeGQL(recipe));
     },
@@ -64,116 +64,91 @@ const resolvers = {
 
   Mutation: {
     signup: async (
-      _,
+      _: undefined,
       args: {
         email: string;
         username: string;
         password: string;
         confirmPassword: string;
       },
-      context: Context
-    ): Promise<AuthResponseGQL> => {
+      { dataSources }: Context
+    ): Promise<AuthResponseGQL | ErrorResponseGQL> => {
       try {
-        const { userModel, token } = await context.dataSources.userAPI.createUser({
+        const token = await dataSources.userAPI.createUser({
           email: args.email,
           username: args.username,
           password: args.password,
           confirmPassword: args.confirmPassword,
         });
-        context.user = userModel;
         return {
           success: true,
           message: 'Created',
           token,
-          me: new UserGQL(userModel),
         };
       } catch (error) {
-        return {
-          success: false,
-          message: error.message,
-          token: null,
-          me: null,
-        };
+        return new ErrorResponseGQL(error.message);
       }
     },
 
     login: async (
-      _,
+      _: undefined,
       args: { email: string; password: string },
-      context: Context
-    ): Promise<AuthResponseGQL> => {
+      { dataSources }: Context
+    ): Promise<AuthResponseGQL | ErrorResponseGQL> => {
       try {
-        const { userModel, token } = await context.dataSources.userAPI.login({
+        const token = await dataSources.userAPI.login({
           email: args.email,
           password: args.password,
         });
-        context.user = userModel;
         return {
           success: true,
           message: 'Logged',
           token,
-          me: new UserGQL(userModel),
         };
       } catch (error) {
-        return {
-          success: false,
-          message: error.message,
-          token: null,
-          me: null,
-        };
+        return new ErrorResponseGQL(error.message);
       }
     },
 
     updateUser: async (
-      _,
+      _: undefined,
       args: { username: string },
-      context: Context
-    ): Promise<MeResponseGQL> => {
+      { dataSources }: Context
+    ): Promise<MeResponseGQL | ErrorResponseGQL> => {
       try {
-        const meModel = await context.dataSources.userAPI.updateUser({
+        const meModel = await dataSources.userAPI.updateUser({
           username: args.username,
         });
+        if (!meModel) throw new Error('User is not logged in');
         return {
           success: true,
           message: 'Updated',
           me: new UserGQL(meModel),
         };
       } catch (error) {
-        return {
-          success: false,
-          message: error.message,
-          me: null,
-        };
+        return new ErrorResponseGQL(error.message);
       }
     },
 
-    logout: async (_, __, context: Context): Promise<MeResponseGQL> => {
-      const me = await context.dataSources.userAPI.logout();
-      if (!me) {
-        return {
-          success: false,
-          message: 'Logout failed',
-          me: null,
-        };
-      }
-      return { success: true, message: 'User loggedout', me: new UserGQL(me) };
+    logout: async (
+      _: undefined,
+      __: {},
+      { dataSources }: Context
+    ): Promise<MeResponseGQL | ErrorResponseGQL> => {
+      const me = await dataSources.userAPI.logout();
+      if (!me) return new ErrorResponseGQL('User is not logged in');
+      return { success: true, message: 'User logged out', me: new UserGQL(me) };
     },
 
     addRecipeToFavorites: async (
-      _,
+      _: undefined,
       args: { recipeId: string },
-      context: Context
-    ): Promise<FavoriteRecipesResponseGQL> => {
-      const me = await context.dataSources.userAPI.addRecipeToFavorites(args.recipeId);
-      if (!me) {
-        return {
-          success: false,
-          message: 'Could not add recipe to favorites',
-          recipe: null,
-        };
-      }
-      context.user = me;
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      { dataSources }: Context
+    ): Promise<FavoriteRecipesResponseGQL | ErrorResponseGQL> => {
+      const me = await dataSources.userAPI.addRecipeToFavorites(args.recipeId);
+      if (!me) return new ErrorResponseGQL('User is not logged in');
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
         success: true,
         message: 'Recipe added to favorites',
@@ -182,22 +157,14 @@ const resolvers = {
     },
 
     removeRecipeFromFavorites: async (
-      _,
+      _: undefined,
       args: { recipeId: string },
-      context: Context
-    ): Promise<FavoriteRecipesResponseGQL> => {
-      const me = await context.dataSources.userAPI.removeRecipeFromFavorites(
-        args.recipeId
-      );
-      if (!me) {
-        return {
-          success: false,
-          message: 'Could not remove recipe from favorites',
-          recipe: null,
-        };
-      }
-      context.user = me;
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      { dataSources }: Context
+    ): Promise<FavoriteRecipesResponseGQL | ErrorResponseGQL> => {
+      const me = await dataSources.userAPI.removeRecipeFromFavorites(args.recipeId);
+      if (!me) return new ErrorResponseGQL('User is not logged in');
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
         success: true,
         message: 'Recipe removed from favorites',
@@ -205,21 +172,20 @@ const resolvers = {
       };
     },
 
-    deleteUser: async (_, __, context: Context): Promise<MeResponseGQL> => {
-      const me = new UserGQL(context.user);
-      const deletedUser = await context.dataSources.userAPI.deleteUser();
-      if (!deletedUser) {
-        return {
-          success: false,
-          message: 'User not deleted',
-          me: null,
-        };
-      }
+    deleteUser: async (
+      _: undefined,
+      __: {},
+      { user, dataSources }: Context
+    ): Promise<MeResponseGQL | ErrorResponseGQL> => {
+      if (!user) return new ErrorResponseGQL('No user logged in');
+      const me = new UserGQL(user);
+      const deletedUser = await dataSources.userAPI.deleteUser();
+      if (!deletedUser) return new ErrorResponseGQL('User not deleted');
       return { success: true, message: 'User deleted', me };
     },
 
     uploadAvatar: async (
-      _,
+      _: undefined,
       args: {
         file: {
           filename: string;
@@ -228,36 +194,33 @@ const resolvers = {
           createReadStream: () => ReadStream;
         };
       },
-      context: Context
-    ): Promise<AvatarResponseGQL> => {
+      { user, dataSources }: Context
+    ): Promise<AvatarResponseGQL | ErrorResponseGQL> => {
       try {
-        await context.dataSources.avatarAPI.uploadAvatar(args);
+        if (!user) throw new Error('No user logged in');
+        const avatarModel = await dataSources.avatarAPI.uploadAvatar(args);
+        if (!avatarModel) throw new Error('Could not upload avatar');
         return {
           success: true,
           message: 'Avatar updated',
-          me: new UserGQL(context.user),
+          me: new UserGQL(user),
         };
       } catch (error) {
-        return {
-          success: false,
-          message: error.message,
-          me: null,
-        };
+        return new ErrorResponseGQL(error.message);
       }
     },
 
-    createRecipe: async (_, __, context: Context): Promise<RecipeCreateResponseGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.createRecipe();
-      if (!recipeModel) {
-        return {
-          success: false,
-          message: 'Failed creating recipe',
-          cookbook: null,
-        };
-      }
-      const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(
-        context.user.id
+    createRecipe: async (
+      _: undefined,
+      args: { title: string },
+      { dataSources }: Context
+    ): Promise<RecipeCreateResponseGQL | ErrorResponseGQL> => {
+      const recipeModel = await dataSources.recipeAPI.createRecipe(args.title);
+      if (!recipeModel) return new ErrorResponseGQL('User is not logged in');
+      const cookbookModel = await dataSources.cookbookAPI.getCookbook(
+        recipeModel.ownerId
       );
+      if (!cookbookModel) return new ErrorResponseGQL('Could not retrieve cookbook');
       return {
         success: true,
         message: 'Recipe created',
@@ -266,21 +229,15 @@ const resolvers = {
     },
 
     updateRecipe: async (
-      _,
+      _: undefined,
       args: { title: string; isPublic: boolean; recipeId: string },
-      context: Context
-    ): Promise<RecipeUpdateResponseGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.updateRecipe(
+      { dataSources }: Context
+    ): Promise<RecipeUpdateResponseGQL | ErrorResponseGQL> => {
+      const recipeModel = await dataSources.recipeAPI.updateRecipe(
         { title: args.title, isPublic: args.isPublic },
         args.recipeId
       );
-      if (!recipeModel) {
-        return {
-          success: false,
-          message: 'Failed to update recipe',
-          recipe: null,
-        };
-      }
+      if (!recipeModel) return new ErrorResponseGQL('Failed to update recipe');
       return {
         success: true,
         message: 'Recipe updated',
@@ -289,21 +246,15 @@ const resolvers = {
     },
 
     deleteRecipe: async (
-      _,
+      _: undefined,
       args: { recipeId: string },
-      context: Context
-    ): Promise<RecipeDeleteResponseGQL> => {
-      const recipeModel = await context.dataSources.recipeAPI.deleteRecipe(args.recipeId);
-      if (!recipeModel) {
-        return {
-          success: false,
-          message: 'Failed to delete recipe',
-          cookbook: null,
-        };
-      }
-      const cookbookModel = await context.dataSources.cookbookAPI.getCookbook(
-        context.user.id
-      );
+      { user, dataSources }: Context
+    ): Promise<RecipeDeleteResponseGQL | ErrorResponseGQL> => {
+      if (!user) return new ErrorResponseGQL('No user is logged in');
+      const recipeModel = await dataSources.recipeAPI.deleteRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Failed to delete recipe');
+      const cookbookModel = await dataSources.cookbookAPI.getCookbook(user.id);
+      if (!cookbookModel) return new ErrorResponseGQL('Could not retrieve cookbook');
       return {
         success: true,
         message: 'Recipe deleted',
@@ -312,25 +263,18 @@ const resolvers = {
     },
 
     createIngredient: async (
-      _,
+      _: undefined,
       args: { text: any; isChecked: any; recipeId: string },
-      context: Context
-    ): Promise<IngredientCreateResponseGQL> => {
-      const newIngredientModel = await context.dataSources.ingredientAPI.createIngredient(
-        {
-          text: args.text,
-          isChecked: args.isChecked,
-          recipeId: args.recipeId,
-        }
-      );
-      if (!newIngredientModel) {
-        return {
-          success: false,
-          message: 'Failed creating ingredient',
-          recipe: null,
-        };
-      }
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      { dataSources }: Context
+    ): Promise<IngredientCreateResponseGQL | ErrorResponseGQL> => {
+      const newIngredientModel = await dataSources.ingredientAPI.createIngredient({
+        text: args.text,
+        isChecked: args.isChecked,
+        recipeId: args.recipeId,
+      });
+      if (!newIngredientModel) return new ErrorResponseGQL('Failed creating ingredient');
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
         success: true,
         message: 'Ingredient created',
@@ -339,21 +283,15 @@ const resolvers = {
     },
 
     updateIngredient: async (
-      _,
+      _: undefined,
       args: { text: string; isChecked: boolean; ingredientId: string },
-      context: Context
-    ): Promise<IngredientUpdateResponseGQL> => {
-      const ingredientModel = await context.dataSources.ingredientAPI.updateIngredient(
+      { dataSources }: Context
+    ): Promise<IngredientUpdateResponseGQL | ErrorResponseGQL> => {
+      const ingredientModel = await dataSources.ingredientAPI.updateIngredient(
         { text: args.text, isChecked: args.isChecked },
         args.ingredientId
       );
-      if (!ingredientModel) {
-        return {
-          success: false,
-          message: 'Failed updating ingredient',
-          ingredient: null,
-        };
-      }
+      if (!ingredientModel) return new ErrorResponseGQL('Failed updating ingredient');
       return {
         success: true,
         message: 'Ingredient updated',
@@ -362,21 +300,21 @@ const resolvers = {
     },
 
     deleteIngredient: async (
-      _,
+      _: undefined,
       args: { ingredientId: string; recipeId: string },
-      context: Context
-    ): Promise<IngredientDeleteResponseGQL> => {
-      const ingredientModel = await context.dataSources.ingredientAPI.deleteIngredient(
+      { user, dataSources }: Context
+    ): Promise<IngredientDeleteResponseGQL | ErrorResponseGQL> => {
+      if (!user) {
+        return new ErrorResponseGQL('No user is logged in');
+      }
+      const ingredientModel = await dataSources.ingredientAPI.deleteIngredient(
         args.ingredientId
       );
       if (!ingredientModel) {
-        return {
-          success: false,
-          message: 'Failed deleting ingredient',
-          recipe: null,
-        };
+        return new ErrorResponseGQL('Failed deleting ingredient');
       }
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
         success: true,
         message: 'Ingredient deleted',
@@ -385,21 +323,19 @@ const resolvers = {
     },
 
     createInstruction: async (
-      _,
+      _: undefined,
       args: { step: string; text: string; recipeId: string },
-      context: Context
-    ): Promise<InstructionCreateResponseGQL> => {
-      const newInstructionModel = await context.dataSources.instructionAPI.createInstruction(
-        { step: args.step, text: args.text, recipeId: args.recipeId }
-      );
-      if (!newInstructionModel) {
-        return {
-          success: false,
-          message: 'Faild creating instruction',
-          recipe: null,
-        };
-      }
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      { dataSources }: Context
+    ): Promise<InstructionCreateResponseGQL | ErrorResponseGQL> => {
+      const newInstructionModel = await dataSources.instructionAPI.createInstruction({
+        step: args.step,
+        text: args.text,
+        recipeId: args.recipeId,
+      });
+      if (!newInstructionModel)
+        return new ErrorResponseGQL('Failed creating instruction');
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Failed retrieving recipe');
       return {
         success: true,
         message: 'Ingredient created',
@@ -408,46 +344,36 @@ const resolvers = {
     },
 
     updateInstruction: async (
-      _,
+      _: undefined,
       args: { step: string; text: string; instructionId: string; recipeId: string },
-      context: Context
-    ): Promise<InstructionUpdateResponseGQL> => {
-      const instructionModel = await context.dataSources.instructionAPI.updateInstruction(
+      { dataSources }: Context
+    ): Promise<InstructionUpdateResponseGQL | ErrorResponseGQL> => {
+      const instructionModel = await dataSources.instructionAPI.updateInstruction(
         { step: args.step, text: args.text },
         args.instructionId,
         args.recipeId
       );
-      if (!instructionModel) {
-        return {
-          success: false,
-          message: 'Faild updating instruction',
-          instruction: null,
-        };
-      }
+      if (!instructionModel) return new ErrorResponseGQL('Failed updating instruction');
       return {
         success: true,
         message: 'Instruction updated',
-        instruction: new InstructionGQl(instructionModel),
+        instruction: new InstructionGQL(instructionModel),
       };
     },
 
     deleteInstruction: async (
-      _,
+      _: undefined,
       args: { instructionId: string; recipeId: string },
-      context: Context
-    ): Promise<InstructionDeleteResponseGQL> => {
-      const instructionModel = context.dataSources.instructionAPI.deleteInstruction(
+      { user, dataSources }: Context
+    ): Promise<InstructionDeleteResponseGQL | ErrorResponseGQL> => {
+      if (!user) return new ErrorResponseGQL('No user is logged in');
+      const instructionModel = dataSources.instructionAPI.deleteInstruction(
         args.instructionId,
         args.recipeId
       );
-      if (!instructionModel) {
-        return {
-          success: false,
-          message: 'Faild deleting instruction',
-          recipe: null,
-        };
-      }
-      const recipeModel = await context.dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!instructionModel) return new ErrorResponseGQL('Failed deleting instruction');
+      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Failed retrieving recipe');
       return {
         success: true,
         message: 'Ingredient created',

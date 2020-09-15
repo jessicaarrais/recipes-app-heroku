@@ -3,13 +3,12 @@ import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
 import RecipeGQL from './graphql_models/recipeGQL';
 import IngredientGQL from './graphql_models/ingredientGQL';
-import InstructionGQl from './graphql_models/instructionGQL';
+import InstructionGQL from './graphql_models/instructionGQL';
 
 export interface AuthResponseGQL {
   success: boolean;
   message: string;
   token: string;
-  me: UserGQL;
 }
 
 export interface MeResponseGQL {
@@ -75,7 +74,7 @@ export interface InstructionCreateResponseGQL {
 export interface InstructionUpdateResponseGQL {
   success: boolean;
   message: string;
-  instruction: InstructionGQl;
+  instruction: InstructionGQL;
 }
 
 export interface InstructionDeleteResponseGQL {
@@ -114,7 +113,7 @@ const typeDefs = gql`
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
-    createRecipe: RecipeCreateResponse
+    createRecipe(title: String): RecipeCreateResponse
 
     updateRecipe(
       recipeId: ID!
@@ -160,7 +159,6 @@ const typeDefs = gql`
     success: Boolean
     message: String
     token: String
-    me: User
   }
 
   type MeResponse {
