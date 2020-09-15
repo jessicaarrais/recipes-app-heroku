@@ -21,12 +21,13 @@ class Avatar extends DataSource {
       encoding: string;
       createReadStream: () => ReadStream;
     };
-  }): Promise<AvatarModel> {
+  }): Promise<AvatarModel | null> {
+    if (!this.context.user) return null;
     await db.sync();
     try {
       const { filename, mimetype, encoding, createReadStream } = await file;
       const avatar = await dbAvatar.findOrCreate({
-        where: { userId: this.context.user?.id },
+        where: { userId: this.context.user.id },
       });
       const newAvatar = avatar[0];
       if (newAvatar) {

@@ -198,7 +198,8 @@ const resolvers = {
     ): Promise<AvatarResponseGQL | ErrorResponseGQL> => {
       try {
         if (!user) throw new Error('No user logged in');
-        await dataSources.avatarAPI.uploadAvatar(args);
+        const avatarModel = await dataSources.avatarAPI.uploadAvatar(args);
+        if (!avatarModel) throw new Error('Could not upload avatar');
         return {
           success: true,
           message: 'Avatar updated',

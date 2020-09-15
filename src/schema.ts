@@ -8,79 +8,79 @@ import InstructionGQL from './graphql_models/instructionGQL';
 export interface AuthResponseGQL {
   success: boolean;
   message: string;
-  token: string | null;
+  token: string;
 }
 
 export interface MeResponseGQL {
   success: boolean;
   message: string;
-  me: UserGQL | null;
+  me: UserGQL;
 }
 
 export interface AvatarResponseGQL {
   success: boolean;
   message: string;
-  me: UserGQL | null;
+  me: UserGQL;
 }
 
 export interface FavoriteRecipesResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 export interface RecipeCreateResponseGQL {
   success: boolean;
   message: string;
-  cookbook: CookbookGQL | null;
+  cookbook: CookbookGQL;
 }
 
 export interface RecipeUpdateResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 export interface RecipeDeleteResponseGQL {
   success: boolean;
   message: string;
-  cookbook: CookbookGQL | null;
+  cookbook: CookbookGQL;
 }
 
 export interface IngredientCreateResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 export interface IngredientUpdateResponseGQL {
   success: boolean;
   message: string;
-  ingredient: IngredientGQL | null;
+  ingredient: IngredientGQL;
 }
 
 export interface IngredientDeleteResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 export interface InstructionCreateResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 export interface InstructionUpdateResponseGQL {
   success: boolean;
   message: string;
-  instruction: InstructionGQL | null;
+  instruction: InstructionGQL;
 }
 
 export interface InstructionDeleteResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL | null;
+  recipe: RecipeGQL;
 }
 
 const typeDefs = gql`
