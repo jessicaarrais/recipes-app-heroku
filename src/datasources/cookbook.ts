@@ -3,7 +3,7 @@ import { db, dbCookbook, CookbookModel } from '../store';
 import { Context } from '..';
 
 class Cookbook extends DataSource {
-  context: Context;
+  context!: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
@@ -14,7 +14,7 @@ class Cookbook extends DataSource {
     return await dbCookbook.create({ userId });
   }
 
-  async getCookbook(userId: string): Promise<CookbookModel> {
+  async getCookbook(userId: string): Promise<CookbookModel | null> {
     await db.sync();
     return await dbCookbook.findOne({ where: { userId } });
   }

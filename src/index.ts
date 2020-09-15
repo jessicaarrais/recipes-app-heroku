@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 4000;
 
 interface MyContext {
   user: UserModel | null;
-  token: string;
+  token: string | null;
 }
 interface MyDataSources {
   dataSources: {
@@ -42,7 +42,7 @@ const dataSources = (): DataSources<Context> => ({
   instructionAPI: new Instruction(),
 });
 
-const context = async ({ req }): Promise<MyContext> => {
+const context = async ({ req }: any): Promise<MyContext> => {
   const auth = req.headers && req.headers.authorization;
   if (auth == null || auth === '') return { user: null, token: null };
 

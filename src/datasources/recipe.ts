@@ -1,7 +1,7 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
-import { Op, OrderItem } from 'sequelize';
+import { Op, OrderItem, Sequelize } from 'sequelize';
 
 interface UpdateRecipeParams {
   title: string;
@@ -14,7 +14,7 @@ export enum RecipesListOrder {
 }
 
 class Recipe extends DataSource {
-  context: Context;
+  context!: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
@@ -26,7 +26,7 @@ class Recipe extends DataSource {
     });
   }
 
-  async getRecipe(id: string): Promise<RecipeModel> {
+  async getRecipe(id: string): Promise<RecipeModel | null> {
     const recipe = await dbRecipe.findOne({ where: { id } });
     if (!recipe) return null;
     const isOwner = this.context.user?.id === recipe.ownerId;
@@ -39,7 +39,7 @@ class Recipe extends DataSource {
   ): Promise<Array<RecipeModel>> {
     const listOrderer: OrderItem =
       order === RecipesListOrder.TITLE_ASCENDING
-        ? ['title', 'ASC']
+        ? [Sequelize.fn('lower', Sequelize.col('title')), 'ASC']
         : ['createdAt', 'DESC'];
 
     if (this.context.user?.cookbookId != cookbookId) {
@@ -54,9 +54,10 @@ class Recipe extends DataSource {
     });
   }
 
-  async createRecipe(): Promise<RecipeModel> {
+  async createRecipe(title: string): Promise<RecipeModel | null> {
+    if (!this.context.user) return null;
     return await dbRecipe.create({
-      title: 'Title',
+      title,
       ownerId: this.context.user.id,
       cookbookId: this.context.user.cookbookId,
     });
@@ -65,11 +66,10 @@ class Recipe extends DataSource {
   async updateRecipe(
     updatedRecipe: UpdateRecipeParams,
     recipeId: string
-  ): Promise<RecipeModel> {
+  ): Promise<RecipeModel | null> {
+    if (!this.context.user) return null;
     const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
-    if (!recipe) {
-      return null;
-    }
+    if (!recipe) return null;
     return await recipe.update(updatedRecipe);
   }
 

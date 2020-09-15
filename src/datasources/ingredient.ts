@@ -2,19 +2,19 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { dbIngredient, IngredientModel } from '../store';
 import { Context } from '..';
 
-interface NewIngredient {
+interface CreateIngredientParams {
   text: string;
   isChecked: boolean;
   recipeId: string;
 }
 
-interface UpdatedIngredient {
+interface UpdateIngredientParams {
   text: string;
   isChecked: boolean;
 }
 
 class Ingredient extends DataSource {
-  context: Context;
+  context!: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
@@ -30,18 +30,18 @@ class Ingredient extends DataSource {
     text,
     isChecked,
     recipeId,
-  }: NewIngredient): Promise<IngredientModel> {
+  }: CreateIngredientParams): Promise<IngredientModel | null> {
+    if (!this.context.user) return null;
     return await dbIngredient.create({ text, isChecked, recipeId });
   }
 
   async updateIngredient(
-    updatedIngredient: UpdatedIngredient,
+    updatedIngredient: UpdateIngredientParams,
     ingredientId: string
-  ): Promise<IngredientModel> {
+  ): Promise<IngredientModel | null> {
+    if (!this.context.user) return null;
     const ingredient = await dbIngredient.findOne({ where: { id: ingredientId } });
-    if (!ingredient) {
-      return null;
-    }
+    if (!ingredient) return null;
     return await ingredient.update(updatedIngredient);
   }
 

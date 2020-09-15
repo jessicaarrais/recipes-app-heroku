@@ -6,7 +6,7 @@ import { Context } from '..';
 import { dbAvatar, db, AvatarModel } from '../store';
 
 class Avatar extends DataSource {
-  context: Context;
+  context!: Context;
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
@@ -26,7 +26,7 @@ class Avatar extends DataSource {
     try {
       const { filename, mimetype, encoding, createReadStream } = await file;
       const avatar = await dbAvatar.findOrCreate({
-        where: { userId: this.context.user.id },
+        where: { userId: this.context.user?.id },
       });
       const newAvatar = avatar[0];
       if (newAvatar) {
@@ -64,7 +64,7 @@ class Avatar extends DataSource {
     }
   }
 
-  async getAvatar(userId: string): Promise<AvatarModel> {
+  async getAvatar(userId: string): Promise<AvatarModel | null> {
     await db.sync();
     return await dbAvatar.findOne({ where: { userId } });
   }

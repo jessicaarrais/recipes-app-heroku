@@ -1,6 +1,6 @@
 import { InstructionModel } from '../store';
 
-class InstructionGQl {
+class InstructionGQL {
   id: string;
   recipeId: string;
   step: string;
@@ -14,4 +14,4 @@ class InstructionGQl {
   }
 }
 
-export default InstructionGQl;
+export default InstructionGQL;
