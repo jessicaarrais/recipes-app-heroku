@@ -1,6 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { Context } from '..';
-import { InstructionModel, dbInstruction } from '../store';
+import { InstructionModel, dbInstruction, dbRecipe } from '../store';
 
 interface CreateInstructionParams {
   step: string;
@@ -30,6 +30,10 @@ class Instruction extends DataSource {
     recipeId,
   }: CreateInstructionParams): Promise<InstructionModel | null> {
     if (!this.context.user) return null;
+    const recipe = await dbRecipe.findOne({
+      where: { id: recipeId, ownerId: this.context.user.id },
+    });
+    if (!recipe) return null;
     return await dbInstruction.create({ step, text, recipeId });
   }
 
@@ -39,6 +43,10 @@ class Instruction extends DataSource {
     recipeId: string
   ): Promise<InstructionModel | null> {
     if (!this.context.user) return null;
+    const recipe = await dbRecipe.findOne({
+      where: { id: recipeId, ownerId: this.context.user.id },
+    });
+    if (!recipe) return null;
     const instruction = await dbInstruction.findOne({
       where: { id: instructionId, recipeId },
     });
@@ -47,9 +55,12 @@ class Instruction extends DataSource {
   }
 
   async deleteInstruction(instructionId: string, recipeId: string): Promise<boolean> {
-    return (
-      (await dbInstruction.destroy({ where: { id: instructionId, recipeId } })) === 1
-    );
+    if (!this.context.user) return false;
+    const recipe = await dbRecipe.findOne({
+      where: { id: recipeId, ownerId: this.context.user.id },
+    });
+    if (!recipe) return false;
+    return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
   }
 }
 

@@ -122,7 +122,7 @@ const typeDefs = gql`
       cookbookId: ID!
     ): RecipeUpdateResponse
 
-    deleteRecipe(recipeId: ID!, cookbookId: ID!): RecipeDeleteResponse
+    deleteRecipe(recipeId: ID!): RecipeDeleteResponse
 
     createIngredient(
       text: String

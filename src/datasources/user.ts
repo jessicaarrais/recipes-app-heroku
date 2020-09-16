@@ -141,9 +141,10 @@ class User extends DataSource {
   }
 
   async deleteUser(): Promise<boolean> {
+    if (!this.context.user) return false;
     return (
       (await dbUser.destroy({
-        where: { id: this.context.user?.id },
+        where: { id: this.context.user.id },
       })) === 1
     );
   }

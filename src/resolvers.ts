@@ -284,12 +284,13 @@ const resolvers = {
 
     updateIngredient: async (
       _: undefined,
-      args: { text: string; isChecked: boolean; ingredientId: string },
+      args: { text: string; isChecked: boolean; ingredientId: string; recipeId: string },
       { dataSources }: Context
     ): Promise<IngredientUpdateResponseGQL | ErrorResponseGQL> => {
       const ingredientModel = await dataSources.ingredientAPI.updateIngredient(
         { text: args.text, isChecked: args.isChecked },
-        args.ingredientId
+        args.ingredientId,
+        args.recipeId
       );
       if (!ingredientModel) return new ErrorResponseGQL('Failed updating ingredient');
       return {
@@ -308,7 +309,8 @@ const resolvers = {
         return new ErrorResponseGQL('No user is logged in');
       }
       const ingredientModel = await dataSources.ingredientAPI.deleteIngredient(
-        args.ingredientId
+        args.ingredientId,
+        args.recipeId
       );
       if (!ingredientModel) {
         return new ErrorResponseGQL('Failed deleting ingredient');

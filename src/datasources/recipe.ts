@@ -68,13 +68,20 @@ class Recipe extends DataSource {
     recipeId: string
   ): Promise<RecipeModel | null> {
     if (!this.context.user) return null;
-    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    const recipe = await dbRecipe.findOne({
+      where: { id: recipeId, ownerId: this.context.user.id },
+    });
     if (!recipe) return null;
     return await recipe.update(updatedRecipe);
   }
 
   async deleteRecipe(recipeId: string): Promise<boolean> {
-    return (await dbRecipe.destroy({ where: { id: recipeId } })) === 1;
+    if (!this.context.user) return false;
+    return (
+      (await dbRecipe.destroy({
+        where: { id: recipeId, ownerId: this.context.user.id },
+      })) === 1
+    );
   }
 }
 
