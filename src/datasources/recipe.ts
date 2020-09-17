@@ -70,11 +70,20 @@ class Recipe extends DataSource {
     if (!this.context.user) return null;
     const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
     if (!recipe) return null;
+    if (recipe.ownerId !== this.context.user.id) return null;
     return await recipe.update(updatedRecipe);
   }
 
   async deleteRecipe(recipeId: string): Promise<boolean> {
-    return (await dbRecipe.destroy({ where: { id: recipeId } })) === 1;
+    if (!this.context.user) return false;
+    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    if (!recipe) return false;
+    if (recipe.ownerId !== this.context.user.id) return false;
+    return (
+      (await dbRecipe.destroy({
+        where: { id: recipeId },
+      })) === 1
+    );
   }
 }
 
