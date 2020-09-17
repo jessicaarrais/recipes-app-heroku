@@ -29,11 +29,7 @@ class Instruction extends DataSource {
     text,
     recipeId,
   }: CreateInstructionParams): Promise<InstructionModel | null> {
-    if (!this.context.user) return null;
-    const recipe = await dbRecipe.findOne({
-      where: { id: recipeId, ownerId: this.context.user.id },
-    });
-    if (!recipe) return null;
+    if (!(await this.isOwner(recipeId))) return null;
     return await dbInstruction.create({ step, text, recipeId });
   }
 
@@ -42,11 +38,7 @@ class Instruction extends DataSource {
     instructionId: string,
     recipeId: string
   ): Promise<InstructionModel | null> {
-    if (!this.context.user) return null;
-    const recipe = await dbRecipe.findOne({
-      where: { id: recipeId, ownerId: this.context.user.id },
-    });
-    if (!recipe) return null;
+    if (!(await this.isOwner(recipeId))) return null;
     const instruction = await dbInstruction.findOne({
       where: { id: instructionId, recipeId },
     });
@@ -55,12 +47,15 @@ class Instruction extends DataSource {
   }
 
   async deleteInstruction(instructionId: string, recipeId: string): Promise<boolean> {
-    if (!this.context.user) return false;
-    const recipe = await dbRecipe.findOne({
-      where: { id: recipeId, ownerId: this.context.user.id },
-    });
-    if (!recipe) return false;
+    if (!(await this.isOwner(recipeId))) return false;
     return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
+  }
+
+  async isOwner(recipeId: string): Promise<boolean> {
+    if (!this.context.user) return false;
+    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    if (!recipe) return false;
+    return recipe.ownerId === this.context.user.id;
   }
 }
 
