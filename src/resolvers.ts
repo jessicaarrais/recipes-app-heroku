@@ -2,11 +2,11 @@ import { ReadStream } from 'fs';
 import { Context } from '.';
 import { RecipeModel } from './store';
 import {
-  InstructionDeleteResponseGQL,
   MeResponseGQL,
   AuthResponseGQL,
   AvatarResponseGQL,
   FavoriteRecipesResponseGQL,
+  LikesResponseGQL,
   RecipeCreateResponseGQL,
   RecipeUpdateResponseGQL,
   RecipeDeleteResponseGQL,
@@ -15,6 +15,7 @@ import {
   IngredientDeleteResponseGQL,
   InstructionCreateResponseGQL,
   InstructionUpdateResponseGQL,
+  InstructionDeleteResponseGQL,
 } from './schema';
 import UserGQL from './graphql_models/userGQL';
 import CookbookGQL from './graphql_models/cookbookGQL';
@@ -135,9 +136,9 @@ const resolvers = {
       __: {},
       { dataSources }: Context
     ): Promise<MeResponseGQL | ErrorResponseGQL> => {
-      const me = await dataSources.userAPI.logout();
-      if (!me) return new ErrorResponseGQL('User is not logged in');
-      return { success: true, message: 'User logged out', me: new UserGQL(me) };
+      const meModel = await dataSources.userAPI.logout();
+      if (!meModel) return new ErrorResponseGQL('User is not logged in');
+      return { success: true, message: 'User logged out', me: new UserGQL(meModel) };
     },
 
     addRecipeToFavorites: async (
@@ -145,8 +146,8 @@ const resolvers = {
       args: { recipeId: string },
       { dataSources }: Context
     ): Promise<FavoriteRecipesResponseGQL | ErrorResponseGQL> => {
-      const me = await dataSources.userAPI.addRecipeToFavorites(args.recipeId);
-      if (!me) return new ErrorResponseGQL('User is not logged in');
+      const meModel = await dataSources.userAPI.addRecipeToFavorites(args.recipeId);
+      if (!meModel) return new ErrorResponseGQL('User is not logged in');
       const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
       if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
@@ -161,13 +162,41 @@ const resolvers = {
       args: { recipeId: string },
       { dataSources }: Context
     ): Promise<FavoriteRecipesResponseGQL | ErrorResponseGQL> => {
-      const me = await dataSources.userAPI.removeRecipeFromFavorites(args.recipeId);
-      if (!me) return new ErrorResponseGQL('User is not logged in');
+      const meModel = await dataSources.userAPI.removeRecipeFromFavorites(args.recipeId);
+      if (!meModel) return new ErrorResponseGQL('User is not logged in');
       const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
       if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
       return {
         success: true,
         message: 'Recipe removed from favorites',
+        recipe: new RecipeGQL(recipeModel),
+      };
+    },
+
+    likeRecipe: async (
+      _: undefined,
+      args: { recipeId: string },
+      { dataSources }: Context
+    ): Promise<LikesResponseGQL | ErrorResponseGQL> => {
+      const recipeModel = await dataSources.recipeAPI.likeRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Failed liking recipe');
+      return {
+        success: true,
+        message: 'Liked this recipe',
+        recipe: new RecipeGQL(recipeModel),
+      };
+    },
+
+    unlikeRecipe: async (
+      _: undefined,
+      args: { recipeId: string },
+      { dataSources }: Context
+    ): Promise<LikesResponseGQL | ErrorResponseGQL> => {
+      const recipeModel = await dataSources.recipeAPI.unlikeRecipe(args.recipeId);
+      if (!recipeModel) return new ErrorResponseGQL('Failed liking recipe');
+      return {
+        success: true,
+        message: 'Unliked this recipe',
         recipe: new RecipeGQL(recipeModel),
       };
     },

@@ -119,6 +119,7 @@ export interface RecipeModel extends Model {
   cookbookId: string;
   title: string;
   isPublic: boolean;
+  likes: Array<String>;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -134,6 +135,7 @@ export const dbRecipe = db.define<RecipeModel>('recipe', {
   cookbookId: DataTypes.UUID,
   title: DataTypes.STRING,
   isPublic: { type: DataTypes.BOOLEAN, defaultValue: false },
+  likes: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
   deletedAt: DataTypes.DATE,

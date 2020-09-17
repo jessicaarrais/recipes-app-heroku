@@ -29,6 +29,12 @@ export interface FavoriteRecipesResponseGQL {
   recipe: RecipeGQL;
 }
 
+export interface LikesResponseGQL {
+  success: boolean;
+  message: string;
+  recipe: RecipeGQL;
+}
+
 export interface RecipeCreateResponseGQL {
   success: boolean;
   message: string;
@@ -109,6 +115,10 @@ const typeDefs = gql`
 
     removeRecipeFromFavorites(recipeId: ID!): FavoriteRecipesResponse
 
+    likeRecipe(recipeId: ID!): LikesResponse
+
+    unlikeRecipe(recipeId: ID!): LikesResponse
+
     deleteUser: MeResponse
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
@@ -174,6 +184,12 @@ const typeDefs = gql`
   }
 
   type FavoriteRecipesResponse {
+    success: Boolean
+    message: String
+    recipe: Recipe
+  }
+
+  type LikesResponse {
     success: Boolean
     message: String
     recipe: Recipe
@@ -262,7 +278,9 @@ const typeDefs = gql`
     cookbookId: ID!
     title: String
     isPublic: Boolean
+    likes: Int
     isFavorite: Boolean
+    isLiked: Boolean
     ingredients: [Ingredient]
     instructions: [Instruction]
   }
