@@ -4,13 +4,13 @@ import { InstructionModel, dbInstruction, dbRecipe } from '../store';
 
 interface CreateInstructionParams {
   step: string;
-  text: string;
+  description: string;
   recipeId: string;
 }
 
 interface UpdateInstructionParams {
   step: string;
-  text: string;
+  description: string;
 }
 
 class Instruction extends DataSource {
@@ -26,11 +26,11 @@ class Instruction extends DataSource {
 
   async createInstruction({
     step,
-    text,
+    description,
     recipeId,
   }: CreateInstructionParams): Promise<InstructionModel | null> {
     if (!(await this.isOwner(recipeId))) return null;
-    return await dbInstruction.create({ step, text, recipeId });
+    return await dbInstruction.create({ step, description, recipeId });
   }
 
   async updateInstruction(

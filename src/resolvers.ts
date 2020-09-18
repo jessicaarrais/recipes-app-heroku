@@ -241,10 +241,13 @@ const resolvers = {
 
     createRecipe: async (
       _: undefined,
-      args: { title: string },
+      args: { title: string; description: string },
       { dataSources }: Context
     ): Promise<RecipeCreateResponseGQL | ErrorResponseGQL> => {
-      const recipeModel = await dataSources.recipeAPI.createRecipe(args.title);
+      const recipeModel = await dataSources.recipeAPI.createRecipe({
+        title: args.title,
+        description: args.description,
+      });
       if (!recipeModel) return new ErrorResponseGQL('User is not logged in');
       const cookbookModel = await dataSources.cookbookAPI.getCookbook(
         recipeModel.ownerId
@@ -259,11 +262,11 @@ const resolvers = {
 
     updateRecipe: async (
       _: undefined,
-      args: { title: string; isPublic: boolean; recipeId: string },
+      args: { title: string; description: string; isPublic: boolean; recipeId: string },
       { dataSources }: Context
     ): Promise<RecipeUpdateResponseGQL | ErrorResponseGQL> => {
       const recipeModel = await dataSources.recipeAPI.updateRecipe(
-        { title: args.title, isPublic: args.isPublic },
+        { title: args.title, description: args.description, isPublic: args.isPublic },
         args.recipeId
       );
       if (!recipeModel) return new ErrorResponseGQL('Failed to update recipe');
@@ -350,12 +353,12 @@ const resolvers = {
 
     createInstruction: async (
       _: undefined,
-      args: { step: string; text: string; recipeId: string },
+      args: { step: string; description: string; recipeId: string },
       { dataSources }: Context
     ): Promise<InstructionCreateResponseGQL | ErrorResponseGQL> => {
       const newInstructionModel = await dataSources.instructionAPI.createInstruction({
         step: args.step,
-        text: args.text,
+        description: args.description,
         recipeId: args.recipeId,
       });
       if (!newInstructionModel)
@@ -371,11 +374,16 @@ const resolvers = {
 
     updateInstruction: async (
       _: undefined,
-      args: { step: string; text: string; instructionId: string; recipeId: string },
+      args: {
+        step: string;
+        description: string;
+        instructionId: string;
+        recipeId: string;
+      },
       { dataSources }: Context
     ): Promise<InstructionUpdateResponseGQL | ErrorResponseGQL> => {
       const instructionModel = await dataSources.instructionAPI.updateInstruction(
-        { step: args.step, text: args.text },
+        { step: args.step, description: args.description },
         args.instructionId,
         args.recipeId
       );

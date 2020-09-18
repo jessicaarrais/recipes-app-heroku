@@ -4,13 +4,13 @@ class InstructionGQL {
   id: string;
   recipeId: string;
   step: string;
-  text: string;
+  description: string;
 
   constructor(instructionModel: InstructionModel) {
     this.id = instructionModel.id;
     this.recipeId = instructionModel.recipeId;
     this.step = instructionModel.step;
-    this.text = instructionModel.text;
+    this.description = instructionModel.description;
   }
 }
 

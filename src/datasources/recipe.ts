@@ -3,8 +3,14 @@ import { dbRecipe, RecipeModel } from '../store';
 import { Context } from '..';
 import { Op, OrderItem, Sequelize } from 'sequelize';
 
+interface CreateRecipeParams {
+  title: string;
+  description: string;
+}
+
 interface UpdateRecipeParams {
   title: string;
+  description: string;
   isPublic: boolean;
 }
 
@@ -54,10 +60,14 @@ class Recipe extends DataSource {
     });
   }
 
-  async createRecipe(title: string): Promise<RecipeModel | null> {
+  async createRecipe({
+    title,
+    description,
+  }: CreateRecipeParams): Promise<RecipeModel | null> {
     if (!this.context.user) return null;
     return await dbRecipe.create({
       title,
+      description,
       ownerId: this.context.user.id,
       cookbookId: this.context.user.cookbookId,
     });

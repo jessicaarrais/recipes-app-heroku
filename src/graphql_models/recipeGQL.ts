@@ -9,6 +9,7 @@ class RecipeGQL {
   ownerId: string;
   cookbookId: string;
   title: string;
+  description: string;
   isPublic: boolean;
   _likes: Array<String>;
 
@@ -17,6 +18,7 @@ class RecipeGQL {
     this.ownerId = recipeModel.ownerId;
     this.cookbookId = recipeModel.cookbookId;
     this.title = recipeModel.title;
+    this.description = recipeModel.description;
     this.isPublic = recipeModel.isPublic;
     this._likes = recipeModel.likes;
   }
