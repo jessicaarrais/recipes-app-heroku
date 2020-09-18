@@ -123,11 +123,12 @@ const typeDefs = gql`
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
-    createRecipe(title: String): RecipeCreateResponse
+    createRecipe(title: String, description: String): RecipeCreateResponse
 
     updateRecipe(
       recipeId: ID!
       title: String
+      description: String
       isPublic: Boolean
       cookbookId: ID!
     ): RecipeUpdateResponse
@@ -151,14 +152,14 @@ const typeDefs = gql`
 
     createInstruction(
       step: String
-      text: String
+      description: String
       recipeId: ID!
     ): InstructionCreateResponse
 
     updateInstruction(
       instructionId: ID!
       step: String
-      text: String
+      description: String
       recipeId: ID!
     ): InstructionUpdateResponse
 
@@ -277,6 +278,7 @@ const typeDefs = gql`
     owner: User
     cookbookId: ID!
     title: String
+    description: String
     isPublic: Boolean
     likes: Int
     isFavorite: Boolean
@@ -296,7 +298,7 @@ const typeDefs = gql`
     id: ID!
     recipeId: ID!
     step: String
-    text: String
+    description: String
   }
 `;
 
