@@ -10,6 +10,7 @@ class RecipeGQL {
   cookbookId: string;
   title: string;
   isPublic: boolean;
+  _likes: Array<String>;
 
   constructor(recipeModel: RecipeModel) {
     this.id = recipeModel.id;
@@ -17,6 +18,7 @@ class RecipeGQL {
     this.cookbookId = recipeModel.cookbookId;
     this.title = recipeModel.title;
     this.isPublic = recipeModel.isPublic;
+    this._likes = recipeModel.likes;
   }
 
   async owner(_args: {}, context: Context): Promise<UserGQL | null> {
@@ -37,9 +39,18 @@ class RecipeGQL {
     );
   }
 
+  likes(_args: {}, _context: Context): Number {
+    return this._likes.length;
+  }
+
   isFavorite(_args: {}, context: Context): boolean {
     if (!context.user) return false;
     return context.user.favoriteRecipes.includes(this.id);
+  }
+
+  isLiked(_args: {}, context: Context): boolean {
+    if (!context.user) return false;
+    return this._likes.includes(context.user.id);
   }
 }
 

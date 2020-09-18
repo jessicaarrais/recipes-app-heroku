@@ -74,6 +74,26 @@ class Recipe extends DataSource {
     return await recipe.update(updatedRecipe);
   }
 
+  async likeRecipe(recipeId: string): Promise<RecipeModel | null> {
+    if (!this.context.user) return null;
+    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    if (!recipe) return null;
+    await recipe.update({
+      likes: Sequelize.fn('array_append', Sequelize.col('likes'), this.context.user.id),
+    });
+    return await recipe.reload();
+  }
+
+  async unlikeRecipe(recipeId: string): Promise<RecipeModel | null> {
+    if (!this.context.user) return null;
+    const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
+    if (!recipe) return null;
+    await recipe.update({
+      likes: Sequelize.fn('array_remove', Sequelize.col('likes'), this.context.user.id),
+    });
+    return await recipe.reload();
+  }
+
   async deleteRecipe(recipeId: string): Promise<boolean> {
     if (!this.context.user) return false;
     const recipe = await dbRecipe.findOne({ where: { id: recipeId } });
