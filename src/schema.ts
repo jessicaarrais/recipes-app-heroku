@@ -153,6 +153,7 @@ const typeDefs = gql`
     createInstruction(
       step: String
       description: String
+      tip: String
       recipeId: ID!
     ): InstructionCreateResponse
 
@@ -160,6 +161,7 @@ const typeDefs = gql`
       instructionId: ID!
       step: String
       description: String
+      tip: String
       recipeId: ID!
     ): InstructionUpdateResponse
 
@@ -299,6 +301,7 @@ const typeDefs = gql`
     recipeId: ID!
     step: String
     description: String
+    tip: String
   }
 `;
 
