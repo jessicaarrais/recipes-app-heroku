@@ -6,11 +6,17 @@ interface CreateIngredientParams {
   text: string;
   isChecked: boolean;
   recipeId: string;
+  instructionId: string;
 }
 
 interface UpdateIngredientParams {
-  text: string;
-  isChecked: boolean;
+  text?: string;
+  isChecked?: boolean;
+}
+
+interface DeleteIngredientParams {
+  ingredientId: string;
+  recipeId: string;
 }
 
 class Ingredient extends DataSource {
@@ -28,9 +34,10 @@ class Ingredient extends DataSource {
     text,
     isChecked,
     recipeId,
+    instructionId,
   }: CreateIngredientParams): Promise<IngredientModel | null> {
     if (!(await this.isOwner(recipeId))) return null;
-    return await dbIngredient.create({ text, isChecked, recipeId });
+    return await dbIngredient.create({ text, isChecked, recipeId, instructionId });
   }
 
   async updateIngredient(
@@ -46,7 +53,10 @@ class Ingredient extends DataSource {
     return await ingredient.update(updatedIngredient);
   }
 
-  async deleteIngredient(ingredientId: string, recipeId: string): Promise<boolean> {
+  async deleteIngredient({
+    ingredientId,
+    recipeId,
+  }: DeleteIngredientParams): Promise<boolean> {
     if (!(await this.isOwner(recipeId))) return false;
     return (await dbIngredient.destroy({ where: { id: ingredientId } })) === 1;
   }

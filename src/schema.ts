@@ -94,7 +94,7 @@ const typeDefs = gql`
     me: User
     user(username: String, id: ID): User
     recipe(recipeId: ID!, cookbookId: ID!): Recipe
-    searchRecipes(value: String): [Recipe]
+    searchRecipes(value: String!): [Recipe]
   }
 
   type Mutation {
@@ -107,7 +107,7 @@ const typeDefs = gql`
 
     login(email: String!, password: String!): AuthResponse
 
-    updateUser(username: String): MeResponse
+    updateUser(username: String!): MeResponse
 
     logout: MeResponse
 
@@ -123,7 +123,7 @@ const typeDefs = gql`
 
     uploadAvatar(file: Upload!): AvatarResponseGQL
 
-    createRecipe(title: String, description: String): RecipeCreateResponse
+    createRecipe(title: String!, description: String!): RecipeCreateResponse
 
     updateRecipe(
       recipeId: ID!
@@ -136,9 +136,10 @@ const typeDefs = gql`
     deleteRecipe(recipeId: ID!): RecipeDeleteResponse
 
     createIngredient(
-      text: String
-      isChecked: Boolean
+      text: String!
+      isChecked: Boolean!
       recipeId: ID!
+      instructionId: ID
     ): IngredientCreateResponse
 
     updateIngredient(
@@ -151,9 +152,9 @@ const typeDefs = gql`
     deleteIngredient(ingredientId: ID!, recipeId: ID!): IngredientDeleteResponse
 
     createInstruction(
-      step: String
-      description: String
-      tip: String
+      step: String!
+      description: String!
+      tip: String!
       recipeId: ID!
     ): InstructionCreateResponse
 
@@ -292,6 +293,7 @@ const typeDefs = gql`
   type Ingredient {
     id: ID!
     recipeId: ID!
+    instructionId: ID
     text: String
     isChecked: Boolean
   }
