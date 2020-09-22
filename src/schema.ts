@@ -130,7 +130,6 @@ const typeDefs = gql`
       title: String
       description: String
       isPublic: Boolean
-      cookbookId: ID!
     ): RecipeUpdateResponse
 
     deleteRecipe(recipeId: ID!): RecipeDeleteResponse
