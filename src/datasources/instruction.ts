@@ -10,9 +10,14 @@ interface CreateInstructionParams {
 }
 
 interface UpdateInstructionParams {
-  step: string;
-  description: string;
-  tip: string;
+  step?: string;
+  description?: string;
+  tip?: string;
+}
+
+interface DeleteInstructionParams {
+  instructionId: string;
+  recipeId: string;
 }
 
 class Instruction extends DataSource {
@@ -49,7 +54,10 @@ class Instruction extends DataSource {
     return await instruction.update(updatedInstruction);
   }
 
-  async deleteInstruction(instructionId: string, recipeId: string): Promise<boolean> {
+  async deleteInstruction({
+    instructionId,
+    recipeId,
+  }: DeleteInstructionParams): Promise<boolean> {
     if (!(await this.isOwner(recipeId))) return false;
     return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
   }

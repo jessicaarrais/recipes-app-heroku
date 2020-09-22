@@ -9,9 +9,9 @@ interface CreateRecipeParams {
 }
 
 interface UpdateRecipeParams {
-  title: string;
-  description: string;
-  isPublic: boolean;
+  title?: string;
+  description?: string;
+  isPublic?: boolean;
 }
 
 export enum RecipesListOrder {

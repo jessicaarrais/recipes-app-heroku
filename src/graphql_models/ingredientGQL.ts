@@ -3,6 +3,7 @@ import { IngredientModel } from '../store';
 class IngredientGQL {
   id: string;
   recipeId: string;
+  instructionId: string;
   text: string;
   isChecked: boolean;
 
@@ -11,6 +12,7 @@ class IngredientGQL {
     this.recipeId = ingredientModel.recipeId;
     this.text = ingredientModel.text;
     this.isChecked = ingredientModel.isChecked;
+    this.instructionId = ingredientModel.instructionId;
   }
 }
 
