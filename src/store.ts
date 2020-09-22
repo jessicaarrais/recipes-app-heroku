@@ -174,6 +174,7 @@ export interface InstructionModel extends Model {
   recipeId: string;
   step: string;
   description: string;
+  tip: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -188,6 +189,7 @@ export const dbInstruction = db.define<InstructionModel>('instruction', {
   recipeId: DataTypes.UUID,
   step: DataTypes.STRING,
   description: DataTypes.STRING,
+  tip: DataTypes.STRING,
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
   deletedAt: DataTypes.DATE,

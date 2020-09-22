@@ -353,12 +353,13 @@ const resolvers = {
 
     createInstruction: async (
       _: undefined,
-      args: { step: string; description: string; recipeId: string },
+      args: { step: string; description: string; recipeId: string; tip: string },
       { dataSources }: Context
     ): Promise<InstructionCreateResponseGQL | ErrorResponseGQL> => {
       const newInstructionModel = await dataSources.instructionAPI.createInstruction({
         step: args.step,
         description: args.description,
+        tip: args.tip,
         recipeId: args.recipeId,
       });
       if (!newInstructionModel)
@@ -377,13 +378,14 @@ const resolvers = {
       args: {
         step: string;
         description: string;
+        tip: string;
         instructionId: string;
         recipeId: string;
       },
       { dataSources }: Context
     ): Promise<InstructionUpdateResponseGQL | ErrorResponseGQL> => {
       const instructionModel = await dataSources.instructionAPI.updateInstruction(
-        { step: args.step, description: args.description },
+        { step: args.step, description: args.description, tip: args.tip },
         args.instructionId,
         args.recipeId
       );
