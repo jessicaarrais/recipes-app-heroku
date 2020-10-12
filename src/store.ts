@@ -137,7 +137,7 @@ export const dbRecipe = db.define<RecipeModel>('recipe', {
   title: DataTypes.STRING,
   description: DataTypes.STRING,
   isPublic: { type: DataTypes.BOOLEAN, defaultValue: false },
-  likes: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
+  likes: { type: DataTypes.ARRAY(DataTypes.UUID), defaultValue: [] },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
   deletedAt: DataTypes.DATE,
