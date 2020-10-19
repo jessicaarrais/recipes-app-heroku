@@ -38,7 +38,7 @@ export interface LikesResponseGQL {
 export interface RecipeCreateResponseGQL {
   success: boolean;
   message: string;
-  cookbook: CookbookGQL;
+  recipe: RecipeGQL;
 }
 
 export interface RecipeUpdateResponseGQL {
@@ -201,7 +201,7 @@ const typeDefs = gql`
   type RecipeCreateResponse {
     success: Boolean
     message: String
-    cookbook: Cookbook
+    recipe: Recipe
   }
 
   type RecipeUpdateResponse {

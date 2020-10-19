@@ -240,7 +240,7 @@ const resolvers = {
       return {
         success: true,
         message: 'Recipe created',
-        cookbook: new CookbookGQL(cookbookModel),
+        recipe: new RecipeGQL(recipeModel),
       };
     },
 
