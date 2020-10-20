@@ -1,5 +1,4 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
-import { truncate } from 'fs';
 import { Context } from '..';
 import { InstructionModel, dbInstruction, dbRecipe, dbIngredient } from '../store';
 
