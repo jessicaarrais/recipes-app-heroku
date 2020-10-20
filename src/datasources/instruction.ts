@@ -1,6 +1,7 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
+import { truncate } from 'fs';
 import { Context } from '..';
-import { InstructionModel, dbInstruction, dbRecipe } from '../store';
+import { InstructionModel, dbInstruction, dbRecipe, dbIngredient } from '../store';
 
 interface CreateInstructionParams {
   step: string;
@@ -59,6 +60,7 @@ class Instruction extends DataSource {
     recipeId,
   }: DeleteInstructionParams): Promise<boolean> {
     if (!(await this.isOwner(recipeId))) return false;
+    await dbIngredient.destroy({ where: { instructionId } });
     return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
   }
 
