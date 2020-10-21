@@ -59,7 +59,11 @@ class Instruction extends DataSource {
     recipeId,
   }: DeleteInstructionParams): Promise<boolean> {
     if (!(await this.isOwner(recipeId))) return false;
-    await dbIngredient.destroy({ where: { instructionId } });
+    const { count } = await dbIngredient.findAndCountAll({
+      where: { instructionId },
+    });
+    const deletedIngredients = await dbIngredient.destroy({ where: { instructionId } });
+    if (deletedIngredients !== count) return false;
     return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
   }
 
