@@ -56,7 +56,7 @@ export interface RecipeDeleteResponseGQL {
 export interface IngredientCreateResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL;
+  instruction: InstructionGQL;
 }
 
 export interface IngredientUpdateResponseGQL {
@@ -68,7 +68,7 @@ export interface IngredientUpdateResponseGQL {
 export interface IngredientDeleteResponseGQL {
   success: boolean;
   message: string;
-  recipe: RecipeGQL;
+  instruction: InstructionGQL;
 }
 
 export interface InstructionCreateResponseGQL {
@@ -146,9 +146,14 @@ const typeDefs = gql`
       text: String
       isChecked: Boolean
       recipeId: ID!
+      instructionId: ID!
     ): IngredientUpdateResponse
 
-    deleteIngredient(ingredientId: ID!, recipeId: ID!): IngredientDeleteResponse
+    deleteIngredient(
+      ingredientId: ID!
+      instructionId: ID!
+      recipeId: ID!
+    ): IngredientDeleteResponse
 
     createInstruction(
       step: String!
@@ -219,7 +224,7 @@ const typeDefs = gql`
   type IngredientCreateResponse {
     success: Boolean
     message: String
-    recipe: Recipe
+    instruction: Instruction
   }
 
   type IngredientUpdateResponse {
@@ -231,7 +236,7 @@ const typeDefs = gql`
   type IngredientDeleteResponse {
     success: Boolean
     message: String
-    recipe: Recipe
+    instruction: Instruction
   }
 
   type InstructionCreateResponse {
@@ -285,13 +290,11 @@ const typeDefs = gql`
     likes: Int
     isFavorite: Boolean
     isLiked: Boolean
-    ingredients: [Ingredient]
     instructions: [Instruction]
   }
 
   type Ingredient {
     id: ID!
-    recipeId: ID!
     instructionId: ID
     text: String
     isChecked: Boolean
@@ -303,6 +306,7 @@ const typeDefs = gql`
     step: String
     description: String
     tip: String
+    ingredients: [Ingredient]
   }
 `;
 

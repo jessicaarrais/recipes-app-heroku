@@ -1,3 +1,5 @@
+import { Context } from '..';
+import IngredientGQL from './ingredientGQL';
 import { InstructionModel } from '../store';
 
 class InstructionGQL {
@@ -13,6 +15,12 @@ class InstructionGQL {
     this.step = instructionModel.step;
     this.description = instructionModel.description;
     this.tip = instructionModel.tip;
+  }
+
+  async ingredients(_args: {}, context: Context): Promise<Array<IngredientGQL>> {
+    return (await context.dataSources.ingredientAPI.getIngredients(this.id)).map(
+      (ingredientModel) => new IngredientGQL(ingredientModel)
+    );
   }
 }
 

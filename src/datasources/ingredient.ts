@@ -26,8 +26,8 @@ class Ingredient extends DataSource {
     this.context = config.context;
   }
 
-  async getIngredients(recipeId: string): Promise<Array<IngredientModel>> {
-    return await dbIngredient.findAll({ where: { recipeId } });
+  async getIngredients(instructionId: string): Promise<Array<IngredientModel>> {
+    return await dbIngredient.findAll({ where: { instructionId } });
   }
 
   async createIngredient({
@@ -37,17 +37,18 @@ class Ingredient extends DataSource {
     instructionId,
   }: CreateIngredientParams): Promise<IngredientModel | null> {
     if (!(await this.isOwner(recipeId))) return null;
-    return await dbIngredient.create({ text, isChecked, recipeId, instructionId });
+    return await dbIngredient.create({ text, isChecked, instructionId });
   }
 
   async updateIngredient(
     updatedIngredient: UpdateIngredientParams,
     ingredientId: string,
-    recipeId: string
+    recipeId: string,
+    instructionId: string
   ): Promise<IngredientModel | null> {
     if (!(await this.isOwner(recipeId))) return null;
     const ingredient = await dbIngredient.findOne({
-      where: { id: ingredientId, recipeId },
+      where: { id: ingredientId, instructionId },
     });
     if (!ingredient) return null;
     return await ingredient.update(updatedIngredient);

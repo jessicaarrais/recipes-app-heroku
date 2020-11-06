@@ -1,6 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { Context } from '..';
-import { InstructionModel, dbInstruction, dbRecipe, dbIngredient } from '../store';
+import { InstructionModel, dbInstruction, dbRecipe, dbIngredient, db } from '../store';
 
 interface CreateInstructionParams {
   step: string;
@@ -25,6 +25,10 @@ class Instruction extends DataSource {
 
   initialize(config: DataSourceConfig<Context>): void | Promise<void> {
     this.context = config.context;
+  }
+
+  async getInstruction(id: string): Promise<InstructionModel | null> {
+    return await dbInstruction.findOne({ where: { id } });
   }
 
   async getInstructions(recipeId: string): Promise<Array<InstructionModel>> {
@@ -59,11 +63,6 @@ class Instruction extends DataSource {
     recipeId,
   }: DeleteInstructionParams): Promise<boolean> {
     if (!(await this.isOwner(recipeId))) return false;
-    const { count } = await dbIngredient.findAndCountAll({
-      where: { instructionId },
-    });
-    const deletedIngredients = await dbIngredient.destroy({ where: { instructionId } });
-    if (deletedIngredients !== count) return false;
     return (await dbInstruction.destroy({ where: { id: instructionId } })) === 1;
   }
 

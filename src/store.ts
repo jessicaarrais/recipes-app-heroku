@@ -147,7 +147,6 @@ export const dbRecipe = db.define<RecipeModel>('recipe', {
 export interface IngredientModel extends Model {
   id: string;
   text: string;
-  recipeId: string;
   instructionId: string;
   isChecked: boolean;
   createdAt: Date;
@@ -161,7 +160,6 @@ export const dbIngredient = db.define<IngredientModel>('ingredient', {
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
   },
-  recipeId: DataTypes.UUID,
   instructionId: DataTypes.UUID,
   text: DataTypes.STRING,
   isChecked: DataTypes.BOOLEAN,
@@ -204,8 +202,6 @@ dbUser.hasOne(dbCookbook);
 dbCookbook.belongsTo(dbUser, { foreignKey: 'userId', onDelete: 'CASCADE' });
 dbCookbook.hasMany(dbRecipe);
 dbRecipe.belongsTo(dbCookbook, { foreignKey: 'cookbookId', onDelete: 'CASCADE' });
-dbRecipe.hasMany(dbIngredient);
-dbIngredient.belongsTo(dbRecipe, { foreignKey: 'recipeId', onDelete: 'CASCADE' });
 dbRecipe.hasMany(dbInstruction);
 dbInstruction.belongsTo(dbRecipe, { foreignKey: 'recipeId', onDelete: 'CASCADE' });
 dbInstruction.hasMany(dbIngredient);

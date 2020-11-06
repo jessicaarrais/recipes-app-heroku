@@ -1,6 +1,5 @@
 import { RecipeModel } from '../store';
 import { Context } from '..';
-import IngredientGQL from './ingredientGQL';
 import InstructionGQL from './instructionGQL';
 import UserGQL from './userGQL';
 
@@ -27,12 +26,6 @@ class RecipeGQL {
     const userModel = await context.dataSources.userAPI.getUser({ id: this.ownerId });
     if (!userModel) return null;
     return new UserGQL(userModel);
-  }
-
-  async ingredients(_args: {}, context: Context): Promise<Array<IngredientGQL>> {
-    return (await context.dataSources.ingredientAPI.getIngredients(this.id)).map(
-      (ingredientModel) => new IngredientGQL(ingredientModel)
-    );
   }
 
   async instructions(_args: {}, context: Context): Promise<Array<InstructionGQL>> {
