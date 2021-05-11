@@ -290,12 +290,15 @@ const resolvers = {
     ): Promise<IngredientCreateResponseGQL | ErrorResponseGQL> => {
       const newIngredientModel = await dataSources.ingredientAPI.createIngredient(args);
       if (!newIngredientModel) return new ErrorResponseGQL('Failed creating ingredient');
-      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
-      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
+      const instructionModel = await dataSources.instructionAPI.getInstruction(
+        args.instructionId
+      );
+      if (!instructionModel)
+        return new ErrorResponseGQL('Could not retrieve instruction');
       return {
         success: true,
         message: 'Ingredient created',
-        recipe: new RecipeGQL(recipeModel),
+        instruction: new InstructionGQL(instructionModel),
       };
     },
 
@@ -306,13 +309,15 @@ const resolvers = {
         isChecked?: boolean;
         ingredientId: string;
         recipeId: string;
+        instructionId: string;
       },
       { dataSources }: Context
     ): Promise<IngredientUpdateResponseGQL | ErrorResponseGQL> => {
       const ingredientModel = await dataSources.ingredientAPI.updateIngredient(
         { text: args.text, isChecked: args.isChecked },
         args.ingredientId,
-        args.recipeId
+        args.recipeId,
+        args.instructionId
       );
       if (!ingredientModel) return new ErrorResponseGQL('Failed updating ingredient');
       return {
@@ -324,17 +329,20 @@ const resolvers = {
 
     deleteIngredient: async (
       _: undefined,
-      args: { ingredientId: string; recipeId: string },
+      args: { ingredientId: string; instructionId: string; recipeId: string },
       { dataSources }: Context
     ): Promise<IngredientDeleteResponseGQL | ErrorResponseGQL> => {
       const ingredientModel = await dataSources.ingredientAPI.deleteIngredient(args);
       if (!ingredientModel) return new ErrorResponseGQL('Failed deleting ingredient');
-      const recipeModel = await dataSources.recipeAPI.getRecipe(args.recipeId);
-      if (!recipeModel) return new ErrorResponseGQL('Could not retrieve recipe');
+      const instructionModel = await dataSources.instructionAPI.getInstruction(
+        args.instructionId
+      );
+      if (!instructionModel)
+        return new ErrorResponseGQL('Could not retrieve instruction');
       return {
         success: true,
         message: 'Ingredient deleted',
-        recipe: new RecipeGQL(recipeModel),
+        instruction: new InstructionGQL(instructionModel),
       };
     },
 
